@@ -1,0 +1,3 @@
+dlcommon.o: dlcommon.c config.h
+
+config.h:

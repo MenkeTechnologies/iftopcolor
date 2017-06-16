@@ -1,0 +1,3 @@
+addrs_dlpi.o: addrs_dlpi.c config.h
+
+config.h:
