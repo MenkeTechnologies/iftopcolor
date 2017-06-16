@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/ctest.dir/iftop.c.o"
+  "CMakeFiles/ctest.dir/getColors.c.o"
   "ctest.pdb"
   "ctest"
 )

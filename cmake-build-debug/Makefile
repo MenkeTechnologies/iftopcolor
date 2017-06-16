@@ -123,6 +123,33 @@ ctest/fast:
 	$(MAKE) -f CMakeFiles/ctest.dir/build.make CMakeFiles/ctest.dir/build
 .PHONY : ctest/fast
 
+getColors.o: getColors.c.o
+
+.PHONY : getColors.o
+
+# target to build an object file
+getColors.c.o:
+	$(MAKE) -f CMakeFiles/ctest.dir/build.make CMakeFiles/ctest.dir/getColors.c.o
+.PHONY : getColors.c.o
+
+getColors.i: getColors.c.i
+
+.PHONY : getColors.i
+
+# target to preprocess a source file
+getColors.c.i:
+	$(MAKE) -f CMakeFiles/ctest.dir/build.make CMakeFiles/ctest.dir/getColors.c.i
+.PHONY : getColors.c.i
+
+getColors.s: getColors.c.s
+
+.PHONY : getColors.s
+
+# target to generate assembly for a file
+getColors.c.s:
+	$(MAKE) -f CMakeFiles/ctest.dir/build.make CMakeFiles/ctest.dir/getColors.c.s
+.PHONY : getColors.c.s
+
 iftop.o: iftop.c.o
 
 .PHONY : iftop.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... ctest"
+	@echo "... getColors.o"
+	@echo "... getColors.i"
+	@echo "... getColors.s"
 	@echo "... iftop.o"
 	@echo "... iftop.i"
 	@echo "... iftop.s"

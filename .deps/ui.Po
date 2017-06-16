@@ -84,6 +84,7 @@ ui.o: ui.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
   /usr/include/i386/_param.h /usr/include/net/net_kev.h \
   /usr/include/sys/_types/_sa_family_t.h \
   /usr/include/sys/_types/_iovec_t.h /usr/include/netinet6/in6.h \
+  /usr/include/pwd.h /usr/include/uuid/uuid.h /usr/include/memory.h \
   addr_hash.h hash.h serv_hash.h /usr/include/arpa/inet.h iftop.h \
   config.h resolver.h /usr/include/netinet/in_systm.h sorted_list.h \
   options.h screenfilter.h
@@ -373,6 +374,12 @@ ui.o: ui.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
 /usr/include/sys/_types/_iovec_t.h:
 
 /usr/include/netinet6/in6.h:
+
+/usr/include/pwd.h:
+
+/usr/include/uuid/uuid.h:
+
+/usr/include/memory.h:
 
 addr_hash.h:
 

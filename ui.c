@@ -16,6 +16,16 @@
 #include <unistd.h>
 #include <netdb.h>
 
+#include <stdio.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <memory.h>
+#include <string.h>
+#include <ctype.h>
+
+
 #include <sys/wait.h>
 
 #include "addr_hash.h"
@@ -25,6 +35,7 @@
 #include "sorted_list.h"
 #include "options.h"
 #include "screenfilter.h"
+
 
 #define HOSTNAME_LENGTH 256
 
@@ -106,52 +117,467 @@ int dontshowdisplay = 0;
 #define NONBOLD 0
 
 
+int  RECEIVE_BAR_COLOR[] = {GREEN_FOREGROUND, BOLD};
+int  SENT_BAR_COLOR[] = {BLUE_FOREGROUND, BOLD};
+int  BOTH_BAR_COLOR[] = {RED_FOREGROUND, BOLD};
 
-int TOP_SCALE_BAR_COLOR []= {BLUE_FOREGROUND, BOLD};
-int SIZE_MARKERS_COLOR [] = {BLUE_FOREGROUND, BOLD};
-int DL_UL_INDICATOR_COLOR [] = {BLUE_FOREGROUND, BOLD};
-int HOST2_COLOR []= {MAGENTA_FOREGROUND, BOLD};
-int HOST1_COLOR []= {CYAN_FOREGROUND, BOLD};
-int TWO_SECOND_TRANSFER_COLUMN_COLOR []= {BLUE_FOREGROUND, NONBOLD};
-int FIVE_SECOND_TRANSFER_COLUMN_COLOR []= {CYAN_FOREGROUND, BOLD};
-int FOURTY_SECOND_TRANSFER_COLUMN_COLOR []= {BLUE_FOREGROUND, BOLD};
+int SCALE_BAR_COLOR[] = {BLUE_FOREGROUND, BOLD};
+int SCALE_MARKERS_COLOR[] = {BLUE_FOREGROUND, BOLD};
+int DL_UL_INDICATOR_COLOR[] = {BLUE_FOREGROUND, BOLD};
+int HOST1_COLOR[] = {CYAN_FOREGROUND, BOLD};
+int HOST2_COLOR[] = {MAGENTA_FOREGROUND, BOLD};
+int TWO_SECOND_TRANSFER_COLUMN_COLOR[] = {BLUE_FOREGROUND, NONBOLD};
+int TEN_SECOND_TRANSFER_COLUMN_COLOR[] = {CYAN_FOREGROUND, BOLD};
+int FOURTY_SECOND_TRANSFER_COLUMN_COLOR[] = {BLUE_FOREGROUND, BOLD};
 
-int BOTTOM_BAR_COLOR []= {BLUE_FOREGROUND, BOLD};
-int CUM_LABEL_COLOR []= {YELLOW_FOREGROUND, NONBOLD};
-int PEAK_LABEL_COLOR []= {MAGENTA_FOREGROUND, BOLD};
-int RATES_LABEL_COLOR []= {MAGENTA_FOREGROUND, BOLD};
+int BOTTOM_BAR_COLOR[] = {BLUE_FOREGROUND, BOLD};
+int CUM_LABEL_COLOR[] = {YELLOW_FOREGROUND, NONBOLD};
+int PEAK_LABEL_COLOR[] = {MAGENTA_FOREGROUND, BOLD};
+int RATES_LABEL_COLOR[] = {MAGENTA_FOREGROUND, BOLD};
 
-int TOTAL_LABEL_COLOR []= {BLUE_FOREGROUND, BOLD};
-int CUM_TRANSFER_COLUMN_COLOR []= {YELLOW_FOREGROUND, BOLD};
-int PEAK_TRANSFER_COLUMN_COLOR []= {YELLOW_FOREGROUND, BOLD};
+int TOTAL_LABEL_COLOR[] = {BLUE_FOREGROUND, BOLD};
+int CUM_TRANSFER_COLUMN_COLOR[] = {YELLOW_FOREGROUND, BOLD};
+int PEAK_TRANSFER_COLUMN_COLOR[] = {YELLOW_FOREGROUND, BOLD};
+
+int convertColorToInt(char *color) {
+
+    //convert to lowercase
+    for (int i = 0; color[i]; i++) {
+        color[i] = tolower(color[i]);
+    }
+    if (strcmp(color, "green") == 0) {
+        return 4;
+    }
+    if (strcmp(color, "red") == 0) {
+        return 5;
+    }
+    if (strcmp(color, "blue") == 0) {
+        return 6;
+    }
+    if (strcmp(color, "yellow") == 0) {
+        return 7;
+    }
+    if (strcmp(color, "magenta") == 0) {
+        return 8;
+    }
+    if (strcmp(color, "cyan") == 0) {
+        return 9;
+    }
+    if (strcmp(color, "black") == 0) {
+        return 10;
+    }
+    if (strcmp(color, "white") == 0) {
+        return 11;
+    }
+
+    //invalid color
+    return -1;
+
+}
+
+int convertBoldToInt(char *bold) {
+    //convert to lowercase
+
+    for (int i = 0; bold[i]; i++) {
+        bold[i] = tolower(bold[i]);
+    }
+
+    if (strcmp(bold, "bold") == 0) {
+        return 1;
+    }
+    if (strcmp(bold, "nonbold") == 0) {
+        return 0;
+    }
+
+    //default to nonbold if invalid or '-'
+    return 0;
+
+
+}
+
+void getColors(){
+
+    struct passwd *pw = getpwuid(getuid());
+    const char *homedir = pw->pw_dir;
+    const char *filename = "/.iftoprc";
+    char absoluePath[200];
+    strcat(absoluePath, homedir);
+    strcat(absoluePath, filename);
+
+    if ((homedir = getenv("IFTOPRC")) == NULL) {
+        absoluePath = getenv("IFTOPRC");
+    } else {
+        system("no environment variable");
+    }
+
+    if (access(absoluePath, F_OK) != -1) {
+        FILE *fp;
+        fp = fopen(absoluePath, "r");
+
+
+        int ch;
+        int lineCount = 0;
+        do {
+            ch = fgetc(fp);
+            if (ch == '\n') lineCount++;
+        } while (ch != EOF);
+
+        if (lineCount > 0) {
+            rewind(fp);
+
+            //set up defaults
+            char *downloadBarString = "RECEIVE_BAR_COLOR";
+            char downloadBarColor[100] = "green";
+
+            char *uploadBarString = "SENT_BAR_COLOR";
+            char uploadBarColor[100] = "blue";
+
+            char *bothBarString = "BOTH_BAR_COLOR";
+            char bothBarColor[100] = "magenta";
+
+            char *scaleBarString = "SCALE_BAR_COLOR";
+            char scaleBarColor[100] = "magenta";
+
+            char *scaleMarkerString = "SCALE_MARKERS_COLOR";
+            char scaleMarkerColor[100] = "blue";
+
+            char *dl_ul_String = "DL_UL_INDICATOR_COLOR";
+            char dl_ul_Color[100] = "blue";
+
+            char *host1String = "HOST1_COLOR";
+            char host1Color[100] = "cyan";
+
+            char *host2String = "HOST2_COLOR";
+            char host2Color[100] = "magenta";
+
+            char *twoSecondTransferColumnString = "TWO_SECOND_TRANSFER_COLUMN_COLOR";
+            char twoSecondTransferColumnColor[100] = "blue";
+
+            char *tenSecondTransferColumnString = "TEN_SECOND_TRANSFER_COLUMN_COLOR";
+            char tenSecondTransferColumnColor[100] = "yellow";
+
+            char *fourtySecondTransferColumnString = "FOURTY_SECOND_TRANSFER_COLUMN_COLOR";
+            char fourtySecondTransferColumnColor[100] = "yellow";
+
+            char *bottomBarString = "BOTTOM_BAR_COLOR";
+            char bottomBarColor[100] = "blue";
+
+            char *cumLabelString = "CUM_LABEL_COLOR";
+            char cumLabelColor[100] = "yellow";
+
+            char *peakLabelString = "PEAK_LABEL_COLOR";
+            char peakLabelColor[100] = "yellow";
+
+            char *ratesLabelString = "RATES_LABEL_COLOR";
+            char ratesLabelColor[100] = "yellow";
+
+            char *totalLabelString = "TOTAL_LABEL_COLOR";
+            char totalLabelColor[100] = "blue";
+
+            char *cumTransferColumnString = "CUM_TRANSFER_COLUMN_COLOR";
+            char cumTransferColumnColor[100] = "yellow";
+
+            char *peakTransferColumnString = "PEAK_TRANSFER_COLUMN_COLOR";
+            char peakTransferColumnColor[100] = "yellow";
+
+
+            for (int i = 0; i < lineCount; i++) {
+                char buffer[255];
+                char boldBuffer[50];
+                fscanf(fp, "%s", buffer);
+                if (buffer[0] == '#') {
+                    //skip this comment line
+                    fgets(buffer,255, fp);
+                    continue;
+
+                }
+
+
+                if (strcmp(downloadBarString, buffer) == 0) {
+                    fscanf(fp, "%s", downloadBarColor);
+                    int colorInt = convertColorToInt(downloadBarColor);
+                    if (colorInt != -1) {
+                        RECEIVE_BAR_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    RECEIVE_BAR_COLOR[1] = convertBoldToInt(boldBuffer);
+
+
+                }
+
+                if (strcmp(uploadBarString, buffer) == 0) {
+                    fscanf(fp, "%s", uploadBarColor);
+
+                    int colorInt = convertColorToInt(uploadBarColor);
+                    if (colorInt != -1) {
+                        SENT_BAR_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    SENT_BAR_COLOR[1] = convertBoldToInt(boldBuffer);
+
+                }
+
+                if (strcmp(bothBarString, buffer) == 0) {
+                    fscanf(fp, "%s", bothBarColor);
+                    int colorInt = convertColorToInt(bothBarColor);
+                    if (colorInt != -1) {
+                        BOTH_BAR_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    BOTH_BAR_COLOR[1] = convertBoldToInt(boldBuffer);
+
+                }
+
+                if (strcmp(scaleBarString, buffer) == 0) {
+                    fscanf(fp, "%s", scaleBarColor);
+                    int colorInt = convertColorToInt(scaleBarColor);
+                    if (colorInt != -1) {
+                        SCALE_BAR_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    SCALE_BAR_COLOR[1] = convertBoldToInt(boldBuffer);
+
+                }
+
+
+                if (strcmp(scaleMarkerString, buffer) == 0) {
+                    fscanf(fp, "%s", scaleMarkerColor);
+                    int colorInt = convertColorToInt(scaleMarkerColor);
+                    if (colorInt != -1) {
+                        SCALE_MARKERS_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    SCALE_MARKERS_COLOR[1] = convertBoldToInt(boldBuffer);
+
+                }
+
+                if (strcmp(dl_ul_String, buffer) == 0) {
+                    fscanf(fp, "%s", dl_ul_Color);
+                    int colorInt = convertColorToInt(dl_ul_Color);
+                    if (colorInt != -1) {
+                        DL_UL_INDICATOR_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    DL_UL_INDICATOR_COLOR[1] = convertBoldToInt(boldBuffer);
+
+                }
+
+                if (strcmp(host1String, buffer) == 0) {
+                    fscanf(fp, "%s", host1Color);
+
+                    int colorInt = convertColorToInt(host1Color);
+                    if (colorInt != -1) {
+                        HOST1_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    HOST1_COLOR[1] = convertBoldToInt(boldBuffer);
+                }
+
+                if (strcmp(host2String, buffer) == 0) {
+                    fscanf(fp, "%s", host2Color);
+                    int colorInt = convertColorToInt(host2Color);
+                    if (colorInt != -1) {
+                        HOST2_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    HOST2_COLOR[1] = convertBoldToInt(boldBuffer);
+                }
+
+                if (strcmp(twoSecondTransferColumnString, buffer) == 0) {
+                    fscanf(fp, "%s", twoSecondTransferColumnColor);
+                    int colorInt = convertColorToInt(twoSecondTransferColumnColor);
+                    if (colorInt != -1) {
+                        TWO_SECOND_TRANSFER_COLUMN_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    TWO_SECOND_TRANSFER_COLUMN_COLOR[1] = convertBoldToInt(boldBuffer);
+
+                }
+                if (strcmp(tenSecondTransferColumnString, buffer) == 0) {
+                    fscanf(fp, "%s", tenSecondTransferColumnColor);
+                    int colorInt = convertColorToInt(tenSecondTransferColumnColor);
+                    if (colorInt != -1) {
+                        TEN_SECOND_TRANSFER_COLUMN_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    TEN_SECOND_TRANSFER_COLUMN_COLOR[1] = convertBoldToInt(boldBuffer);
+                }
+                if (strcmp(fourtySecondTransferColumnString, buffer) == 0) {
+                    fscanf(fp, "%s", fourtySecondTransferColumnColor);
+                    int colorInt = convertColorToInt(fourtySecondTransferColumnColor);
+                    if (colorInt != -1) {
+                        FOURTY_SECOND_TRANSFER_COLUMN_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    FOURTY_SECOND_TRANSFER_COLUMN_COLOR[1] = convertBoldToInt(boldBuffer);
+                }
+                if (strcmp(bottomBarString, buffer) == 0) {
+                    fscanf(fp, "%s", bottomBarColor);
+                    int colorInt = convertColorToInt(bottomBarColor);
+                    if (colorInt != -1) {
+                        BOTTOM_BAR_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    BOTTOM_BAR_COLOR[1] = convertBoldToInt(boldBuffer);
+                }
+                if (strcmp(cumLabelString, buffer) == 0) {
+                    fscanf(fp, "%s", cumLabelColor);
+                    int colorInt = convertColorToInt(cumLabelColor);
+                    if (colorInt != -1) {
+                        CUM_LABEL_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    CUM_LABEL_COLOR[1] = convertBoldToInt(boldBuffer);
+                }
+                if (strcmp(peakLabelString, buffer) == 0) {
+                    fscanf(fp, "%s", peakLabelColor);
+                    int colorInt = convertColorToInt(peakLabelColor);
+                    if (colorInt != -1) {
+                        PEAK_LABEL_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    PEAK_LABEL_COLOR[1] = convertBoldToInt(boldBuffer);
+                }
+                if (strcmp(ratesLabelString, buffer) == 0) {
+                    fscanf(fp, "%s", ratesLabelColor);
+                    int colorInt = convertColorToInt(ratesLabelColor);
+                    if (colorInt != -1) {
+                        RATES_LABEL_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    RATES_LABEL_COLOR[1] = convertBoldToInt(boldBuffer);
+                }
+                if (strcmp(totalLabelString, buffer) == 0) {
+                    fscanf(fp, "%s", totalLabelColor);
+                    int colorInt = convertColorToInt(totalLabelColor);
+                    if (colorInt != -1) {
+                        TOTAL_LABEL_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    TOTAL_LABEL_COLOR[1] = convertBoldToInt(boldBuffer);
+                }
+                if (strcmp(cumTransferColumnString, buffer) == 0) {
+                    fscanf(fp, "%s", cumTransferColumnColor);
+                    int colorInt = convertColorToInt(cumTransferColumnColor);
+                    if (colorInt != -1) {
+                        CUM_TRANSFER_COLUMN_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    CUM_TRANSFER_COLUMN_COLOR[1] = convertBoldToInt(boldBuffer);
+                }
+                if (strcmp(peakTransferColumnString, buffer) == 0) {
+                    fscanf(fp, "%s", peakTransferColumnColor);
+                    int colorInt = convertColorToInt(peakTransferColumnColor);
+                    if (colorInt != -1) {
+                        PEAK_TRANSFER_COLUMN_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%s", boldBuffer);
+                    PEAK_TRANSFER_COLUMN_COLOR[1] = convertBoldToInt(boldBuffer);
+                }
+            }
+
+
+            printf("the download bar color is %s\n", downloadBarColor);
+
+            printf("the up bar color is %s\n", uploadBarColor);
+            printf("the host2 color is %s\n", host2Color);
+
+            printf("the peak column is %s\n", peakTransferColumnColor);
+
+            printf("the color int of peak transfer is %d\n", PEAK_TRANSFER_COLUMN_COLOR[0]);
+            printf("the bold is %d\n", PEAK_TRANSFER_COLUMN_COLOR[1]);
+
+
+
+//        printf("%s\n", buffer);
+//
+//        fgets(buffer, 255, (FILE*)fp);
+//
+//        printf("%s\n", buffer);
+//
+//        fgets(buffer, 255, (FILE*)fp);
+//
+//        printf("%s\n", buffer);
+
+
+        } else {
+            //empty file
+            system("empty file");
+        }
+
+
+    } else {
+//        printf(".iftoprc config file does not exist. Resorting to defaults.\n");
+        system("say no file at");
+        char str [200] = "say ";
+        strcat(str, absoluePath);
+
+        system(str);
+    }
+
+
+
+}
+
 //int RATES_2_TRANSFER_COLUMN_COLOR []= {GREEN_FOREGROUND, BOLD};
 //int RATES_5_TRANSFER_COLUMN_COLOR []= {RED_FOREGROUND, BOLD};
 //int RATES_40_TRANSFER_COLUMN_COLOR [] = {CYAN_FOREGROUND, BOLD};
 //int RATES_2_TRANSFER_COLUMN_COLOR []= TWO_SECOND_TRANSFER_COLUMN_COLOR;
-//int RATES_5_TRANSFER_COLUMN_COLOR []= FIVE_SECOND_TRANSFER_COLUMN_COLOR;
+//int RATES_5_TRANSFER_COLUMN_COLOR []= TEN_SECOND_TRANSFER_COLUMN_COLOR;
 //int RATES_40_TRANSFER_COLUMN_COLOR [] = FOURTY_SECOND_TRANSFER_COLUMN_COLOR;
 
-void turnOnColor(int color_ary []){
+void ui_curses_init() {
+    (void) initscr();      /* initialize the curses library */
+    if (has_colors() == TRUE) {
+        start_color();          /* Start color          */
+        use_default_colors();   /* retain terminal fg , bg colors */
+        //change colors for transfer and receive bars
+
+        //init color for <= and =>
+        init_pair(RED_FOREGROUND, COLOR_RED, -1);
+        init_pair(BLUE_FOREGROUND, COLOR_BLUE, -1);
+        init_pair(GREEN_FOREGROUND, COLOR_GREEN, -1);
+        init_pair(YELLOW_FOREGROUND, COLOR_YELLOW, -1);
+        init_pair(MAGENTA_FOREGROUND, COLOR_MAGENTA, -1);
+        init_pair(CYAN_FOREGROUND, COLOR_CYAN, -1);
+        init_pair(WHITE_FOREGROUND, COLOR_WHITE, -1);
+        init_pair(BLACK_FOREGROUND, COLOR_BLACK, -1);
+
+//        init_pair(COLOR_PAIR_RECV, COLOR_GREEN, -1);  /* Download color */
+//        init_pair(COLOR_PAIR_SENT, COLOR_BLUE, -1);
+//        init_pair(COLOR_PAIR_BOTH, COLOR_MAGENTA, -1);
+
+        getColors();
+
+
+    }
+    keypad(stdscr, TRUE);  /* enable keyboard mapping */
+    (void) nonl();         /* tell curses not to do NL->CR/NL on output */
+    (void) cbreak();       /* take input chars one at a time, no wait for \n */
+    (void) noecho();       /* don't echo input */
+    halfdelay(2);
+}
+
+
+void turnOnColor(int color_ary[]) {
 
     int fg = color_ary[0];
     attron(COLOR_PAIR(fg));
 
-    if (color_ary[1] == 1){
+    if (color_ary[1] == 1) {
         attron(A_BOLD);
     }
 
 }
 
-void turnOffColor(int color_ary []){
+void turnOffColor(int color_ary[]) {
     int fg = color_ary[0];
     attroff(COLOR_PAIR(fg));
 
-    if (color_ary[1] == 1){
+    if (color_ary[1] == 1) {
         attroff(A_BOLD);
     }
 }
-
-
 
 
 /*
@@ -353,12 +779,11 @@ static void draw_bar_scale(int *y) {
             if (x + strlen(p) >= COLS)
                 x = COLS - strlen(p);
 
-            turnOnColor(SIZE_MARKERS_COLOR);
+            turnOnColor(SCALE_MARKERS_COLOR);
 
             mvaddstr(*y, x, p);
 
-            turnOffColor(SIZE_MARKERS_COLOR);
-
+            turnOffColor(SCALE_MARKERS_COLOR);
 
 
             if (options.log_scale) {
@@ -404,19 +829,19 @@ void draw_line_total(float sent, float recv, int y, int x, option_linedisplay_t 
 
     if (linedisplay != OPTION_LINEDISPLAY_TWO_LINE) {
         readable_size(n, buf, 10, 1024, bytes);
-        if (n==sent){
+        if (n == sent) {
             turnOnColor(TWO_SECOND_TRANSFER_COLUMN_COLOR);
-        } else if(n==recv){
-            turnOnColor(FIVE_SECOND_TRANSFER_COLUMN_COLOR);
+        } else if (n == recv) {
+            turnOnColor(TEN_SECOND_TRANSFER_COLUMN_COLOR);
         } else {
             turnOnColor(FOURTY_SECOND_TRANSFER_COLUMN_COLOR);
         }
         mvaddstr(y, x, buf);
 
-        if (n==sent){
+        if (n == sent) {
             turnOffColor(TWO_SECOND_TRANSFER_COLUMN_COLOR);
-        } else if(n==recv){
-            turnOffColor(FIVE_SECOND_TRANSFER_COLUMN_COLOR);
+        } else if (n == recv) {
+            turnOffColor(TEN_SECOND_TRANSFER_COLUMN_COLOR);
         } else {
             turnOffColor(FOURTY_SECOND_TRANSFER_COLUMN_COLOR);
         }
@@ -448,17 +873,48 @@ void draw_line_totals(int y, host_pair_line *line, option_linedisplay_t linedisp
     if (options.showbars) {
         switch (linedisplay) {
             case OPTION_LINEDISPLAY_TWO_LINE:
-                draw_bar(line->sent[options.bar_interval], y, COLOR_PAIR_SENT);
-                draw_bar(line->recv[options.bar_interval], y + 1, COLOR_PAIR_RECV);
+                if (SENT_BAR_COLOR[1] == BOLD){
+                    attron(A_BOLD);
+                }
+                draw_bar(line->sent[options.bar_interval], y, SENT_BAR_COLOR[0]);
+                if (SENT_BAR_COLOR[1] == BOLD){
+                    attroff(A_BOLD);
+                }
+                if (RECEIVE_BAR_COLOR[1] == BOLD){
+                    attron(A_BOLD);
+                }
+                draw_bar(line->recv[options.bar_interval], y + 1, RECEIVE_BAR_COLOR[0]);
+
+                if (RECEIVE_BAR_COLOR[1] == BOLD){
+                    attroff(A_BOLD);
+                }
                 break;
             case OPTION_LINEDISPLAY_ONE_LINE_SENT:
-                draw_bar(line->sent[options.bar_interval], y, COLOR_PAIR_SENT);
+                if (SENT_BAR_COLOR[1] == BOLD){
+                    attron(A_BOLD);
+                }
+                draw_bar(line->sent[options.bar_interval], y, SENT_BAR_COLOR[0]);
+                if (SENT_BAR_COLOR[1] == BOLD){
+                    attroff(A_BOLD);
+                }
                 break;
             case OPTION_LINEDISPLAY_ONE_LINE_RECV:
-                draw_bar(line->recv[options.bar_interval], y, COLOR_PAIR_RECV);
+                if (RECEIVE_BAR_COLOR[1] == BOLD){
+                    attron(A_BOLD);
+                }
+                draw_bar(line->recv[options.bar_interval], y, RECEIVE_BAR_COLOR[0]);
+                if (RECEIVE_BAR_COLOR[1] == BOLD){
+                    attroff(A_BOLD);
+                }
                 break;
             case OPTION_LINEDISPLAY_ONE_LINE_BOTH:
-                draw_bar(line->recv[options.bar_interval] + line->sent[options.bar_interval], y, COLOR_PAIR_BOTH);
+                if (BOTH_BAR_COLOR[1] == BOLD){
+                    attron(A_BOLD);
+                }
+                draw_bar(line->recv[options.bar_interval] + line->sent[options.bar_interval], y, BOTH_BAR_COLOR[0]);
+                if (BOTH_BAR_COLOR[1] == BOLD){
+                    attroff(A_BOLD);
+                }
                 break;
         }
     }
@@ -475,18 +931,18 @@ void draw_totals(host_pair_line *totals) {
     y += 2;
     for (j = 0; j < HISTORY_DIVISIONS; j++) {
         readable_size((totals->sent[j] + totals->recv[j]), buf, 10, 1024, options.bandwidth_in_bytes);
-        if (j==0){
+        if (j == 0) {
             turnOnColor(TOTAL_LABEL_COLOR);
-        } else if (j ==1 ){
+        } else if (j == 1) {
             turnOnColor(TOTAL_LABEL_COLOR);
         } else {
             turnOnColor(TOTAL_LABEL_COLOR);
 
         }
         mvaddstr(y, x, buf);
-        if (j==0){
+        if (j == 0) {
             turnOffColor(TOTAL_LABEL_COLOR);
-        } else if (j ==1 ){
+        } else if (j == 1) {
             turnOffColor(TOTAL_LABEL_COLOR);
         } else {
             turnOffColor(TOTAL_LABEL_COLOR);
@@ -706,7 +1162,6 @@ void sprint_host(char *line, int af, struct in6_addr *addr, unsigned int port, u
 }
 
 
-
 void ui_print() {
     sorted_list_node *nn = NULL;
     char host1[HOSTNAME_LENGTH], host2[HOSTNAME_LENGTH];
@@ -728,10 +1183,10 @@ void ui_print() {
      */
     erase();
 
-    turnOnColor(TOP_SCALE_BAR_COLOR);
+    turnOnColor(SCALE_BAR_COLOR);
     draw_bar_scale(&y);
 
-    turnOffColor(TOP_SCALE_BAR_COLOR);
+    turnOffColor(SCALE_BAR_COLOR);
 
     if (options.showhelp) {
         mvaddstr(y, 0, HELP_MESSAGE);
@@ -778,20 +1233,20 @@ void ui_print() {
                     int x = 0;
                     turnOnColor(HOST1_COLOR);
 
-                    if (L <1){
-                        x=1;
+                    if (L < 1) {
+                        x = 1;
                     }
                     //leave host1 alone
                     mvaddstr(y, x, host1);
                     turnOffColor(HOST1_COLOR);
 
-                    if (L<1 && x ==1){
+                    if (L < 1 && x == 1) {
                     }
 
                     x += L;
 
 
-                  turnOnColor(DL_UL_INDICATOR_COLOR);
+                    turnOnColor(DL_UL_INDICATOR_COLOR);
 
                     switch (options.linedisplay) {
                         case OPTION_LINEDISPLAY_TWO_LINE:
@@ -925,34 +1380,6 @@ void ui_tick(int print) {
     }
 }
 
-void ui_curses_init() {
-    (void) initscr();      /* initialize the curses library */
-    if (has_colors() == TRUE) {
-        start_color();          /* Start color          */
-        use_default_colors();   /* retain terminal fg , bg colors */
-        //change colors for transfer and receive bars
-        init_pair(COLOR_PAIR_RECV, COLOR_GREEN, -1);  /* Download color */
-        init_pair(COLOR_PAIR_SENT, COLOR_BLUE, -1);
-        init_pair(COLOR_PAIR_BOTH, COLOR_MAGENTA, -1);
-        //init color for <= and =>
-        init_pair(RED_FOREGROUND, COLOR_RED, -1);
-        init_pair(BLUE_FOREGROUND, COLOR_BLUE, -1);
-        init_pair(GREEN_FOREGROUND, COLOR_GREEN, -1);
-        init_pair(YELLOW_FOREGROUND, COLOR_YELLOW, -1);
-        init_pair(MAGENTA_FOREGROUND, COLOR_MAGENTA, -1);
-        init_pair(CYAN_FOREGROUND, COLOR_CYAN, -1);
-        init_pair(WHITE_FOREGROUND, COLOR_WHITE, -1);
-        init_pair(BLACK_FOREGROUND, COLOR_BLACK, -1);
-
-
-
-    }
-    keypad(stdscr, TRUE);  /* enable keyboard mapping */
-    (void) nonl();         /* tell curses not to do NL->CR/NL on output */
-    (void) cbreak();       /* take input chars one at a time, no wait for \n */
-    (void) noecho();       /* don't echo input */
-    halfdelay(2);
-}
 
 void showhelp(const char *s) {
     strncpy(helpmsg, s, HELP_MSG_SIZE);

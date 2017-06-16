@@ -82,6 +82,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/getColors.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/getColors.h">
+			<Option target="ctest"/>
+		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/iftop.c">
 			<Option target="ctest"/>
 		</Unit>

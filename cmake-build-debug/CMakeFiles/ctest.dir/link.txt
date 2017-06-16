@@ -1,1 +1,1 @@
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/ctest.dir/iftop.c.o  -o ctest 
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc  -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/ctest.dir/iftop.c.o CMakeFiles/ctest.dir/getColors.c.o  -o ctest 

@@ -4,6 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
+  "/Users/jacobmenke/Documents/forkedProjects/iftopcolor/getColors.c" "/Users/jacobmenke/Documents/forkedProjects/iftopcolor/cmake-build-debug/CMakeFiles/ctest.dir/getColors.c.o"
   "/Users/jacobmenke/Documents/forkedProjects/iftopcolor/iftop.c" "/Users/jacobmenke/Documents/forkedProjects/iftopcolor/cmake-build-debug/CMakeFiles/ctest.dir/iftop.c.o"
   )
 set(CMAKE_C_COMPILER_ID "AppleClang")

@@ -3,7 +3,7 @@ project(ctest)
 
 set(CMAKE_C_STANDARD 99)
 
-set(SOURCE_FILES iftop.c)
+set(SOURCE_FILES iftop.c getColors.h getColors.c)
 add_executable(ctest ${SOURCE_FILES})
 
 
