@@ -2,33 +2,30 @@
 
 ![screenshot of all colorized iftop](/screenshot1.png)
 
-README for iftop
-$Id: README,v 1.8 2003/06/06 22:42:34 pdw Exp $
-
-Read the INSTALL file, manual page and source code for more information.
+# Read the INSTALL file, manual page and source code for more information.
 
 iftop must be run as root.
 
-KNOWN ISSUES
+# KNOWN ISSUES
 
-RedHat 7.2:
+# RedHat 7.2:
 
 There is a bug in the version of ncurses distibuted with RedHat 7.2 that
 will cause iftop to segfault.  The RPM in RedHat's Rawhide distribution
 fixes this.
 
-Slackware 8.1:
+# Slackware 8.1:
 
 You may need to upgrade your libpcap (by updating the tcpdump package) 
 in order to compile iftop.
 
-FreeBSD 4.7:
+# FreeBSD 4.7:
 
 This version of FreeBSD lacks a proper gethostbyaddr_r function. You should
 choose an alternative name resolution technique using the --with-resolver=...
 option to configure.
 
-Solaris:
+# Solaris:
 
 On Solaris, iftop has to run in promiscuous mode in order to capture
 outgoing packets.  iftop autoconfigures to run in promiscuous mode on
