@@ -195,31 +195,27 @@ int convertBoldToInt(char *bold) {
 
 }
 
+void eraseAndLoop();
+
 void getColors(){
 
     struct passwd *pw = getpwuid(getuid());
     const char *homedir = pw->pw_dir;
     const char *filename = "/.iftoprc";
-    char absoluePath[200];
+    char absoluePath[200] = "";
     strcat(absoluePath, homedir);
     strcat(absoluePath, filename);
-
-    if ((homedir = getenv("IFTOPRC")) == NULL) {
-        absoluePath = getenv("IFTOPRC");
-    } else {
-        system("no environment variable");
-    }
 
     if (access(absoluePath, F_OK) != -1) {
         FILE *fp;
         fp = fopen(absoluePath, "r");
 
-
         int ch;
         int lineCount = 0;
         do {
             ch = fgetc(fp);
-            if (ch == '\n') lineCount++;
+            if (ch == '\n')
+                lineCount++;
         } while (ch != EOF);
 
         if (lineCount > 0) {
@@ -280,11 +276,12 @@ void getColors(){
             char *peakTransferColumnString = "PEAK_TRANSFER_COLUMN_COLOR";
             char peakTransferColumnColor[100] = "yellow";
 
-
             for (int i = 0; i < lineCount; i++) {
                 char buffer[255];
                 char boldBuffer[50];
+                //parse out first field
                 fscanf(fp, "%s", buffer);
+
                 if (buffer[0] == '#') {
                     //skip this comment line
                     fgets(buffer,255, fp);
@@ -301,7 +298,6 @@ void getColors(){
                     }
                     fscanf(fp, "%s", boldBuffer);
                     RECEIVE_BAR_COLOR[1] = convertBoldToInt(boldBuffer);
-
 
                 }
 
@@ -502,22 +498,19 @@ void getColors(){
 
         } else {
             //empty file
-            system("empty file");
         }
 
 
     } else {
 //        printf(".iftoprc config file does not exist. Resorting to defaults.\n");
-        system("say no file at");
-        char str [200] = "say ";
-        strcat(str, absoluePath);
 
-        system(str);
     }
 
 
 
 }
+
+
 
 //int RATES_2_TRANSFER_COLUMN_COLOR []= {GREEN_FOREGROUND, BOLD};
 //int RATES_5_TRANSFER_COLUMN_COLOR []= {RED_FOREGROUND, BOLD};
@@ -527,6 +520,7 @@ void getColors(){
 //int RATES_40_TRANSFER_COLUMN_COLOR [] = FOURTY_SECOND_TRANSFER_COLUMN_COLOR;
 
 void ui_curses_init() {
+
     (void) initscr();      /* initialize the curses library */
     if (has_colors() == TRUE) {
         start_color();          /* Start color          */
@@ -543,11 +537,13 @@ void ui_curses_init() {
         init_pair(WHITE_FOREGROUND, COLOR_WHITE, -1);
         init_pair(BLACK_FOREGROUND, COLOR_BLACK, -1);
 
-//        init_pair(COLOR_PAIR_RECV, COLOR_GREEN, -1);  /* Download color */
-//        init_pair(COLOR_PAIR_SENT, COLOR_BLUE, -1);
-//        init_pair(COLOR_PAIR_BOTH, COLOR_MAGENTA, -1);
-
         getColors();
+
+        if (signal(SIGQUIT, eraseAndLoop) == SIGQUIT) {
+
+        } else {
+
+        }
 
 
     }
@@ -756,6 +752,7 @@ static void draw_bar_scale(int *y) {
         /* Draw bar graph scale on top of the window. */
         move(*y, 0);
         clrtoeol();
+
         mvhline(*y + 1, 0, 0, COLS);
         /* i in bytes */
 
@@ -1236,7 +1233,7 @@ void ui_print() {
                     if (L < 1) {
                         x = 1;
                     }
-                    //leave host1 alone
+
                     mvaddstr(y, x, host1);
                     turnOffColor(HOST1_COLOR);
 
@@ -1421,8 +1418,10 @@ void showportstatus() {
 }
 
 
+
 void ui_loop() {
     /* in edline.c */
+
     char *edline(int linenum, const char *prompt, const char *initial);
     /* in iftop.c */
     char *set_filter_code(const char *filter);
@@ -1716,3 +1715,11 @@ void ui_loop() {
 void ui_finish() {
     endwin();
 }
+
+void eraseAndLoop(){
+    getColors();
+    erase();
+
+    ui_loop();
+}
+

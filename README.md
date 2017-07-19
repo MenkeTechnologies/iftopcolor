@@ -1,3 +1,7 @@
+# MenkeTechnologies Iftop FULL COLOR
+
+![screenshot of all colorized iftop](/screenshot1.png)
+
 README for iftop
 $Id: README,v 1.8 2003/06/06 22:42:34 pdw Exp $
 
