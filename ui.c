@@ -142,7 +142,8 @@ int PEAK_TRANSFER_COLUMN_COLOR[] = {YELLOW_FOREGROUND, BOLD};
 int convertColorToInt(char *color) {
 
     //convert to lowercase
-    for (int i = 0; color[i]; i++) {
+    int i = 0;
+    for (i = 0; color[i]; i++) {
         color[i] = tolower(color[i]);
     }
     if (strcmp(color, "green") == 0) {
@@ -178,7 +179,8 @@ int convertColorToInt(char *color) {
 int convertBoldToInt(char *bold) {
     //convert to lowercase
 
-    for (int i = 0; bold[i]; i++) {
+    int i =0;
+    for (i = 0; bold[i]; i++) {
         bold[i] = tolower(bold[i]);
     }
 
@@ -276,7 +278,8 @@ void getColors(){
             char *peakTransferColumnString = "PEAK_TRANSFER_COLUMN_COLOR";
             char peakTransferColumnColor[100] = "yellow";
 
-            for (int i = 0; i < lineCount; i++) {
+            int i = 0;
+            for (i = 0; i < lineCount; i++) {
                 char buffer[255];
                 char boldBuffer[50];
                 //parse out first field
