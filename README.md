@@ -1,4 +1,4 @@
-# MenkeTechnologies Iftop FULL COLOR
+# MenkeTechnologies Iftop **_FULL_** COLOR
 
 ![screenshot of all colorized iftop](/screenshot1.png)
 

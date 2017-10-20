@@ -15,6 +15,8 @@ util.o: util.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
   /usr/include/machine/endian.h /usr/include/i386/endian.h \
   /usr/include/sys/_endian.h /usr/include/libkern/_OSByteOrder.h \
   /usr/include/libkern/i386/_OSByteOrder.h \
+  /usr/include/sys/_types/_u_char.h /usr/include/sys/_types/_u_short.h \
+  /usr/include/sys/_types/_u_int.h /usr/include/sys/_types/_caddr_t.h \
   /usr/include/sys/_types/_dev_t.h /usr/include/sys/_types/_blkcnt_t.h \
   /usr/include/sys/_types/_blksize_t.h /usr/include/sys/_types/_gid_t.h \
   /usr/include/sys/_types/_in_addr_t.h \
@@ -53,11 +55,12 @@ util.o: util.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
   /usr/include/stdlib.h /usr/include/sys/wait.h \
   /usr/include/sys/signal.h /usr/include/machine/signal.h \
   /usr/include/i386/signal.h /usr/include/machine/_mcontext.h \
-  /usr/include/i386/_mcontext.h /usr/include/mach/i386/_structs.h \
+  /usr/include/i386/_mcontext.h /usr/include/mach/machine/_structs.h \
+  /usr/include/mach/i386/_structs.h \
   /usr/include/sys/_types/_sigaltstack.h \
   /usr/include/sys/_types/_ucontext.h \
   /usr/include/sys/_types/_sigset_t.h /usr/include/sys/resource.h \
-  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.1.0/include/stdint.h \
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include/stdint.h \
   /usr/include/stdint.h /usr/include/_types/_uint8_t.h \
   /usr/include/_types/_uint16_t.h /usr/include/_types/_uint32_t.h \
   /usr/include/_types/_uint64_t.h /usr/include/_types/_intmax_t.h \
@@ -65,8 +68,9 @@ util.o: util.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
   /usr/include/alloca.h /usr/include/sys/_types/_ct_rune_t.h \
   /usr/include/sys/_types/_rune_t.h /usr/include/sys/_types/_wchar_t.h \
   /usr/include/string.h /usr/include/strings.h \
-  /usr/include/secure/_string.h /usr/include/unistd.h \
-  /usr/include/sys/unistd.h /usr/include/sys/_types/_posix_vdisable.h \
+  /usr/include/secure/_strings.h /usr/include/secure/_string.h \
+  /usr/include/unistd.h /usr/include/sys/unistd.h \
+  /usr/include/sys/_types/_posix_vdisable.h \
   /usr/include/sys/_types/_seek_set.h /usr/include/sys/select.h \
   /usr/include/sys/_types/_timespec.h /usr/include/sys/_select.h \
   /usr/include/sys/_types/_uuid_t.h /usr/include/gethostuuid.h iftop.h \
@@ -123,6 +127,14 @@ util.o: util.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
 /usr/include/libkern/_OSByteOrder.h:
 
 /usr/include/libkern/i386/_OSByteOrder.h:
+
+/usr/include/sys/_types/_u_char.h:
+
+/usr/include/sys/_types/_u_short.h:
+
+/usr/include/sys/_types/_u_int.h:
+
+/usr/include/sys/_types/_caddr_t.h:
 
 /usr/include/sys/_types/_dev_t.h:
 
@@ -244,6 +256,8 @@ util.o: util.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
 
 /usr/include/i386/_mcontext.h:
 
+/usr/include/mach/machine/_structs.h:
+
 /usr/include/mach/i386/_structs.h:
 
 /usr/include/sys/_types/_sigaltstack.h:
@@ -254,7 +268,7 @@ util.o: util.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
 
 /usr/include/sys/resource.h:
 
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.1.0/include/stdint.h:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include/stdint.h:
 
 /usr/include/stdint.h:
 
@@ -283,6 +297,8 @@ util.o: util.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
 /usr/include/string.h:
 
 /usr/include/strings.h:
+
+/usr/include/secure/_strings.h:
 
 /usr/include/secure/_string.h:
 
