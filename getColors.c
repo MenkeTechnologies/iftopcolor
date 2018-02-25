@@ -345,15 +345,15 @@ int i = 0;
             }
 
 
-            printf("the download bar color is %s\n", downloadBarColor);
-
-            printf("the up bar color is %s\n", uploadBarColor);
-            printf("the host2 color is %s\n", host2Color);
-
-            printf("the peak column is %s\n", peakTransferColumnColor);
-
-            printf("the color int of peak transfer is %d\n", PEAK_TRANSFER_COLUMN_COLOR[0]);
-            printf("the bold is %d\n", PEAK_TRANSFER_COLUMN_COLOR[1]);
+//            printf("the download bar color is %s\n", downloadBarColor);
+//
+//            printf("the up bar color is %s\n", uploadBarColor);
+//            printf("the host2 color is %s\n", host2Color);
+//
+//            printf("the peak column is %s\n", peakTransferColumnColor);
+//
+//            printf("the color int of peak transfer is %d\n", PEAK_TRANSFER_COLUMN_COLOR[0]);
+//            printf("the bold is %d\n", PEAK_TRANSFER_COLUMN_COLOR[1]);
 
 
 

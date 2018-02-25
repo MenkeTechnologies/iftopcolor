@@ -720,6 +720,7 @@ void packet_init() {
     }
 #endif
     else {
+
         fprintf(stderr, "Unsupported datalink type: %d\n"
                 "Please email pdw@ex-parrot.com, quoting the datalink type and what you were\n"
                 "trying to do at the time\n.", dlt);
