@@ -30,8 +30,8 @@ Kernel configured for up to 8 processors.
 Processor type: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 1 2 3 4 5 6 7
 Primary memory available: 16.00 gigabytes
-Default processor set: 497 tasks, 2415 threads, 8 processors
-Load average: 8.67, Mach factor: 1.31
+Default processor set: 498 tasks, 2503 threads, 8 processors
+Load average: 5.64, Mach factor: 2.38
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
@@ -604,7 +604,7 @@ configure:6751: checking for library containing gethostbyaddr_r
 configure:6792: gcc -o conftest -g -O2   conftest.c  >&5
 Undefined symbols for architecture x86_64:
   "_gethostbyaddr_r", referenced from:
-      _main in conftest-e82d45.o
+      _main in conftest-a2bcf0.o
 ld: symbol(s) not found for architecture x86_64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 configure:6799: $? = 1

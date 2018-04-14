@@ -202,13 +202,15 @@ void eraseAndLoop();
 void getColors(){
 
     const char *homedir;
+    char msg[200];
 
     if ((homedir = getenv("HOME")) == NULL) {
         homedir = getpwuid(getuid())->pw_dir;
     }
 
+
     const char *filename = "/.iftopcolors";
-    
+
     char absolutePath[200] = "";
     strcat(absolutePath, homedir);
     strcat(absolutePath, filename);
