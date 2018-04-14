@@ -36,7 +36,6 @@ HOST1_COLOR red nonbold
 #TOTAL_LABEL_COLOR blue bold
 #CUM_TRANSFER_COLUMN_COLOR magenta nonbold
 #PEAK_TRANSFER_COLUMN_COLORt magenta nonbold
-# Read the INSTALL file, manual page and source code for more information.
 ```
 iftop must be run as root.
 
