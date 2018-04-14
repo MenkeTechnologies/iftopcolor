@@ -201,16 +201,21 @@ void eraseAndLoop();
 
 void getColors(){
 
-    struct passwd *pw = getpwuid(getuid());
-    const char *homedir = pw->pw_dir;
-    const char *filename = "/.iftoprc";
-    char absoluePath[200] = "";
-    strcat(absoluePath, homedir);
-    strcat(absoluePath, filename);
+    const char *homedir;
 
-    if (access(absoluePath, F_OK) != -1) {
+    if ((homedir = getenv("HOME")) == NULL) {
+        homedir = getpwuid(getuid())->pw_dir;
+    }
+
+    const char *filename = "/.iftopcolors";
+    
+    char absolutePath[200] = "";
+    strcat(absolutePath, homedir);
+    strcat(absolutePath, filename);
+
+    if (access(absolutePath, F_OK) != -1) {
         FILE *fp;
-        fp = fopen(absoluePath, "r");
+        fp = fopen(absolutePath, "r");
 
         int ch;
         int lineCount = 0;

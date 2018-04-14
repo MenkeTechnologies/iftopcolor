@@ -48,20 +48,20 @@ iftop.o: iftop.c integers.h /usr/include/sys/types.h \
   /usr/include/sys/_pthread/_pthread_key_t.h \
   /usr/include/sys/_types/_fsblkcnt_t.h \
   /usr/include/sys/_types/_fsfilcnt_t.h config.h \
-  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include/stdint.h \
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdint.h \
   /usr/include/stdint.h /usr/include/_types/_uint8_t.h \
   /usr/include/_types/_uint16_t.h /usr/include/_types/_uint32_t.h \
   /usr/include/_types/_uint64_t.h /usr/include/_types/_intmax_t.h \
   /usr/include/_types/_uintmax_t.h /usr/include/stdio.h \
-  /usr/include/Availability.h /usr/include/AvailabilityInternal.h \
-  /usr/include/_types.h /usr/include/sys/_types/_va_list.h \
-  /usr/include/sys/_types/_null.h /usr/include/sys/stdio.h \
-  /usr/include/secure/_stdio.h /usr/include/secure/_common.h \
-  /usr/include/stdlib.h /usr/include/sys/wait.h \
-  /usr/include/sys/signal.h /usr/include/machine/signal.h \
-  /usr/include/i386/signal.h /usr/include/machine/_mcontext.h \
-  /usr/include/i386/_mcontext.h /usr/include/mach/machine/_structs.h \
-  /usr/include/mach/i386/_structs.h \
+  /usr/include/_stdio.h /usr/include/Availability.h \
+  /usr/include/AvailabilityInternal.h /usr/include/_types.h \
+  /usr/include/sys/_types/_va_list.h /usr/include/sys/_types/_null.h \
+  /usr/include/sys/stdio.h /usr/include/secure/_stdio.h \
+  /usr/include/secure/_common.h /usr/include/stdlib.h \
+  /usr/include/sys/wait.h /usr/include/sys/signal.h \
+  /usr/include/machine/signal.h /usr/include/i386/signal.h \
+  /usr/include/machine/_mcontext.h /usr/include/i386/_mcontext.h \
+  /usr/include/mach/machine/_structs.h /usr/include/mach/i386/_structs.h \
   /usr/include/sys/_types/_sigaltstack.h \
   /usr/include/sys/_types/_ucontext.h \
   /usr/include/sys/_types/_sigset_t.h /usr/include/sys/resource.h \
@@ -86,8 +86,8 @@ iftop.o: iftop.c integers.h /usr/include/sys/types.h \
   /usr/include/pthread/qos.h /usr/include/sys/qos.h \
   /usr/include/sys/_types/_mach_port_t.h /usr/include/curses.h \
   /usr/include/ncurses_dll.h /usr/include/unctrl.h \
-  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include/stdarg.h \
-  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include/stdbool.h \
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdarg.h \
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdbool.h \
   /usr/include/signal.h /usr/include/string.h /usr/include/strings.h \
   /usr/include/secure/_strings.h /usr/include/secure/_string.h \
   /usr/include/unistd.h /usr/include/sys/unistd.h \
@@ -248,7 +248,7 @@ integers.h:
 
 config.h:
 
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include/stdint.h:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdint.h:
 
 /usr/include/stdint.h:
 
@@ -265,6 +265,8 @@ config.h:
 /usr/include/_types/_uintmax_t.h:
 
 /usr/include/stdio.h:
+
+/usr/include/_stdio.h:
 
 /usr/include/Availability.h:
 
@@ -388,9 +390,9 @@ config.h:
 
 /usr/include/unctrl.h:
 
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include/stdarg.h:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdarg.h:
 
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include/stdbool.h:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdbool.h:
 
 /usr/include/signal.h:
 

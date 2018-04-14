@@ -3,8 +3,9 @@ project(ctest)
 
 set(CMAKE_C_STANDARD 99)
 
-set(SOURCE_FILES iftop.c getColors.h getColors.c)
-add_executable(ctest ${SOURCE_FILES})
+file(GLOB SRC *.c .h)
+
+add_executable(ctest ${SRC})
 
 
 include_directories(/usr/include)

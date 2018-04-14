@@ -48,9 +48,10 @@ screenfilter.o: screenfilter.c config.h /usr/include/sys/types.h \
   /usr/include/sys/_pthread/_pthread_key_t.h \
   /usr/include/sys/_types/_fsblkcnt_t.h \
   /usr/include/sys/_types/_fsfilcnt_t.h /usr/include/regex.h \
-  /usr/include/_types.h /usr/include/Availability.h \
-  /usr/include/AvailabilityInternal.h /usr/include/sys/_types/_wchar_t.h \
-  /usr/include/stdio.h /usr/include/sys/_types/_va_list.h \
+  /usr/include/_regex.h /usr/include/_types.h \
+  /usr/include/Availability.h /usr/include/AvailabilityInternal.h \
+  /usr/include/sys/_types/_wchar_t.h /usr/include/stdio.h \
+  /usr/include/_stdio.h /usr/include/sys/_types/_va_list.h \
   /usr/include/sys/_types/_null.h /usr/include/sys/stdio.h \
   /usr/include/secure/_stdio.h /usr/include/secure/_common.h iftop.h \
   options.h /usr/include/sys/socket.h /usr/include/machine/_param.h \
@@ -58,7 +59,7 @@ screenfilter.o: screenfilter.c config.h /usr/include/sys/types.h \
   /usr/include/sys/_types/_sa_family_t.h \
   /usr/include/sys/_types/_socklen_t.h \
   /usr/include/sys/_types/_iovec_t.h /usr/include/netinet/in.h \
-  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include/stdint.h \
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdint.h \
   /usr/include/stdint.h /usr/include/_types/_uint8_t.h \
   /usr/include/_types/_uint16_t.h /usr/include/_types/_uint32_t.h \
   /usr/include/_types/_uint64_t.h /usr/include/_types/_intmax_t.h \
@@ -213,6 +214,8 @@ config.h:
 
 /usr/include/regex.h:
 
+/usr/include/_regex.h:
+
 /usr/include/_types.h:
 
 /usr/include/Availability.h:
@@ -222,6 +225,8 @@ config.h:
 /usr/include/sys/_types/_wchar_t.h:
 
 /usr/include/stdio.h:
+
+/usr/include/_stdio.h:
 
 /usr/include/sys/_types/_va_list.h:
 
@@ -253,7 +258,7 @@ options.h:
 
 /usr/include/netinet/in.h:
 
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include/stdint.h:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdint.h:
 
 /usr/include/stdint.h:
 

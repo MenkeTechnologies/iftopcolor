@@ -76,6 +76,8 @@ void getColors(){
     if ((homedir = getenv("HOME")) == NULL) {
         homedir = getpwuid(getuid())->pw_dir;
     }
+    fprintf((FILE *) STDERR_FILENO, "its nullllll\n");
+    exit(1);
 
     const char *filename = "/.iftopcolors";
     char absoluePath[200];

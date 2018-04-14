@@ -82,16 +82,112 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/addr_hash.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/addr_hash.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/addrs_dlpi.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/addrs_ioctl.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/cfgfile.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/cfgfile.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/dlcommon.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/dlcommon.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/edline.c">
+			<Option target="ctest"/>
+		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/getColors.c">
 			<Option target="ctest"/>
 		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/getColors.h">
 			<Option target="ctest"/>
 		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/hash.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/hash.h">
+			<Option target="ctest"/>
+		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/iftop.c">
 			<Option target="ctest"/>
 		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/iftop.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/ns_hash.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/ns_hash.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/options.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/options.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/resolver.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/resolver.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/screenfilter.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/screenfilter.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/serv_hash.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/serv_hash.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/sorted_list.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/sorted_list.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/stringmap.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/stringmap.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/threadprof.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/threadprof.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/ui.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/ui.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/util.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/vector.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/vector.h">
 			<Option target="ctest"/>
 		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/CMakeLists.txt">
