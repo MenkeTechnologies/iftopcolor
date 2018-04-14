@@ -5,12 +5,12 @@
 
 # Installation
 
-    ```sh
-    git clone https://github.com/MenkeTechnologies/iftopcolor.git && cd iftopcolor && ./configure && make && sudo make install
-    ```
+```sh
+git clone https://github.com/MenkeTechnologies/iftopcolor.git && cd iftopcolor && ./configure && make && sudo make install
+```
 
 # Configuration File at ~/.iftocolors
-
+```
 #colors are red, blue, green, yellow, magenta, cyan, black and white
 #RECEIVE_BAR_COLOR yellow -
 #SENT_BAR_COLOR yellow -
@@ -31,7 +31,7 @@ HOST1_COLOR red nonbold
 #CUM_TRANSFER_COLUMN_COLOR magenta nonbold
 #PEAK_TRANSFER_COLUMN_COLORt magenta nonbold
 # Read the INSTALL file, manual page and source code for more information.
-
+```
 iftop must be run as root.
 
 # KNOWN ISSUES
