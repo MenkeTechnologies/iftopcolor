@@ -70,9 +70,14 @@ int i =0;
 }
 
 void getColors(){
-    struct passwd *pw = getpwuid(getuid());
-    const char *homedir = pw->pw_dir;
-    const char *filename = "/.iftoprc";
+
+    const char *homedir;
+
+    if ((homedir = getenv("HOME")) == NULL) {
+        homedir = getpwuid(getuid())->pw_dir;
+    }
+
+    const char *filename = "/.iftopcolors";
     char absoluePath[200];
     strcat(absoluePath, homedir);
     strcat(absoluePath, filename);
