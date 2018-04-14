@@ -2,6 +2,34 @@
 
 ![screenshot of all colorized iftop](/screenshot1.png)
 
+
+# Installation
+
+    ```sh
+    git clone https://github.com/MenkeTechnologies/iftopcolor.git && cd iftopcolor && ./configure && make && sudo make install
+    ```
+
+# Configuration File at ~/.iftocolors
+
+#colors are red, blue, green, yellow, magenta, cyan, black and white
+#RECEIVE_BAR_COLOR yellow -
+#SENT_BAR_COLOR yellow -
+BOTH_BAR_COLOR blue bold
+#SCALE_BAR_COLOR red nonbold
+#SCALE_MARKERS_COLOR red bold
+#DL_UL_INDICATOR_COLOR blue bold
+HOST1_COLOR red nonbold
+#HOST2_COLOR red bold
+#TWO_SECOND_TRANSFER_COLUMN_COLOR yellow bold
+#TEN_SECOND_TRANSFER_COLUMN_COLOR magenta bold
+#FOURTY_SECOND_TRANSFER_COLUMN_COLOR yellow bold
+#BOTTOM_BAR_COLOR blue bold
+#CUM_LABEL_COLOR yellow nonbold
+#PEAK_LABEL_COLOR magenta bold
+#RATES_LABEL_COLOR magenta bold
+#TOTAL_LABEL_COLOR blue bold
+#CUM_TRANSFER_COLUMN_COLOR magenta nonbold
+#PEAK_TRANSFER_COLUMN_COLORt magenta nonbold
 # Read the INSTALL file, manual page and source code for more information.
 
 iftop must be run as root.
