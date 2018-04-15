@@ -78,14 +78,13 @@ void getColors(){
     }
 
     const char *filename = "/.iftopcolors";
-    char absoluePath[200];
-    strcat(absoluePath, homedir);
-    strcat(absoluePath, filename);
+    char absolutePath[200];
+    strcat(absolutePath, homedir);
+    strcat(absolutePath, filename);
 
-    if (access(absoluePath, F_OK) != -1) {
+    if (access(absolutePath, F_OK) != -1) {
         FILE *fp;
-        fp = fopen(absoluePath, "r");
-
+        fp = fopen(absolutePath, "r");
 
         int ch;
         int lineCount = 0;
