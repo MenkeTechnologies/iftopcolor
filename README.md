@@ -9,7 +9,7 @@
 git clone https://github.com/MenkeTechnologies/iftopcolor.git && cd iftopcolor && ./configure && make && sudo make install
 ```
 
-## Should be installed to /usr/local/sbin.  So make sure this in your PATH.
+## Should be installed to /usr/local/sbin.  So make sure this directory is in your PATH.
 
 ```sh
 sudo iftop
