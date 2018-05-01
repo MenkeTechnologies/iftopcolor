@@ -9,13 +9,13 @@
 git clone https://github.com/MenkeTechnologies/iftopcolor.git && cd iftopcolor && ./configure && make && sudo make install
 ```
 
-## Should be installed to /usr/local/sbin.  So make sure this in PATH.
+## Should be installed to /usr/local/sbin.  So make sure this in your PATH.
 
 ```sh
 sudo iftop
 ```
 
-# Configuration File at ~/.iftocolors.  Will be used for custom colors if present and parseable.
+# Configuration File at ~/.iftopcolors.  Will be used for custom colors if present and parseable.
 ```
 #colors are red, blue, green, yellow, magenta, cyan, black and white
 #RECEIVE_BAR_COLOR yellow -
