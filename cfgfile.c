@@ -20,36 +20,36 @@
 
 #define MAX_CONFIG_LINE     2048
 
-char * config_directives[] = {
-	"interface", 
-	"dns-resolution",
-	"port-resolution",
-	"filter-code",
-	"show-bars", 
-	"promiscuous",
-	"hide-source",
-	"hide-destination",
-	"use-bytes", 
-	"sort", 
-	"line-display", 
-	"show-totals", 
-	"log-scale", 
-	"max-bandwidth",
-	"net-filter", 
-	"net-filter6", 
+char *config_directives[] = {
+        "interface",
+        "dns-resolution",
+        "port-resolution",
+        "filter-code",
+        "show-bars",
+        "promiscuous",
+        "hide-source",
+        "hide-destination",
+        "use-bytes",
+        "sort",
+        "line-display",
+        "show-totals",
+        "log-scale",
+        "max-bandwidth",
+        "net-filter",
+        "net-filter6",
         "link-local",
-	"port-display", 
-	NULL
+        "port-display",
+        NULL
 };
 
 stringmap config;
 
-extern options_t options ;
+extern options_t options;
 
 int is_cfgdirective_valid(const char *s) {
     int t;
     for (t = 0; config_directives[t] != NULL; t++)
-       if (strcmp(s, config_directives[t]) == 0) return 1;
+        if (strcmp(s, config_directives[t]) == 0) return 1;
     return 0;
 }
 
@@ -73,7 +73,7 @@ int read_config_file(const char *f, int whinge) {
 
     fp = fopen(f, "rt");
     if (!fp) {
-        if(whinge) fprintf(stderr, "%s: %s\n", f, strerror(errno)); 
+        if (whinge) fprintf(stderr, "%s: %s\n", f, strerror(errno));
         goto fail;
     }
 
@@ -136,7 +136,7 @@ int read_config_file(const char *f, int whinge) {
 
     ret = 1;
 
-fail:
+    fail:
     if (fp) fclose(fp);
     if (line) xfree(line);
 
@@ -152,7 +152,7 @@ int config_get_int(const char *directive, int *value) {
     S = stringmap_find(config, directive);
     if (!S) return 0;
 
-    s = (char*)S->d.v;
+    s = (char *) S->d.v;
     if (!*s) return -1;
     errno = 0;
     *value = strtol(s, &t, 10);
@@ -174,7 +174,7 @@ int config_get_float(const char *directive, float *value) {
     if (!(S = stringmap_find(config, directive)))
         return 0;
 
-    s = (char*)S->d.v;
+    s = (char *) S->d.v;
     if (!*s) return -1;
     errno = 0;
     *value = strtod(s, &t);
@@ -190,7 +190,7 @@ char *config_get_string(const char *directive) {
     stringmap S;
 
     S = stringmap_find(config, directive);
-    if (S) return (char*)S->d.v;
+    if (S) return (char *) S->d.v;
     else return NULL;
 }
 
@@ -213,14 +213,14 @@ int config_get_enum(const char *directive, config_enumeration_type *enumeration,
     char *s;
     config_enumeration_type *t;
     s = config_get_string(directive);
-    if(s) {
-        for(t = enumeration; t->name; t++) {
-            if(strcmp(s,t->name) == 0) {
+    if (s) {
+        for (t = enumeration; t->name; t++) {
+            if (strcmp(s, t->name) == 0) {
                 *value = t->value;
                 return 1;
             }
         }
-        fprintf(stderr,"Invalid enumeration value \"%s\" for directive \"%s\"\n", s, directive);
+        fprintf(stderr, "Invalid enumeration value \"%s\" for directive \"%s\"\n", s, directive);
     }
     return 0;
 }
@@ -228,21 +228,20 @@ int config_get_enum(const char *directive, config_enumeration_type *enumeration,
 /* config_set_string; Sets a value in the config, possibly overriding
  * an existing value
  */
-void config_set_string(const char *directive, const char* s) {
+void config_set_string(const char *directive, const char *s) {
     stringmap S;
 
     S = stringmap_find(config, directive);
     if (S) {
-      xfree(S->d.v);
-      S->d = item_ptr(xstrdup(s));
-    }
-    else {
-      stringmap_insert(config, directive, item_ptr(xstrdup(s)));
+        xfree(S->d.v);
+        S->d = item_ptr(xstrdup(s));
+    } else {
+        stringmap_insert(config, directive, item_ptr(xstrdup(s)));
     }
 }
 
 int read_config(char *file, int whinge_on_error) {
-    void* o;
+    void *o;
 
     return read_config_file(file, whinge_on_error);
 }

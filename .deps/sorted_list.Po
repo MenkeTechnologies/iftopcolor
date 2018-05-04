@@ -34,10 +34,6 @@ sorted_list.o: sorted_list.c /usr/include/stdlib.h \
   /usr/include/sys/_types/_ct_rune_t.h /usr/include/sys/_types/_rune_t.h \
   /usr/include/sys/_types/_wchar_t.h /usr/include/sys/_types/_null.h \
   /usr/include/sys/_types/_dev_t.h /usr/include/sys/_types/_mode_t.h \
-  /usr/include/stdio.h /usr/include/_stdio.h \
-  /usr/include/sys/_types/_va_list.h /usr/include/sys/stdio.h \
-  /usr/include/sys/_types/_off_t.h /usr/include/sys/_types/_ssize_t.h \
-  /usr/include/secure/_stdio.h /usr/include/secure/_common.h \
   sorted_list.h iftop.h config.h
 
 /usr/include/stdlib.h:
@@ -163,22 +159,6 @@ sorted_list.o: sorted_list.c /usr/include/stdlib.h \
 /usr/include/sys/_types/_dev_t.h:
 
 /usr/include/sys/_types/_mode_t.h:
-
-/usr/include/stdio.h:
-
-/usr/include/_stdio.h:
-
-/usr/include/sys/_types/_va_list.h:
-
-/usr/include/sys/stdio.h:
-
-/usr/include/sys/_types/_off_t.h:
-
-/usr/include/sys/_types/_ssize_t.h:
-
-/usr/include/secure/_stdio.h:
-
-/usr/include/secure/_common.h:
 
 sorted_list.h:
 

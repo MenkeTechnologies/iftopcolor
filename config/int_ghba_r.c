@@ -21,13 +21,13 @@ int main(void) {
     char *buf;
     int res, herr;
     size_t buflen = 1024;
-    
+
     localhost.s_addr = htonl(INADDR_LOOPBACK);
     buf = malloc(buflen);
-    while ((res = gethostbyaddr_r((char*)&localhost, sizeof localhost, AF_INET,
+    while ((res = gethostbyaddr_r((char *) &localhost, sizeof localhost, AF_INET,
                                   &hostbuf, buf, buflen, &hp, &herr))
-                    == ERANGE)
-        buf = (char*)realloc(buf, buflen *= 2);
+           == ERANGE)
+        buf = (char *) realloc(buf, buflen *= 2);
 
     /* We assume that the loopback address can always be resolved if
      * gethostbyaddr_r is actually working. */

@@ -77,14 +77,9 @@ resolver.o: resolver.c /usr/include/sys/types.h \
   /usr/include/sys/_types/_timeval.h /usr/include/alloca.h \
   /usr/include/sys/_types/_ct_rune_t.h /usr/include/sys/_types/_rune_t.h \
   /usr/include/sys/_types/_wchar_t.h /usr/include/netdb.h \
-  /usr/include/errno.h /usr/include/sys/errno.h /usr/include/string.h \
-  /usr/include/strings.h /usr/include/secure/_strings.h \
-  /usr/include/secure/_string.h /usr/include/unistd.h \
-  /usr/include/sys/unistd.h /usr/include/sys/_types/_posix_vdisable.h \
-  /usr/include/sys/_types/_seek_set.h /usr/include/sys/select.h \
-  /usr/include/sys/_select.h /usr/include/sys/_types/_uuid_t.h \
-  /usr/include/gethostuuid.h ns_hash.h hash.h iftop.h config.h \
-  threadprof.h options.h
+  /usr/include/string.h /usr/include/strings.h \
+  /usr/include/secure/_strings.h /usr/include/secure/_string.h ns_hash.h \
+  hash.h iftop.h config.h options.h
 
 /usr/include/sys/types.h:
 
@@ -340,10 +335,6 @@ resolver.o: resolver.c /usr/include/sys/types.h \
 
 /usr/include/netdb.h:
 
-/usr/include/errno.h:
-
-/usr/include/sys/errno.h:
-
 /usr/include/string.h:
 
 /usr/include/strings.h:
@@ -352,22 +343,6 @@ resolver.o: resolver.c /usr/include/sys/types.h \
 
 /usr/include/secure/_string.h:
 
-/usr/include/unistd.h:
-
-/usr/include/sys/unistd.h:
-
-/usr/include/sys/_types/_posix_vdisable.h:
-
-/usr/include/sys/_types/_seek_set.h:
-
-/usr/include/sys/select.h:
-
-/usr/include/sys/_select.h:
-
-/usr/include/sys/_types/_uuid_t.h:
-
-/usr/include/gethostuuid.h:
-
 ns_hash.h:
 
 hash.h:
@@ -375,7 +350,5 @@ hash.h:
 iftop.h:
 
 config.h:
-
-threadprof.h:
 
 options.h:

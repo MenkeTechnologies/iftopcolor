@@ -8,7 +8,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <memory.h>
-#include <string.h>
 #include <ctype.h>
 #include "getColors.h"
 
@@ -51,7 +50,7 @@ int convertColorToInt(char *color) {
 
 int convertBoldToInt(char *bold) {
     //convert to lowercase
-int i =0;
+    int i = 0;
     for (i = 0; bold[i]; i++) {
         bold[i] = tolower(bold[i]);
     }
@@ -69,7 +68,7 @@ int i =0;
 
 }
 
-void getColors(){
+void getColors() {
 
     const char *homedir;
 
@@ -152,14 +151,14 @@ void getColors(){
             char peakTransferColumnColor[100] = "yellow";
 
 
-int i = 0;
+            int i = 0;
             for (i = 0; i < lineCount; i++) {
                 char buffer[255];
                 char boldBuffer[50];
                 fscanf(fp, "%s", buffer);
                 if (buffer[0] == '#') {
                     //skip this comment line
-                    fgets(buffer,255, fp);
+                    fgets(buffer, 255, fp);
                     continue;
 
                 }
@@ -382,7 +381,6 @@ int i = 0;
 //        printf(".iftoprc config file does not exist. Resorting to defaults.\n");
         system("say no file");
     }
-
 
 
 }

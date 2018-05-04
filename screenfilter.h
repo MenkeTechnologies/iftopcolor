@@ -14,8 +14,9 @@
 
 #ifdef HAVE_REGCOMP
 
-int screen_filter_set(char* s);
-int screen_filter_match(char* s);
+int screen_filter_set(char *s);
+
+int screen_filter_match(char *s);
 
 #endif
 

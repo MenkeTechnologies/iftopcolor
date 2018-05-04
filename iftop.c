@@ -8,10 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <sys/types.h>
-#include <sys/ioctl.h>
 #include <sys/socket.h>
-#include <net/if.h>
 /* include <net/bpf.h> -- this was added by the PFLOG patch but seems
  * superfluous and breaks on Slackware */
 #if defined(HAVE_PCAP_H)
@@ -25,10 +22,8 @@
 #endif
 
 #include <pthread.h>
-#include <curses.h>
 #include <signal.h>
 #include <string.h>
-#include <unistd.h>
 #include <locale.h>
 
 #include "iftop.h"
@@ -43,7 +38,6 @@
 
 #endif /* DLT_LINUX_SLL */
 
-#include "threadprof.h"
 #include "ether.h"
 #include "ip.h"
 #include "tcp.h"
@@ -722,8 +716,8 @@ void packet_init() {
     else {
 
         fprintf(stderr, "Unsupported datalink type: %d\n"
-                "Please email pdw@ex-parrot.com, quoting the datalink type and what you were\n"
-                "trying to do at the time\n.", dlt);
+                        "Please email pdw@ex-parrot.com, quoting the datalink type and what you were\n"
+                        "trying to do at the time\n.", dlt);
         exit(1);
     }
 
@@ -739,7 +733,6 @@ void packet_init() {
 void packet_loop(void *ptr) {
     pcap_loop(pd, -1, (pcap_handler) packet_handler, NULL);
 }
-
 
 
 /* main:

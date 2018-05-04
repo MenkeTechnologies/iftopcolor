@@ -68,37 +68,25 @@ iftop.o: iftop.c integers.h /usr/include/sys/types.h \
   /usr/include/sys/_types/_timeval.h /usr/include/alloca.h \
   /usr/include/sys/_types/_ct_rune_t.h /usr/include/sys/_types/_rune_t.h \
   /usr/include/sys/_types/_wchar_t.h /usr/include/time.h \
-  /usr/include/sys/_types/_timespec.h /usr/include/sys/ioctl.h \
-  /usr/include/sys/ttycom.h /usr/include/sys/ioccom.h \
-  /usr/include/sys/filio.h /usr/include/sys/sockio.h \
-  /usr/include/sys/socket.h /usr/include/machine/_param.h \
-  /usr/include/i386/_param.h /usr/include/net/net_kev.h \
-  /usr/include/sys/_types/_sa_family_t.h \
+  /usr/include/sys/_types/_timespec.h /usr/include/sys/socket.h \
+  /usr/include/machine/_param.h /usr/include/i386/_param.h \
+  /usr/include/net/net_kev.h /usr/include/sys/_types/_sa_family_t.h \
   /usr/include/sys/_types/_socklen_t.h \
-  /usr/include/sys/_types/_iovec_t.h /usr/include/net/if.h \
-  /usr/include/net/if_var.h /usr/include/sys/time.h \
-  /usr/include/sys/_types/_timeval64.h /usr/include/sys/_select.h \
-  /usr/include/sys/queue.h /usr/include/sys/_types/_timeval32.h \
-  /usr/include/pcap.h /usr/include/pcap/pcap.h \
-  /usr/include/pcap/export-defs.h /usr/include/pcap/bpf.h \
+  /usr/include/sys/_types/_iovec_t.h /usr/include/pcap.h \
+  /usr/include/pcap/pcap.h /usr/include/pcap/export-defs.h \
+  /usr/include/sys/time.h /usr/include/sys/_types/_timeval64.h \
+  /usr/include/sys/_select.h /usr/include/pcap/bpf.h \
   /usr/include/pcap/dlt.h /usr/include/pthread.h \
   /usr/include/pthread/pthread_impl.h /usr/include/pthread/sched.h \
   /usr/include/pthread/qos.h /usr/include/sys/qos.h \
-  /usr/include/sys/_types/_mach_port_t.h /usr/include/curses.h \
-  /usr/include/ncurses_dll.h /usr/include/unctrl.h \
-  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdarg.h \
-  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdbool.h \
-  /usr/include/signal.h /usr/include/string.h /usr/include/strings.h \
+  /usr/include/sys/_types/_mach_port_t.h /usr/include/signal.h \
+  /usr/include/string.h /usr/include/strings.h \
   /usr/include/secure/_strings.h /usr/include/secure/_string.h \
-  /usr/include/unistd.h /usr/include/sys/unistd.h \
-  /usr/include/sys/_types/_posix_vdisable.h \
-  /usr/include/sys/_types/_seek_set.h /usr/include/sys/select.h \
-  /usr/include/sys/_types/_uuid_t.h /usr/include/gethostuuid.h \
   /usr/include/locale.h /usr/include/_locale.h iftop.h addr_hash.h \
   /usr/include/netinet/in.h /usr/include/netinet6/in6.h hash.h \
   resolver.h /usr/include/netinet/in_systm.h ui.h options.h \
-  /usr/include/arpa/inet.h sll.h threadprof.h ether.h ip.h tcp.h token.h \
-  llc.h extract.h ethertype.h cfgfile.h ppp.h /usr/include/netinet/ip6.h
+  /usr/include/arpa/inet.h sll.h ether.h ip.h tcp.h token.h llc.h \
+  extract.h ethertype.h cfgfile.h ppp.h /usr/include/netinet/ip6.h
 
 integers.h:
 
@@ -324,16 +312,6 @@ config.h:
 
 /usr/include/sys/_types/_timespec.h:
 
-/usr/include/sys/ioctl.h:
-
-/usr/include/sys/ttycom.h:
-
-/usr/include/sys/ioccom.h:
-
-/usr/include/sys/filio.h:
-
-/usr/include/sys/sockio.h:
-
 /usr/include/sys/socket.h:
 
 /usr/include/machine/_param.h:
@@ -348,25 +326,17 @@ config.h:
 
 /usr/include/sys/_types/_iovec_t.h:
 
-/usr/include/net/if.h:
+/usr/include/pcap.h:
 
-/usr/include/net/if_var.h:
+/usr/include/pcap/pcap.h:
+
+/usr/include/pcap/export-defs.h:
 
 /usr/include/sys/time.h:
 
 /usr/include/sys/_types/_timeval64.h:
 
 /usr/include/sys/_select.h:
-
-/usr/include/sys/queue.h:
-
-/usr/include/sys/_types/_timeval32.h:
-
-/usr/include/pcap.h:
-
-/usr/include/pcap/pcap.h:
-
-/usr/include/pcap/export-defs.h:
 
 /usr/include/pcap/bpf.h:
 
@@ -384,16 +354,6 @@ config.h:
 
 /usr/include/sys/_types/_mach_port_t.h:
 
-/usr/include/curses.h:
-
-/usr/include/ncurses_dll.h:
-
-/usr/include/unctrl.h:
-
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdarg.h:
-
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdbool.h:
-
 /usr/include/signal.h:
 
 /usr/include/string.h:
@@ -403,20 +363,6 @@ config.h:
 /usr/include/secure/_strings.h:
 
 /usr/include/secure/_string.h:
-
-/usr/include/unistd.h:
-
-/usr/include/sys/unistd.h:
-
-/usr/include/sys/_types/_posix_vdisable.h:
-
-/usr/include/sys/_types/_seek_set.h:
-
-/usr/include/sys/select.h:
-
-/usr/include/sys/_types/_uuid_t.h:
-
-/usr/include/gethostuuid.h:
 
 /usr/include/locale.h:
 
@@ -443,8 +389,6 @@ options.h:
 /usr/include/arpa/inet.h:
 
 sll.h:
-
-threadprof.h:
 
 ether.h:
 

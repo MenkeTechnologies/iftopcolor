@@ -5,9 +5,9 @@
 #ifndef __GETCOLORS_H
 #define __GETCOLORS_H
 
-extern int  RECEIVE_BAR_COLOR [];
-extern int  SENT_BAR_COLOR[];
-extern int  BOTH_BAR_COLOR[];
+extern int RECEIVE_BAR_COLOR[];
+extern int SENT_BAR_COLOR[];
+extern int BOTH_BAR_COLOR[];
 
 extern int SCALE_BAR_COLOR[];
 
@@ -31,7 +31,9 @@ extern int PEAK_TRANSFER_COLUMN_COLOR[];
 
 
 int convertColorToInt(char *);
+
 int convertBoldToInt(char *);
+
 void getColors();
 
 

@@ -18,26 +18,25 @@
 
 static const char rcsid[] = "$Id: screenfilter.c,v 1.3 2002/11/04 12:27:35 chris Exp $";
 
-extern options_t options ;
+extern options_t options;
 
 regex_t preg;
 
-int screen_filter_set(char* s) {
+int screen_filter_set(char *s) {
     int r;
 
-    if(options.screenfilter != NULL) {
+    if (options.screenfilter != NULL) {
         xfree(options.screenfilter);
         options.screenfilter = NULL;
         regfree(&preg);
     }
 
-    r = regcomp(&preg, s, REG_ICASE|REG_EXTENDED);
-      
-    if(r == 0) {
+    r = regcomp(&preg, s, REG_ICASE | REG_EXTENDED);
+
+    if (r == 0) {
         options.screenfilter = s;
         return 1;
-    }
-    else {
+    } else {
         xfree(s);
         return 0;
     }
@@ -45,15 +44,14 @@ int screen_filter_set(char* s) {
 
 int screen_filter_match(char *s) {
     int r;
-    if(options.screenfilter == NULL) {
+    if (options.screenfilter == NULL) {
         return 1;
     }
 
     r = regexec(&preg, s, 0, NULL, 0);
-    if(r == 0) {
+    if (r == 0) {
         return 1;
-    }
-    else {
+    } else {
         return 0;
     }
 }

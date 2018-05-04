@@ -1,3 +1,1 @@
-dlcommon.o: dlcommon.c config.h
-
-config.h:
+dlcommon.o: dlcommon.c

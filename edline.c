@@ -22,7 +22,7 @@ static int min(const int a, const int b) {
 char *edline(int linenum, const char *prompt, const char *initial) {
     int xstart, slen, off = 0, pos, i, c;
     char *str;
-    
+
     xstart = strlen(prompt) + 2;
 
     if (initial) {
@@ -88,9 +88,9 @@ char *edline(int linenum, const char *prompt, const char *initial) {
 
             case 23:    /* ^W */
                 for (i = pos; i > 0; --i)
-                    if (!isspace((int)str[i])) break;
+                    if (!isspace((int) str[i])) break;
                 for (; i > 0; --i)
-                    if (isspace((int)str[i])) break;
+                    if (isspace((int) str[i])) break;
                 if (i != pos) {
                     memmove(str + i, str + pos, strlen(str + pos) + 1);
                     pos = i;
@@ -105,7 +105,7 @@ char *edline(int linenum, const char *prompt, const char *initial) {
                     if (strlen(str) == slen - 1)
                         str = xrealloc(str, slen *= 2);
                     memmove(str + pos + 1, str + pos, strlen(str + pos) + 1);
-                    str[pos++] = (char)c;
+                    str[pos++] = (char) c;
                 } else
                     beep();
                 break;
@@ -115,7 +115,7 @@ char *edline(int linenum, const char *prompt, const char *initial) {
         off = 0;
         if (pos > COLS - xstart - 1)
             off = pos - (COLS - xstart - 1);
-        
+
         /* display the string */
         mvaddstr(linenum, 0, prompt);
         addstr("> ");

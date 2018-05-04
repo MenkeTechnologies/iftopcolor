@@ -58,13 +58,13 @@ ui.o: ui.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
   /usr/include/unctrl.h \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdarg.h \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdbool.h \
-  /usr/include/errno.h /usr/include/sys/errno.h /usr/include/string.h \
-  /usr/include/strings.h /usr/include/secure/_strings.h \
-  /usr/include/secure/_string.h /usr/include/math.h \
-  /usr/include/pthread.h /usr/include/pthread/pthread_impl.h \
-  /usr/include/pthread/sched.h /usr/include/time.h \
-  /usr/include/sys/_types/_timespec.h /usr/include/pthread/qos.h \
-  /usr/include/sys/qos.h /usr/include/sys/_types/_mach_port_t.h \
+  /usr/include/string.h /usr/include/strings.h \
+  /usr/include/secure/_strings.h /usr/include/secure/_string.h \
+  /usr/include/math.h /usr/include/pthread.h \
+  /usr/include/pthread/pthread_impl.h /usr/include/pthread/sched.h \
+  /usr/include/time.h /usr/include/sys/_types/_timespec.h \
+  /usr/include/pthread/qos.h /usr/include/sys/qos.h \
+  /usr/include/sys/_types/_mach_port_t.h \
   /usr/include/sys/_types/_sigset_t.h /usr/include/signal.h \
   /usr/include/sys/signal.h /usr/include/machine/signal.h \
   /usr/include/i386/signal.h /usr/include/machine/_mcontext.h \
@@ -88,10 +88,9 @@ ui.o: ui.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
   /usr/include/i386/_param.h /usr/include/net/net_kev.h \
   /usr/include/sys/_types/_sa_family_t.h \
   /usr/include/sys/_types/_iovec_t.h /usr/include/netinet6/in6.h \
-  /usr/include/pwd.h /usr/include/uuid/uuid.h /usr/include/memory.h \
-  addr_hash.h hash.h serv_hash.h /usr/include/arpa/inet.h iftop.h \
-  config.h resolver.h /usr/include/netinet/in_systm.h sorted_list.h \
-  options.h screenfilter.h
+  /usr/include/pwd.h /usr/include/uuid/uuid.h addr_hash.h hash.h \
+  serv_hash.h /usr/include/arpa/inet.h iftop.h config.h resolver.h \
+  /usr/include/netinet/in_systm.h sorted_list.h options.h screenfilter.h
 
 /usr/include/sys/types.h:
 
@@ -281,10 +280,6 @@ ui.o: ui.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
 
 /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include/stdbool.h:
 
-/usr/include/errno.h:
-
-/usr/include/sys/errno.h:
-
 /usr/include/string.h:
 
 /usr/include/strings.h:
@@ -398,8 +393,6 @@ ui.o: ui.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
 /usr/include/pwd.h:
 
 /usr/include/uuid/uuid.h:
-
-/usr/include/memory.h:
 
 addr_hash.h:
 

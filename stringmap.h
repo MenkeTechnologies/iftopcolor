@@ -20,14 +20,17 @@ typedef struct _stringmap {
 } *stringmap;
 
 stringmap stringmap_new(void);
-void      stringmap_delete(stringmap);
-void      stringmap_delete_free(stringmap);
+
+void stringmap_delete(stringmap);
+
+void stringmap_delete_free(stringmap);
 
 /* Try to insert an item into a stringmap, returning 1 if the map already
  * contained an item with that key.
  */
-item *stringmap_insert(stringmap, const char*, const item);
+item *stringmap_insert(stringmap, const char *, const item);
+
 /* Find an item in a stringmap */
-stringmap     stringmap_find(const stringmap, const char*);
+stringmap stringmap_find(const stringmap, const char *);
 
 #endif /* __STRINGMAP_H_ */

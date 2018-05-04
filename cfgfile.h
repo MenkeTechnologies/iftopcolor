@@ -16,11 +16,14 @@ typedef struct {
 int read_config();
 
 char *config_get_string(const char *directive);
-int config_get_bool(const char *directive);
-int config_get_int(const char *directive, int *value);
-int config_get_float(const char *directive, float *value);
-int config_init();
 
+int config_get_bool(const char *directive);
+
+int config_get_int(const char *directive, int *value);
+
+int config_get_float(const char *directive, float *value);
+
+int config_init();
 
 
 #endif /* __CFGFILE_H_ */

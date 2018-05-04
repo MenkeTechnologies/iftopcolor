@@ -13,25 +13,25 @@
 
 
 typedef enum {
-  OPTION_PORTS_OFF,
-  OPTION_PORTS_SRC,
-  OPTION_PORTS_DEST,
-  OPTION_PORTS_ON
+    OPTION_PORTS_OFF,
+    OPTION_PORTS_SRC,
+    OPTION_PORTS_DEST,
+    OPTION_PORTS_ON
 } option_port_t;
 
 typedef enum {
-  OPTION_SORT_DIV1,
-  OPTION_SORT_DIV2,
-  OPTION_SORT_DIV3,
-  OPTION_SORT_SRC,
-  OPTION_SORT_DEST
+    OPTION_SORT_DIV1,
+    OPTION_SORT_DIV2,
+    OPTION_SORT_DIV3,
+    OPTION_SORT_SRC,
+    OPTION_SORT_DEST
 } option_sort_t;
 
 typedef enum {
-  OPTION_LINEDISPLAY_TWO_LINE,
-  OPTION_LINEDISPLAY_ONE_LINE_BOTH,
-  OPTION_LINEDISPLAY_ONE_LINE_RECV,
-  OPTION_LINEDISPLAY_ONE_LINE_SENT
+    OPTION_LINEDISPLAY_TWO_LINE,
+    OPTION_LINEDISPLAY_ONE_LINE_BOTH,
+    OPTION_LINEDISPLAY_ONE_LINE_RECV,
+    OPTION_LINEDISPLAY_ONE_LINE_SENT
 } option_linedisplay_t;
 
 /* 
@@ -61,7 +61,7 @@ typedef struct {
 
     int bar_interval;
 
-    char* screenfilter;
+    char *screenfilter;
     int freezeorder;
 
     int screen_offset;
@@ -92,6 +92,7 @@ typedef struct {
 
 
 void options_set_defaults();
+
 void options_read(int argc, char **argv);
 
 #endif /* __OPTIONS_H_ */

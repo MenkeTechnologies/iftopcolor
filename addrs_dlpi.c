@@ -9,8 +9,6 @@
  *
  */
 
-#include "config.h"
-
 #ifdef HAVE_DLPI
 
 #include <stdio.h>
@@ -117,9 +115,9 @@ get_addrs_dlpi(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr)
       goto get_ip_address;
     } else {
       if ((fd = open(fulldevpath, O_RDWR)) < 0) {
-	fprintf(stderr, "Couldn't open %s\n", fulldevpath);
-	free(devname2);
-	goto get_ip_address;
+    fprintf(stderr, "Couldn't open %s\n", fulldevpath);
+    free(devname2);
+    goto get_ip_address;
       }
     }
   }
@@ -154,19 +152,19 @@ get_addrs_dlpi(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr)
   dlinforeq(fd);
   dlinfoack(fd, buf);
 
-  /* 
+  /*
      printdlprim(dlp);  // uncomment this to dump out info from DLPI
   */
 
   if (dlp->info_ack.dl_addr_length + dlp->info_ack.dl_sap_length == 6) {
-    memcpy(if_hw_addr, 
-	   OFFADDR(dlp, dlp->info_ack.dl_addr_offset),
-	   dlp->info_ack.dl_addr_length);
+    memcpy(if_hw_addr,
+       OFFADDR(dlp, dlp->info_ack.dl_addr_offset),
+       dlp->info_ack.dl_addr_length);
     got_hw_addr = 1;
   } else {
-    fprintf(stderr, "Error, bad length for hardware interface %s -- %d\n", 
-	    interface,
-	    dlp->info_ack.dl_addr_length);
+    fprintf(stderr, "Error, bad length for hardware interface %s -- %d\n",
+        interface,
+        dlp->info_ack.dl_addr_length);
   }
 
   close(fd);

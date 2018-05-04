@@ -20,15 +20,15 @@ int main(void) {
     char *buf;
     int herr;
     size_t buflen = 1024;
-    
+
     localhost.s_addr = htonl(INADDR_LOOPBACK);
     buf = malloc(buflen);
-    while ((hp = gethostbyaddr_r((char*)&localhost, sizeof(struct in_addr),
+    while ((hp = gethostbyaddr_r((char *) &localhost, sizeof(struct in_addr),
                                  AF_INET, &hostbuf, buf, buflen, &herr))
-                    == NULL
+           == NULL
            && errno == ERANGE)
-        buf = (char*)realloc(buf, buflen *= 2);
-        
+        buf = (char *) realloc(buf, buflen *= 2);
+
     /* We assume that the loopback address can always be resolved if
      * gethostbyaddr_r is actually working. */
     if (hp == NULL) {

@@ -15,9 +15,10 @@
 typedef struct {
     int port;
     int protocol;
-} ip_service; 
+} ip_service;
 
-hash_type* serv_hash_create(void);
-void serv_hash_initialise(hash_type* sh);
+hash_type *serv_hash_create(void);
+
+void serv_hash_initialise(hash_type *sh);
 
 #endif /* __SERV_HASH_H_ */

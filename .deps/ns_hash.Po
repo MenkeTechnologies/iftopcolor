@@ -40,16 +40,16 @@ ns_hash.o: ns_hash.c /usr/include/stdio.h /usr/include/_stdio.h \
   /usr/include/sys/_types/_mode_t.h /usr/include/string.h \
   /usr/include/sys/_types/_rsize_t.h /usr/include/sys/_types/_errno_t.h \
   /usr/include/strings.h /usr/include/secure/_strings.h \
-  /usr/include/secure/_string.h /usr/include/sys/types.h \
-  /usr/include/sys/_types/_u_char.h /usr/include/sys/_types/_u_short.h \
-  /usr/include/sys/_types/_u_int.h /usr/include/sys/_types/_caddr_t.h \
-  /usr/include/sys/_types/_blkcnt_t.h \
-  /usr/include/sys/_types/_blksize_t.h /usr/include/sys/_types/_gid_t.h \
+  /usr/include/secure/_string.h /usr/include/netinet/in.h \
   /usr/include/sys/_types/_in_addr_t.h \
-  /usr/include/sys/_types/_in_port_t.h /usr/include/sys/_types/_ino_t.h \
-  /usr/include/sys/_types/_ino64_t.h /usr/include/sys/_types/_key_t.h \
-  /usr/include/sys/_types/_nlink_t.h /usr/include/sys/_types/_clock_t.h \
-  /usr/include/sys/_types/_time_t.h \
+  /usr/include/sys/_types/_in_port_t.h /usr/include/sys/socket.h \
+  /usr/include/sys/types.h /usr/include/sys/_types/_u_char.h \
+  /usr/include/sys/_types/_u_short.h /usr/include/sys/_types/_u_int.h \
+  /usr/include/sys/_types/_caddr_t.h /usr/include/sys/_types/_blkcnt_t.h \
+  /usr/include/sys/_types/_blksize_t.h /usr/include/sys/_types/_gid_t.h \
+  /usr/include/sys/_types/_ino_t.h /usr/include/sys/_types/_ino64_t.h \
+  /usr/include/sys/_types/_key_t.h /usr/include/sys/_types/_nlink_t.h \
+  /usr/include/sys/_types/_clock_t.h /usr/include/sys/_types/_time_t.h \
   /usr/include/sys/_types/_useconds_t.h \
   /usr/include/sys/_types/_suseconds_t.h \
   /usr/include/sys/_types/_fd_def.h \
@@ -67,13 +67,12 @@ ns_hash.o: ns_hash.c /usr/include/stdio.h /usr/include/_stdio.h \
   /usr/include/sys/_pthread/_pthread_t.h \
   /usr/include/sys/_pthread/_pthread_key_t.h \
   /usr/include/sys/_types/_fsblkcnt_t.h \
-  /usr/include/sys/_types/_fsfilcnt_t.h /usr/include/sys/socket.h \
-  /usr/include/machine/_param.h /usr/include/i386/_param.h \
-  /usr/include/net/net_kev.h /usr/include/sys/_types/_sa_family_t.h \
+  /usr/include/sys/_types/_fsfilcnt_t.h /usr/include/machine/_param.h \
+  /usr/include/i386/_param.h /usr/include/net/net_kev.h \
+  /usr/include/sys/_types/_sa_family_t.h \
   /usr/include/sys/_types/_socklen_t.h \
-  /usr/include/sys/_types/_iovec_t.h /usr/include/netinet/in_systm.h \
-  /usr/include/netinet/in.h /usr/include/netinet6/in6.h \
-  /usr/include/arpa/inet.h ns_hash.h hash.h iftop.h config.h
+  /usr/include/sys/_types/_iovec_t.h /usr/include/netinet6/in6.h \
+  ns_hash.h /usr/include/arpa/inet.h hash.h iftop.h config.h
 
 /usr/include/stdio.h:
 
@@ -227,6 +226,14 @@ ns_hash.o: ns_hash.c /usr/include/stdio.h /usr/include/_stdio.h \
 
 /usr/include/secure/_string.h:
 
+/usr/include/netinet/in.h:
+
+/usr/include/sys/_types/_in_addr_t.h:
+
+/usr/include/sys/_types/_in_port_t.h:
+
+/usr/include/sys/socket.h:
+
 /usr/include/sys/types.h:
 
 /usr/include/sys/_types/_u_char.h:
@@ -242,10 +249,6 @@ ns_hash.o: ns_hash.c /usr/include/stdio.h /usr/include/_stdio.h \
 /usr/include/sys/_types/_blksize_t.h:
 
 /usr/include/sys/_types/_gid_t.h:
-
-/usr/include/sys/_types/_in_addr_t.h:
-
-/usr/include/sys/_types/_in_port_t.h:
 
 /usr/include/sys/_types/_ino_t.h:
 
@@ -299,8 +302,6 @@ ns_hash.o: ns_hash.c /usr/include/stdio.h /usr/include/_stdio.h \
 
 /usr/include/sys/_types/_fsfilcnt_t.h:
 
-/usr/include/sys/socket.h:
-
 /usr/include/machine/_param.h:
 
 /usr/include/i386/_param.h:
@@ -313,15 +314,11 @@ ns_hash.o: ns_hash.c /usr/include/stdio.h /usr/include/_stdio.h \
 
 /usr/include/sys/_types/_iovec_t.h:
 
-/usr/include/netinet/in_systm.h:
-
-/usr/include/netinet/in.h:
-
 /usr/include/netinet6/in6.h:
 
-/usr/include/arpa/inet.h:
-
 ns_hash.h:
+
+/usr/include/arpa/inet.h:
 
 hash.h:
 

@@ -15,14 +15,13 @@ static const char rcsid[] = "$Id: stringmap.c,v 1.4 2010/11/27 11:06:12 pdw Exp 
 #include <string.h>
 
 #include "stringmap.h"
-#include "vector.h"
 #include "iftop.h"
 
 /* stringmap_new:
  * Allocate memory for a new stringmap. */
 stringmap stringmap_new() {
     stringmap S;
-    
+
     S = xcalloc(sizeof *S, 1);
 
     return S;
@@ -60,7 +59,7 @@ item *stringmap_insert(stringmap S, const char *k, const item d) {
     if (!S) return NULL;
     if (S->key == NULL) {
         S->key = xstrdup(k);
-        S->d   = d;
+        S->d = d;
         return NULL;
     } else {
         stringmap S2;
@@ -68,13 +67,12 @@ item *stringmap_insert(stringmap S, const char *k, const item d) {
             int i = strcmp(k, S2->key);
             if (i == 0) {
                 return &(S2->d);
-            }
-            else if (i < 0) {
+            } else if (i < 0) {
                 if (S2->l) S2 = S2->l;
                 else {
                     if (!(S2->l = stringmap_new())) return NULL;
                     S2->l->key = xstrdup(k);
-                    S2->l->d   = d;
+                    S2->l->d = d;
                     return NULL;
                 }
             } else if (i > 0) {
@@ -82,7 +80,7 @@ item *stringmap_insert(stringmap S, const char *k, const item d) {
                 else {
                     if (!(S2->g = stringmap_new())) return NULL;
                     S2->g->key = xstrdup(k);
-                    S2->g->d   = d;
+                    S2->g->d = d;
                     return NULL;
                 }
             }

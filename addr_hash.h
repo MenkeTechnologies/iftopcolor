@@ -28,6 +28,6 @@ typedef struct {
 
 typedef addr_pair key_type;      /* index into hash table */
 
-hash_type* addr_hash_create(void);
+hash_type *addr_hash_create(void);
 
 #endif /* __ADDR_HASH_H_ */

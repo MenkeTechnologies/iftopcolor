@@ -46,13 +46,9 @@ util.o: util.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
   /usr/include/sys/_pthread/_pthread_t.h \
   /usr/include/sys/_pthread/_pthread_key_t.h \
   /usr/include/sys/_types/_fsblkcnt_t.h \
-  /usr/include/sys/_types/_fsfilcnt_t.h /usr/include/errno.h \
-  /usr/include/sys/errno.h /usr/include/stdio.h /usr/include/_stdio.h \
+  /usr/include/sys/_types/_fsfilcnt_t.h /usr/include/stdlib.h \
   /usr/include/Availability.h /usr/include/AvailabilityInternal.h \
-  /usr/include/_types.h /usr/include/sys/_types/_va_list.h \
-  /usr/include/sys/_types/_null.h /usr/include/sys/stdio.h \
-  /usr/include/secure/_stdio.h /usr/include/secure/_common.h \
-  /usr/include/stdlib.h /usr/include/sys/wait.h \
+  /usr/include/_types.h /usr/include/sys/wait.h \
   /usr/include/sys/signal.h /usr/include/machine/signal.h \
   /usr/include/i386/signal.h /usr/include/machine/_mcontext.h \
   /usr/include/i386/_mcontext.h /usr/include/mach/machine/_structs.h \
@@ -67,13 +63,9 @@ util.o: util.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
   /usr/include/_types/_uintmax_t.h /usr/include/sys/_types/_timeval.h \
   /usr/include/alloca.h /usr/include/sys/_types/_ct_rune_t.h \
   /usr/include/sys/_types/_rune_t.h /usr/include/sys/_types/_wchar_t.h \
-  /usr/include/string.h /usr/include/strings.h \
-  /usr/include/secure/_strings.h /usr/include/secure/_string.h \
-  /usr/include/unistd.h /usr/include/sys/unistd.h \
-  /usr/include/sys/_types/_posix_vdisable.h \
-  /usr/include/sys/_types/_seek_set.h /usr/include/sys/select.h \
-  /usr/include/sys/_types/_timespec.h /usr/include/sys/_select.h \
-  /usr/include/sys/_types/_uuid_t.h /usr/include/gethostuuid.h iftop.h \
+  /usr/include/sys/_types/_null.h /usr/include/string.h \
+  /usr/include/strings.h /usr/include/secure/_strings.h \
+  /usr/include/secure/_common.h /usr/include/secure/_string.h iftop.h \
   config.h
 
 /usr/include/sys/types.h:
@@ -220,31 +212,13 @@ util.o: util.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
 
 /usr/include/sys/_types/_fsfilcnt_t.h:
 
-/usr/include/errno.h:
-
-/usr/include/sys/errno.h:
-
-/usr/include/stdio.h:
-
-/usr/include/_stdio.h:
+/usr/include/stdlib.h:
 
 /usr/include/Availability.h:
 
 /usr/include/AvailabilityInternal.h:
 
 /usr/include/_types.h:
-
-/usr/include/sys/_types/_va_list.h:
-
-/usr/include/sys/_types/_null.h:
-
-/usr/include/sys/stdio.h:
-
-/usr/include/secure/_stdio.h:
-
-/usr/include/secure/_common.h:
-
-/usr/include/stdlib.h:
 
 /usr/include/sys/wait.h:
 
@@ -296,31 +270,17 @@ util.o: util.c /usr/include/sys/types.h /usr/include/sys/appleapiopts.h \
 
 /usr/include/sys/_types/_wchar_t.h:
 
+/usr/include/sys/_types/_null.h:
+
 /usr/include/string.h:
 
 /usr/include/strings.h:
 
 /usr/include/secure/_strings.h:
 
+/usr/include/secure/_common.h:
+
 /usr/include/secure/_string.h:
-
-/usr/include/unistd.h:
-
-/usr/include/sys/unistd.h:
-
-/usr/include/sys/_types/_posix_vdisable.h:
-
-/usr/include/sys/_types/_seek_set.h:
-
-/usr/include/sys/select.h:
-
-/usr/include/sys/_types/_timespec.h:
-
-/usr/include/sys/_select.h:
-
-/usr/include/sys/_types/_uuid_t.h:
-
-/usr/include/gethostuuid.h:
 
 iftop.h:
 

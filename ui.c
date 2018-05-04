@@ -7,7 +7,6 @@
 
 #include <ctype.h>
 #include <curses.h>
-#include <errno.h>
 #include <string.h>
 #include <math.h>
 #include <pthread.h>
@@ -16,17 +15,8 @@
 #include <unistd.h>
 #include <netdb.h>
 
-#include <stdio.h>
-#include <sys/types.h>
 #include <pwd.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <memory.h>
-#include <string.h>
-#include <ctype.h>
 
-
-#include <sys/wait.h>
 
 #include "addr_hash.h"
 #include "serv_hash.h"
@@ -117,9 +107,9 @@ int dontshowdisplay = 0;
 #define NONBOLD 0
 
 
-int  RECEIVE_BAR_COLOR[] = {GREEN_FOREGROUND, BOLD};
-int  SENT_BAR_COLOR[] = {BLUE_FOREGROUND, BOLD};
-int  BOTH_BAR_COLOR[] = {RED_FOREGROUND, BOLD};
+int RECEIVE_BAR_COLOR[] = {GREEN_FOREGROUND, BOLD};
+int SENT_BAR_COLOR[] = {BLUE_FOREGROUND, BOLD};
+int BOTH_BAR_COLOR[] = {RED_FOREGROUND, BOLD};
 
 int SCALE_BAR_COLOR[] = {BLUE_FOREGROUND, BOLD};
 int SCALE_MARKERS_COLOR[] = {BLUE_FOREGROUND, BOLD};
@@ -179,7 +169,7 @@ int convertColorToInt(char *color) {
 int convertBoldToInt(char *bold) {
     //convert to lowercase
 
-    int i =0;
+    int i = 0;
     for (i = 0; bold[i]; i++) {
         bold[i] = tolower(bold[i]);
     }
@@ -199,7 +189,7 @@ int convertBoldToInt(char *bold) {
 
 void eraseAndLoop();
 
-void getColors(){
+void getColors() {
 
     const char *homedir;
     char msg[200];
@@ -294,7 +284,7 @@ void getColors(){
 
                 if (buffer[0] == '#') {
                     //skip this comment line
-                    fgets(buffer,255, fp);
+                    fgets(buffer, 255, fp);
                     continue;
 
                 }
@@ -515,7 +505,6 @@ void getColors(){
 //        printf(".iftoprc config file does not exist. Resorting to defaults.\n");
 
     }
-
 
 
 }
@@ -880,46 +869,46 @@ void draw_line_totals(int y, host_pair_line *line, option_linedisplay_t linedisp
     if (options.showbars) {
         switch (linedisplay) {
             case OPTION_LINEDISPLAY_TWO_LINE:
-                if (SENT_BAR_COLOR[1] == BOLD){
+                if (SENT_BAR_COLOR[1] == BOLD) {
                     attron(A_BOLD);
                 }
                 draw_bar(line->sent[options.bar_interval], y, SENT_BAR_COLOR[0]);
-                if (SENT_BAR_COLOR[1] == BOLD){
+                if (SENT_BAR_COLOR[1] == BOLD) {
                     attroff(A_BOLD);
                 }
-                if (RECEIVE_BAR_COLOR[1] == BOLD){
+                if (RECEIVE_BAR_COLOR[1] == BOLD) {
                     attron(A_BOLD);
                 }
                 draw_bar(line->recv[options.bar_interval], y + 1, RECEIVE_BAR_COLOR[0]);
 
-                if (RECEIVE_BAR_COLOR[1] == BOLD){
+                if (RECEIVE_BAR_COLOR[1] == BOLD) {
                     attroff(A_BOLD);
                 }
                 break;
             case OPTION_LINEDISPLAY_ONE_LINE_SENT:
-                if (SENT_BAR_COLOR[1] == BOLD){
+                if (SENT_BAR_COLOR[1] == BOLD) {
                     attron(A_BOLD);
                 }
                 draw_bar(line->sent[options.bar_interval], y, SENT_BAR_COLOR[0]);
-                if (SENT_BAR_COLOR[1] == BOLD){
+                if (SENT_BAR_COLOR[1] == BOLD) {
                     attroff(A_BOLD);
                 }
                 break;
             case OPTION_LINEDISPLAY_ONE_LINE_RECV:
-                if (RECEIVE_BAR_COLOR[1] == BOLD){
+                if (RECEIVE_BAR_COLOR[1] == BOLD) {
                     attron(A_BOLD);
                 }
                 draw_bar(line->recv[options.bar_interval], y, RECEIVE_BAR_COLOR[0]);
-                if (RECEIVE_BAR_COLOR[1] == BOLD){
+                if (RECEIVE_BAR_COLOR[1] == BOLD) {
                     attroff(A_BOLD);
                 }
                 break;
             case OPTION_LINEDISPLAY_ONE_LINE_BOTH:
-                if (BOTH_BAR_COLOR[1] == BOLD){
+                if (BOTH_BAR_COLOR[1] == BOLD) {
                     attron(A_BOLD);
                 }
                 draw_bar(line->recv[options.bar_interval] + line->sent[options.bar_interval], y, BOTH_BAR_COLOR[0]);
-                if (BOTH_BAR_COLOR[1] == BOLD){
+                if (BOTH_BAR_COLOR[1] == BOLD) {
                     attroff(A_BOLD);
                 }
                 break;
@@ -1428,7 +1417,6 @@ void showportstatus() {
 }
 
 
-
 void ui_loop() {
     /* in edline.c */
 
@@ -1726,7 +1714,7 @@ void ui_finish() {
     endwin();
 }
 
-void eraseAndLoop(){
+void eraseAndLoop() {
     getColors();
     erase();
 
