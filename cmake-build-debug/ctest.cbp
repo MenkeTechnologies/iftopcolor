@@ -100,6 +100,9 @@
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/cfgfile.h">
 			<Option target="ctest"/>
 		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/config.h">
+			<Option target="ctest"/>
+		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/dlcommon.c">
 			<Option target="ctest"/>
 		</Unit>
@@ -107,6 +110,15 @@
 			<Option target="ctest"/>
 		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/edline.c">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/ether.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/ethertype.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/extract.h">
 			<Option target="ctest"/>
 		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/getColors.c">
@@ -127,6 +139,15 @@
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/iftop.h">
 			<Option target="ctest"/>
 		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/integers.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/ip.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/llc.h">
+			<Option target="ctest"/>
+		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/ns_hash.c">
 			<Option target="ctest"/>
 		</Unit>
@@ -137,6 +158,9 @@
 			<Option target="ctest"/>
 		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/options.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/ppp.h">
 			<Option target="ctest"/>
 		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/resolver.c">
@@ -157,6 +181,9 @@
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/serv_hash.h">
 			<Option target="ctest"/>
 		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/sll.h">
+			<Option target="ctest"/>
+		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/sorted_list.c">
 			<Option target="ctest"/>
 		</Unit>
@@ -169,10 +196,16 @@
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/stringmap.h">
 			<Option target="ctest"/>
 		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/tcp.h">
+			<Option target="ctest"/>
+		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/threadprof.c">
 			<Option target="ctest"/>
 		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/threadprof.h">
+			<Option target="ctest"/>
+		</Unit>
+		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/token.h">
 			<Option target="ctest"/>
 		</Unit>
 		<Unit filename="/Users/jacobmenke/Documents/forkedProjects/iftopcolor/ui.c">
