@@ -79,9 +79,6 @@ static void finish(int sig) {
     foad = sig;
 }
 
-
-
-
 /* Only need ethernet (plus optional 4 byte VLAN) and IP headers (48) + first 2
  * bytes of tcp/udp header */
 /* Increase with a further 20 to account for IPv6 header length.  */

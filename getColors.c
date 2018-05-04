@@ -372,14 +372,12 @@ void getColors() {
 
 
         } else {
-            //empty file
-            system("empty file");
+//        printf(".iftopcolors config file is empty. Resorting to defaults.\n");
         }
 
 
     } else {
-//        printf(".iftoprc config file does not exist. Resorting to defaults.\n");
-        system("say no file");
+//       printf(".iftopcolors config file does not exist. Resorting to defaults.\n");
     }
 
 

@@ -198,7 +198,6 @@ void getColors() {
         homedir = getpwuid(getuid())->pw_dir;
     }
 
-
     const char *filename = "/.iftopcolors";
 
     char absolutePath[200] = "";
@@ -289,7 +288,6 @@ void getColors() {
 
                 }
 
-
                 if (strcmp(downloadBarString, buffer) == 0) {
                     fscanf(fp, "%s", downloadBarColor);
                     int colorInt = convertColorToInt(downloadBarColor);
@@ -334,7 +332,6 @@ void getColors() {
                     SCALE_BAR_COLOR[1] = convertBoldToInt(boldBuffer);
 
                 }
-
 
                 if (strcmp(scaleMarkerString, buffer) == 0) {
                     fscanf(fp, "%s", scaleMarkerColor);
@@ -473,15 +470,15 @@ void getColors() {
             }
 
 
-            printf("the download bar color is %s\n", downloadBarColor);
-
-            printf("the up bar color is %s\n", uploadBarColor);
-            printf("the host2 color is %s\n", host2Color);
-
-            printf("the peak column is %s\n", peakTransferColumnColor);
-
-            printf("the color int of peak transfer is %d\n", PEAK_TRANSFER_COLUMN_COLOR[0]);
-            printf("the bold is %d\n", PEAK_TRANSFER_COLUMN_COLOR[1]);
+//            printf("the download bar color is %s\n", downloadBarColor);
+//
+//            printf("the up bar color is %s\n", uploadBarColor);
+//            printf("the host2 color is %s\n", host2Color);
+//
+//            printf("the peak column is %s\n", peakTransferColumnColor);
+//
+//            printf("the color int of peak transfer is %d\n", PEAK_TRANSFER_COLUMN_COLOR[0]);
+//            printf("the bold is %d\n", PEAK_TRANSFER_COLUMN_COLOR[1]);
 
 
 
@@ -498,11 +495,12 @@ void getColors() {
 
         } else {
             //empty file
+//        printf(".iftopcolors config file is empty. Resorting to defaults.\n");
         }
 
 
     } else {
-//        printf(".iftoprc config file does not exist. Resorting to defaults.\n");
+//        printf(".iftopcolors config file does not exist. Resorting to defaults.\n");
 
     }
 
