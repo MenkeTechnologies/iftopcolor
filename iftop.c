@@ -735,6 +735,7 @@ void packet_loop(void *ptr) {
 /* main:
  * Entry point. See usage(). */
 int main(int argc, char **argv) {
+
     pthread_t thread;
     struct sigaction sa = {};
 
@@ -767,6 +768,7 @@ int main(int argc, char **argv) {
     pthread_cancel(thread);
 
     ui_finish();
+
 
     return 0;
 }

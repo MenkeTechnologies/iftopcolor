@@ -1,10 +1,5 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.12)
 project(iftopcolor)
 
-set(CMAKE_C_STANDARD 99)
-
-file(GLOB SRC *.c *.h)
-
-add_executable(ctest ${SRC})
-
-include_directories(/usr/include)
+file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/*.c)
+add_executable(iftopcolor ${SRC_FILES})

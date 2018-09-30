@@ -1,4 +1,4 @@
-/Applications/CLion.app/Contents/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/jacobmenke/Documents/forkedProjects/iftopcolor
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/wizard/forkedRepos/iftopcolor
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/jacobmenke/Documents/forkedProjects/iftopcolor/cmake-build-debug
+-- Build files have been written to: /Users/wizard/forkedRepos/iftopcolor/cmake-build-debug
