@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
+
+pane=iftop:1.0
+
 make && {
+    tmux send-keys -t $pane C-c
+    sleep 1
 
-tmux send-keys -t main-7:1.3 C-c
-tmux send-keys -t main-7:1.3 "sudo ./iftop -i en0" C-m
-tmux send-keys -t main-7:1.3 t
-tmux send-keys -t main-7:1.3 p
-tmux send-keys -t main-7:1.3 L
-
-sleep 2
-make clean
+    tmux send-keys -t $pane "sudo ./iftop -i en0 -c $HOME/.iftop.conf" C-m
+    sleep 2
+    make clean
 
 }
 
