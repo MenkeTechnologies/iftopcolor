@@ -103,7 +103,7 @@ void getColors() {
             char uploadBarColor[100] = "blue";
 
             char *bothBarString = "BOTH_BAR_COLOR";
-            char bothBarColor[100] = "magenta";
+            char bothBarColor[100] = "blue";
 
             char *scaleBarString = "SCALE_BAR_COLOR";
             char scaleBarColor[100] = "magenta";
