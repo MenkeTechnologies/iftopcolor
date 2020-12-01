@@ -1,5 +1,4 @@
 Makefile
-config/
 config.status
 iftop
 cmake-build-debug/
