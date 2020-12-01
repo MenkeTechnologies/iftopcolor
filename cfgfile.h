@@ -25,5 +25,10 @@ int config_get_float(const char *directive, float *value);
 
 int config_init();
 
+void config_set_string(const char *directive, const char *s);
+
+int read_config(char *file, int whinge_on_error);
+
+int config_get_enum(const char *directive, config_enumeration_type *enumeration, int *value);
 
 #endif /* __CFGFILE_H_ */
