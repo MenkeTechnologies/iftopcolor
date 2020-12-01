@@ -5,3 +5,4 @@ iftop
 *.o
 cmake-build-debug/
 .deps/
+*.cache
