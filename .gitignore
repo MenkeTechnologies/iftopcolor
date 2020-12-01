@@ -2,5 +2,6 @@ Makefile
 config.status
 config.log
 iftop
+*.o
 cmake-build-debug/
 .deps/
