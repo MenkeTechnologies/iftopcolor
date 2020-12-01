@@ -1,1 +1,0 @@
-dlcommon.o: dlcommon.c

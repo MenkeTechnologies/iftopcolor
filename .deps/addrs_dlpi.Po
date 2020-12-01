@@ -1,1 +1,0 @@
-addrs_dlpi.o: addrs_dlpi.c
