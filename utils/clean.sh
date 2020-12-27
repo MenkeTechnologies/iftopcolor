@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 if [[ ! -f "Makefile.am" ]]; then
     cd ..
@@ -13,6 +13,7 @@ rm -rf \
         aclocal.m4 \
         src/*.o \
         src/iftop \
+        src/iftop.spec \
         src/.deps \
         .deps \
         src/Makefile \

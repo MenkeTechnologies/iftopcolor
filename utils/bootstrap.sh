@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 #
 # bootstrap:
 # Build the configure script from the .in files.
