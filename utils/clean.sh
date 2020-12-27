@@ -12,6 +12,9 @@ set -x
 rm -rf \
         aclocal.m4 \
         src/*.o \
+        iftop \
+        cmake_install.cmake \
+        CMakeCache.txt \
         src/iftop \
         iftop.spec \
         src/.deps \

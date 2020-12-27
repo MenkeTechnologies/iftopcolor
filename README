@@ -5,9 +5,18 @@
 
 # Installation
 
+## Requires CMake
+
 ```sh
-git clone https://github.com/MenkeTechnologies/iftopcolor.git && cd iftopcolor && ./configure && make && sudo make install
+git clone https://github.com/MenkeTechnologies/iftopcolor.git && cd iftopcolor && cmake . && make && sudo make install
 ```
+
+OR from ./configure from GNU autotools
+
+```sh
+git clone https://github.com/MenkeTechnologies/iftopcolor.git && cd iftopcolor && ./utils/autogen.sh && sudo make install
+```
+
 
 ## Should be installed to /usr/local/sbin.  So make sure this directory is in your PATH.
 
