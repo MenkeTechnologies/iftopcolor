@@ -14,9 +14,11 @@ rm -rf \
         autoscan.log \
         config.h.in \
         config.h \
+        config.log \
         config.status \
         Makefile \
         configure \
+        depcomp \
         configure.scan \
         configure.ac \
         Makefile.in \

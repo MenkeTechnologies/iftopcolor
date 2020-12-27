@@ -16,6 +16,7 @@ fi
 
 set -x
 autoscan
+mv configure.scan configure.ac
 aclocal -I config
 # libtoolize --force --copy
 autoheader
