@@ -15,10 +15,7 @@ if [[ ! -f "Makefile.am" ]]; then
 fi
 
 set -x
-autoscan
-mv configure.scan configure.ac
 aclocal -I config
-# libtoolize --force --copy
 autoheader
-automake --foreign --add-missing --copy
 autoconf
+automake

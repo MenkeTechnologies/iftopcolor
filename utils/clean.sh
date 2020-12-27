@@ -11,7 +11,12 @@ fi
 set -x
 rm -rf \
         aclocal.m4 \
+        src/autoscan.log \
+        src/configure.scan \
+        src/configure.ac \
         autoscan.log \
+        configure.scan \
+        configure.ac \
         config.h.in \
         config.h \
         config.log \
@@ -19,7 +24,5 @@ rm -rf \
         Makefile \
         configure \
         depcomp \
-        configure.scan \
-        configure.ac \
         Makefile.in \
         autom4te.cache \

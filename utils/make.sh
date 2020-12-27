@@ -14,6 +14,7 @@ if [[ ! -f "Makefile.am" ]]; then
     fi
 fi
 
+./utils/clean.sh
 ./utils/bootstrap.sh
 ./configure
 make
