@@ -12,6 +12,7 @@ set -x
 rm -rf \
         aclocal.m4 \
         src/*.o \
+        src/iftop \
         src/.deps \
         .deps \
         src/Makefile \

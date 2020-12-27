@@ -10,6 +10,9 @@ GPATH
 GRTAGS
 GTAGS
 
+iftop
+iftop.spec
+
 Makefile.in
 ar-lib
 mdate-sh
