@@ -13,6 +13,9 @@ rm -rf \
         aclocal.m4 \
         autoscan.log \
         config.h.in \
+        config.h \
+        config.status \
+        Makefile \
         configure \
         configure.scan \
         Makefile.in \
