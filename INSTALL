@@ -19,5 +19,5 @@ when running configure, like this:
     $ CPPFLAGS=-I/usr/include/pcap ./configure
 
 
-For historical interest, the old iftop makefile is included in Makefile.OLD.
+For historical interest, the old iftop makefile is included in legacy/Makefile.OLD.
 

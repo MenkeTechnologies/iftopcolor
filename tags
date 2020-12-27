@@ -4,842 +4,1486 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-BLACK_FOREGROUND	ui.c	/^#define BLACK_FOREGROUND /;"	d	file:
-BLUE_FOREGROUND	ui.c	/^#define BLUE_FOREGROUND /;"	d	file:
-BOLD	ui.c	/^#define BOLD /;"	d	file:
-BOTH_BAR_COLOR	ui.c	/^int BOTH_BAR_COLOR[] = {RED_FOREGROUND, BOLD};$/;"	v
-BOTTOM_BAR_COLOR	ui.c	/^int BOTTOM_BAR_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
-BRIDGE_NUMBER	token.h	/^#define BRIDGE_NUMBER(/;"	d
-BROADCAST	token.h	/^#define BROADCAST(/;"	d
-CAPTURE_LENGTH	iftop.c	/^#define CAPTURE_LENGTH /;"	d	file:
-CASERET	dlcommon.c	/^#define		CASERET(/;"	d	file:
-COLOR_PAIR_BOTH	ui.c	/^#define COLOR_PAIR_BOTH /;"	d	file:
-COLOR_PAIR_RECV	ui.c	/^#define COLOR_PAIR_RECV /;"	d	file:
-COLOR_PAIR_SENT	ui.c	/^#define COLOR_PAIR_SENT /;"	d	file:
-CONFIG_TYPE_BOOL	cfgfile.c	/^#define CONFIG_TYPE_BOOL /;"	d	file:
-CONFIG_TYPE_INT	cfgfile.c	/^#define CONFIG_TYPE_INT /;"	d	file:
-CONFIG_TYPE_STRING	cfgfile.c	/^#define CONFIG_TYPE_STRING /;"	d	file:
-CUM_LABEL_COLOR	ui.c	/^int CUM_LABEL_COLOR[] = {YELLOW_FOREGROUND, NONBOLD};$/;"	v
-CUM_TRANSFER_COLUMN_COLOR	ui.c	/^int CUM_TRANSFER_COLUMN_COLOR[] = {YELLOW_FOREGROUND, BOLD};$/;"	v
-CYAN_FOREGROUND	ui.c	/^#define CYAN_FOREGROUND /;"	d	file:
-DIRECTION	token.h	/^#define DIRECTION(/;"	d
-DLCOMMON_H	dlcommon.h	/^#define DLCOMMON_H$/;"	d
-DL_UL_INDICATOR_COLOR	ui.c	/^int DL_UL_INDICATOR_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
-DUMP_RESOLUTION	iftop.h	/^#define DUMP_RESOLUTION /;"	d
-ETHERTYPE_8021Q	ethertype.h	/^#define    ETHERTYPE_8021Q /;"	d
-ETHERTYPE_AARP	ethertype.h	/^#define ETHERTYPE_AARP /;"	d
-ETHERTYPE_ARP	ether.h	/^#define    ETHERTYPE_ARP /;"	d
-ETHERTYPE_ARP	ethertype.h	/^#define ETHERTYPE_ARP	/;"	d
-ETHERTYPE_ATALK	ethertype.h	/^#define ETHERTYPE_ATALK /;"	d
-ETHERTYPE_CISCO_CDP	llc.h	/^#define    ETHERTYPE_CISCO_CDP /;"	d
-ETHERTYPE_DECDNS	ethertype.h	/^#define    ETHERTYPE_DECDNS /;"	d
-ETHERTYPE_DECDTS	ethertype.h	/^#define    ETHERTYPE_DECDTS /;"	d
-ETHERTYPE_DN	ethertype.h	/^#define    ETHERTYPE_DN /;"	d
-ETHERTYPE_IP	ether.h	/^#define    ETHERTYPE_IP /;"	d
-ETHERTYPE_IP	ethertype.h	/^#define	ETHERTYPE_IP	/;"	d
-ETHERTYPE_IPV6	ethertype.h	/^#define ETHERTYPE_IPV6 /;"	d
-ETHERTYPE_IPX	ethertype.h	/^#define ETHERTYPE_IPX /;"	d
-ETHERTYPE_LANBRIDGE	ethertype.h	/^#define    ETHERTYPE_LANBRIDGE /;"	d
-ETHERTYPE_LAT	ethertype.h	/^#define    ETHERTYPE_LAT /;"	d
-ETHERTYPE_LOOPBACK	ethertype.h	/^#define    ETHERTYPE_LOOPBACK /;"	d
-ETHERTYPE_MOPDL	ethertype.h	/^#define    ETHERTYPE_MOPDL /;"	d
-ETHERTYPE_MOPRC	ethertype.h	/^#define    ETHERTYPE_MOPRC /;"	d
-ETHERTYPE_MPLS	ethertype.h	/^#define    ETHERTYPE_MPLS /;"	d
-ETHERTYPE_MPLS_MULTI	ethertype.h	/^#define    ETHERTYPE_MPLS_MULTI /;"	d
-ETHERTYPE_NS	ethertype.h	/^#define ETHERTYPE_NS /;"	d
-ETHERTYPE_PPP	ethertype.h	/^#define    ETHERTYPE_PPP /;"	d
-ETHERTYPE_PPPOED	ethertype.h	/^#define ETHERTYPE_PPPOED /;"	d
-ETHERTYPE_PPPOES	ethertype.h	/^#define ETHERTYPE_PPPOES /;"	d
-ETHERTYPE_PUP	ether.h	/^#define    ETHERTYPE_PUP /;"	d
-ETHERTYPE_PUP	ethertype.h	/^#define	ETHERTYPE_PUP	/;"	d
-ETHERTYPE_REVARP	ether.h	/^#define    ETHERTYPE_REVARP /;"	d
-ETHERTYPE_REVARP	ethertype.h	/^#define ETHERTYPE_REVARP	/;"	d
-ETHERTYPE_SCA	ethertype.h	/^#define ETHERTYPE_SCA /;"	d
-ETHERTYPE_SPRITE	ethertype.h	/^#define    ETHERTYPE_SPRITE /;"	d
-ETHERTYPE_TRAIL	ethertype.h	/^#define ETHERTYPE_TRAIL /;"	d
-ETHERTYPE_VEXP	ethertype.h	/^#define    ETHERTYPE_VEXP /;"	d
-ETHERTYPE_VPROD	ethertype.h	/^#define    ETHERTYPE_VPROD /;"	d
-ETHER_ADDR_LEN	ether.h	/^#define    ETHER_ADDR_LEN /;"	d
-EXTRACT_16BITS	extract.h	/^#define EXTRACT_16BITS(/;"	d
-EXTRACT_24BITS	extract.h	/^#define EXTRACT_24BITS(/;"	d
-EXTRACT_32BITS	extract.h	/^#define EXTRACT_32BITS(/;"	d
-EXTRACT_LE_16BITS	extract.h	/^#define EXTRACT_LE_16BITS(/;"	d
-EXTRACT_LE_32BITS	extract.h	/^#define EXTRACT_LE_32BITS(/;"	d
-EXTRACT_LE_8BITS	extract.h	/^#define EXTRACT_LE_8BITS(/;"	d
-FOURTY_SECOND_TRANSFER_COLUMN_COLOR	ui.c	/^int FOURTY_SECOND_TRANSFER_COLUMN_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
-FRAME_TYPE	token.h	/^#define FRAME_TYPE(/;"	d
-GREEN_FOREGROUND	ui.c	/^#define GREEN_FOREGROUND /;"	d	file:
-HASH_STATUS_KEY_NOT_FOUND	hash.h	/^    HASH_STATUS_KEY_NOT_FOUND$/;"	e	enum:__anon7
-HASH_STATUS_MEM_EXHAUSTED	hash.h	/^    HASH_STATUS_MEM_EXHAUSTED,$/;"	e	enum:__anon7
-HASH_STATUS_OK	hash.h	/^    HASH_STATUS_OK,$/;"	e	enum:__anon7
-HAVE_C99_INTS	config.h	/^#define HAVE_C99_INTS /;"	d
-HAVE_INET_ATON	config.h	/^#define HAVE_INET_ATON /;"	d
-HAVE_INET_PTON	config.h	/^#define HAVE_INET_PTON /;"	d
-HAVE_INTTYPES_H	config.h	/^#define HAVE_INTTYPES_H /;"	d
-HAVE_LIBPCAP	config.h	/^#define HAVE_LIBPCAP /;"	d
-HAVE_MEMORY_H	config.h	/^#define HAVE_MEMORY_H /;"	d
-HAVE_PCAP_H	config.h	/^#define HAVE_PCAP_H /;"	d
-HAVE_REGCOMP	config.h	/^#define HAVE_REGCOMP /;"	d
-HAVE_SELECT	config.h	/^#define HAVE_SELECT /;"	d
-HAVE_STDINT_H	config.h	/^#define HAVE_STDINT_H /;"	d
-HAVE_STDLIB_H	config.h	/^#define HAVE_STDLIB_H /;"	d
-HAVE_STRDUP	config.h	/^#define HAVE_STRDUP /;"	d
-HAVE_STRERROR	config.h	/^#define HAVE_STRERROR /;"	d
-HAVE_STRINGS_H	config.h	/^#define HAVE_STRINGS_H /;"	d
-HAVE_STRING_H	config.h	/^#define HAVE_STRING_H /;"	d
-HAVE_STRSPN	config.h	/^#define HAVE_STRSPN /;"	d
-HAVE_SYS_IOCTL_H	config.h	/^#define HAVE_SYS_IOCTL_H /;"	d
-HAVE_SYS_SOCKIO_H	config.h	/^#define HAVE_SYS_SOCKIO_H /;"	d
-HAVE_SYS_STAT_H	config.h	/^#define HAVE_SYS_STAT_H /;"	d
-HAVE_SYS_TIME_H	config.h	/^#define HAVE_SYS_TIME_H /;"	d
-HAVE_SYS_TYPES_H	config.h	/^#define HAVE_SYS_TYPES_H /;"	d
-HAVE_UNISTD_H	config.h	/^#define HAVE_UNISTD_H /;"	d
-HELP_MESSAGE	ui.c	/^#define HELP_MESSAGE /;"	d	file:
-HELP_MSG_SIZE	ui.c	/^#define HELP_MSG_SIZE /;"	d	file:
-HELP_TIME	ui.c	/^#define HELP_TIME /;"	d	file:
-HISTORY_DIVISIONS	ui.c	/^#define HISTORY_DIVISIONS /;"	d	file:
-HISTORY_LENGTH	iftop.h	/^#define HISTORY_LENGTH /;"	d
-HOST1_COLOR	ui.c	/^int HOST1_COLOR[] = {CYAN_FOREGROUND, BOLD};$/;"	v
-HOST2_COLOR	ui.c	/^int HOST2_COLOR[] = {MAGENTA_FOREGROUND, BOLD};$/;"	v
-HOSTNAME_LENGTH	ui.c	/^#define HOSTNAME_LENGTH /;"	d	file:
-IFTOP_VERSION	config.h	/^#define IFTOP_VERSION /;"	d
-IPDEFTTL	ip.h	/^#define    IPDEFTTL /;"	d
-IPFRAGTTL	ip.h	/^#define    IPFRAGTTL /;"	d
-IPOPT_CLASS	ip.h	/^#define    IPOPT_CLASS(/;"	d
-IPOPT_CONTROL	ip.h	/^#define    IPOPT_CONTROL /;"	d
-IPOPT_COPIED	ip.h	/^#define    IPOPT_COPIED(/;"	d
-IPOPT_DEBMEAS	ip.h	/^#define    IPOPT_DEBMEAS /;"	d
-IPOPT_EOL	ip.h	/^#define    IPOPT_EOL /;"	d
-IPOPT_LSRR	ip.h	/^#define    IPOPT_LSRR /;"	d
-IPOPT_MINOFF	ip.h	/^#define    IPOPT_MINOFF /;"	d
-IPOPT_NOP	ip.h	/^#define    IPOPT_NOP /;"	d
-IPOPT_NUMBER	ip.h	/^#define    IPOPT_NUMBER(/;"	d
-IPOPT_OFFSET	ip.h	/^#define IPOPT_OFFSET /;"	d
-IPOPT_OLEN	ip.h	/^#define    IPOPT_OLEN /;"	d
-IPOPT_OPTVAL	ip.h	/^#define    IPOPT_OPTVAL /;"	d
-IPOPT_RESERVED1	ip.h	/^#define    IPOPT_RESERVED1 /;"	d
-IPOPT_RESERVED2	ip.h	/^#define    IPOPT_RESERVED2 /;"	d
-IPOPT_RR	ip.h	/^#define    IPOPT_RR /;"	d
-IPOPT_SATID	ip.h	/^#define    IPOPT_SATID /;"	d
-IPOPT_SECURITY	ip.h	/^#define    IPOPT_SECURITY /;"	d
-IPOPT_SECUR_CONFID	ip.h	/^#define    IPOPT_SECUR_CONFID /;"	d
-IPOPT_SECUR_EFTO	ip.h	/^#define    IPOPT_SECUR_EFTO /;"	d
-IPOPT_SECUR_MMMM	ip.h	/^#define    IPOPT_SECUR_MMMM /;"	d
-IPOPT_SECUR_RESTR	ip.h	/^#define    IPOPT_SECUR_RESTR /;"	d
-IPOPT_SECUR_SECRET	ip.h	/^#define    IPOPT_SECUR_SECRET /;"	d
-IPOPT_SECUR_TOPSECRET	ip.h	/^#define    IPOPT_SECUR_TOPSECRET /;"	d
-IPOPT_SECUR_UNCLASS	ip.h	/^#define    IPOPT_SECUR_UNCLASS /;"	d
-IPOPT_SSRR	ip.h	/^#define    IPOPT_SSRR /;"	d
-IPOPT_TS	ip.h	/^#define    IPOPT_TS /;"	d
-IPOPT_TS_PRESPEC	ip.h	/^#define    IPOPT_TS_PRESPEC /;"	d
-IPOPT_TS_TSANDADDR	ip.h	/^#define    IPOPT_TS_TSANDADDR /;"	d
-IPOPT_TS_TSONLY	ip.h	/^#define    IPOPT_TS_TSONLY /;"	d
-IPTOS_LOWDELAY	ip.h	/^#define    IPTOS_LOWDELAY /;"	d
-IPTOS_PREC_CRITIC_ECP	ip.h	/^#define    IPTOS_PREC_CRITIC_ECP /;"	d
-IPTOS_PREC_FLASH	ip.h	/^#define    IPTOS_PREC_FLASH /;"	d
-IPTOS_PREC_FLASHOVERRIDE	ip.h	/^#define    IPTOS_PREC_FLASHOVERRIDE /;"	d
-IPTOS_PREC_IMMEDIATE	ip.h	/^#define    IPTOS_PREC_IMMEDIATE /;"	d
-IPTOS_PREC_INTERNETCONTROL	ip.h	/^#define    IPTOS_PREC_INTERNETCONTROL /;"	d
-IPTOS_PREC_NETCONTROL	ip.h	/^#define    IPTOS_PREC_NETCONTROL /;"	d
-IPTOS_PREC_PRIORITY	ip.h	/^#define    IPTOS_PREC_PRIORITY /;"	d
-IPTOS_PREC_ROUTINE	ip.h	/^#define    IPTOS_PREC_ROUTINE /;"	d
-IPTOS_RELIABILITY	ip.h	/^#define    IPTOS_RELIABILITY /;"	d
-IPTOS_THROUGHPUT	ip.h	/^#define    IPTOS_THROUGHPUT /;"	d
-IPTS_FLG	ip.h	/^#define IPTS_FLG(/;"	d
-IPTS_OFLW	ip.h	/^#define IPTS_OFLW(/;"	d
-IPTTLDEC	ip.h	/^#define    IPTTLDEC /;"	d
-IPVERSION	ip.h	/^#define    IPVERSION /;"	d
-IP_DF	ip.h	/^#define    IP_DF /;"	d
-IP_HL	ip.h	/^#define IP_HL(/;"	d
-IP_MAXPACKET	ip.h	/^#define    IP_MAXPACKET /;"	d
-IP_MF	ip.h	/^#define    IP_MF /;"	d
-IP_MSS	ip.h	/^#define    IP_MSS /;"	d
-IP_OFFMASK	ip.h	/^#define    IP_OFFMASK /;"	d
-IP_V	ip.h	/^#define IP_V(/;"	d
-IS_SOURCE_ROUTED	token.h	/^#define IS_SOURCE_ROUTED(/;"	d
-LARGEST_FRAME	token.h	/^#define LARGEST_FRAME(/;"	d
-LINUX_SLL_BROADCAST	sll.h	/^#define LINUX_SLL_BROADCAST /;"	d
-LINUX_SLL_HOST	sll.h	/^#define LINUX_SLL_HOST /;"	d
-LINUX_SLL_MULTICAST	sll.h	/^#define LINUX_SLL_MULTICAST /;"	d
-LINUX_SLL_OTHERHOST	sll.h	/^#define LINUX_SLL_OTHERHOST /;"	d
-LINUX_SLL_OUTGOING	sll.h	/^#define LINUX_SLL_OUTGOING /;"	d
-LINUX_SLL_P_802_2	sll.h	/^#define LINUX_SLL_P_802_2 /;"	d
-LINUX_SLL_P_802_3	sll.h	/^#define LINUX_SLL_P_802_3 /;"	d
-LLCSAP_8021B_G	llc.h	/^#define    LLCSAP_8021B_G /;"	d
-LLCSAP_8021B_I	llc.h	/^#define    LLCSAP_8021B_I /;"	d
-LLCSAP_8021D	llc.h	/^#define    LLCSAP_8021D /;"	d
-LLCSAP_GLOBAL	llc.h	/^#define    LLCSAP_GLOBAL /;"	d
-LLCSAP_IP	llc.h	/^#define    LLCSAP_IP /;"	d
-LLCSAP_IPX	llc.h	/^#define LLCSAP_IPX /;"	d
-LLCSAP_ISO8208	llc.h	/^#define    LLCSAP_ISO8208 /;"	d
-LLCSAP_ISONS	llc.h	/^#define    LLCSAP_ISONS /;"	d
-LLCSAP_NETBEUI	llc.h	/^#define LLCSAP_NETBEUI /;"	d
-LLCSAP_NULL	llc.h	/^#define    LLCSAP_NULL /;"	d
-LLCSAP_PROWAY	llc.h	/^#define    LLCSAP_PROWAY /;"	d
-LLCSAP_PROWAYNM	llc.h	/^#define    LLCSAP_PROWAYNM /;"	d
-LLCSAP_RS511	llc.h	/^#define    LLCSAP_RS511 /;"	d
-LLCSAP_SNAP	llc.h	/^#define    LLCSAP_SNAP /;"	d
-LLC_DISC	llc.h	/^#define    LLC_DISC /;"	d
-LLC_DM	llc.h	/^#define    LLC_DM /;"	d
-LLC_FRMR	llc.h	/^#define    LLC_FRMR /;"	d
-LLC_GSAP	llc.h	/^#define    LLC_GSAP /;"	d
-LLC_IS_NR	llc.h	/^#define LLC_IS_NR(/;"	d
-LLC_IS_POLL	llc.h	/^#define    LLC_IS_POLL /;"	d
-LLC_I_NS	llc.h	/^#define LLC_I_NS(/;"	d
-LLC_REJ	llc.h	/^#define    LLC_REJ /;"	d
-LLC_RNR	llc.h	/^#define    LLC_RNR /;"	d
-LLC_RR	llc.h	/^#define    LLC_RR /;"	d
-LLC_SABME	llc.h	/^#define    LLC_SABME /;"	d
-LLC_S_CMD	llc.h	/^#define    LLC_S_CMD(/;"	d
-LLC_S_FMT	llc.h	/^#define LLC_S_FMT /;"	d
-LLC_TEST	llc.h	/^#define    LLC_TEST /;"	d
-LLC_UA	llc.h	/^#define    LLC_UA /;"	d
-LLC_UI	llc.h	/^#define    LLC_UI /;"	d
-LLC_U_CMD	llc.h	/^#define    LLC_U_CMD(/;"	d
-LLC_U_FMT	llc.h	/^#define    LLC_U_FMT /;"	d
-LLC_U_POLL	llc.h	/^#define    LLC_U_POLL /;"	d
-LLC_XID	llc.h	/^#define    LLC_XID /;"	d
-LLC_XID_FI	llc.h	/^#define    LLC_XID_FI /;"	d
-MAGENTA_FOREGROUND	ui.c	/^#define MAGENTA_FOREGROUND /;"	d	file:
-MAXDLADDR	dlcommon.h	/^#define        MAXDLADDR /;"	d
-MAXDLBUF	dlcommon.h	/^#define        MAXDLBUF /;"	d
-MAXTTL	ip.h	/^#define    MAXTTL /;"	d
-MAXWAIT	dlcommon.h	/^#define        MAXWAIT /;"	d
-MAX_CONFIG_LINE	cfgfile.c	/^#define MAX_CONFIG_LINE /;"	d	file:
-NAMESIZE	resolver.c	/^#define NAMESIZE /;"	d	file:
-NONBOLD	ui.c	/^#define NONBOLD /;"	d	file:
-OFFADDR	dlcommon.h	/^#define        OFFADDR(/;"	d
-OPTION_LINEDISPLAY_ONE_LINE_BOTH	options.h	/^    OPTION_LINEDISPLAY_ONE_LINE_BOTH,$/;"	e	enum:__anon15
-OPTION_LINEDISPLAY_ONE_LINE_RECV	options.h	/^    OPTION_LINEDISPLAY_ONE_LINE_RECV,$/;"	e	enum:__anon15
-OPTION_LINEDISPLAY_ONE_LINE_SENT	options.h	/^    OPTION_LINEDISPLAY_ONE_LINE_SENT$/;"	e	enum:__anon15
-OPTION_LINEDISPLAY_TWO_LINE	options.h	/^    OPTION_LINEDISPLAY_TWO_LINE,$/;"	e	enum:__anon15
-OPTION_PORTS_DEST	options.h	/^    OPTION_PORTS_DEST,$/;"	e	enum:__anon13
-OPTION_PORTS_OFF	options.h	/^    OPTION_PORTS_OFF,$/;"	e	enum:__anon13
-OPTION_PORTS_ON	options.h	/^    OPTION_PORTS_ON$/;"	e	enum:__anon13
-OPTION_PORTS_SRC	options.h	/^    OPTION_PORTS_SRC,$/;"	e	enum:__anon13
-OPTION_SORT_DEST	options.h	/^    OPTION_SORT_DEST$/;"	e	enum:__anon14
-OPTION_SORT_DIV1	options.h	/^    OPTION_SORT_DIV1,$/;"	e	enum:__anon14
-OPTION_SORT_DIV2	options.h	/^    OPTION_SORT_DIV2,$/;"	e	enum:__anon14
-OPTION_SORT_DIV3	options.h	/^    OPTION_SORT_DIV3,$/;"	e	enum:__anon14
-OPTION_SORT_SRC	options.h	/^    OPTION_SORT_SRC,$/;"	e	enum:__anon14
-OUI_APPLETALK	llc.h	/^#define    OUI_APPLETALK /;"	d
-OUI_CISCO	llc.h	/^#define    OUI_CISCO /;"	d
-OUI_CISCO_90	llc.h	/^#define    OUI_CISCO_90 /;"	d
-OUI_ENCAP_ETHER	llc.h	/^#define    OUI_ENCAP_ETHER /;"	d
-PACKAGE	config.h	/^#define PACKAGE /;"	d
-PACKAGE_BUGREPORT	config.h	/^#define PACKAGE_BUGREPORT /;"	d
-PACKAGE_NAME	config.h	/^#define PACKAGE_NAME /;"	d
-PACKAGE_STRING	config.h	/^#define PACKAGE_STRING /;"	d
-PACKAGE_TARNAME	config.h	/^#define PACKAGE_TARNAME /;"	d
-PACKAGE_URL	config.h	/^#define PACKAGE_URL /;"	d
-PACKAGE_VERSION	config.h	/^#define PACKAGE_VERSION /;"	d
-PEAK_LABEL_COLOR	ui.c	/^int PEAK_LABEL_COLOR[] = {MAGENTA_FOREGROUND, BOLD};$/;"	v
-PEAK_TRANSFER_COLUMN_COLOR	ui.c	/^int PEAK_TRANSFER_COLUMN_COLOR[] = {YELLOW_FOREGROUND, BOLD};$/;"	v
-PPP_ADDRESS	ppp.h	/^#define PPP_ADDRESS /;"	d
-PPP_APPLE	ppp.h	/^#define PPP_APPLE /;"	d
-PPP_APPLECP	ppp.h	/^#define PPP_APPLECP /;"	d
-PPP_BACP	ppp.h	/^#define PPP_BACP /;"	d
-PPP_BAP	ppp.h	/^#define PPP_BAP /;"	d
-PPP_BRPDU	ppp.h	/^#define PPP_BRPDU /;"	d
-PPP_CCP	ppp.h	/^#define PPP_CCP /;"	d
-PPP_CHAP	ppp.h	/^#define PPP_CHAP /;"	d
-PPP_COMP	ppp.h	/^#define    PPP_COMP /;"	d
-PPP_CONTROL	ppp.h	/^#define PPP_CONTROL /;"	d
-PPP_DECNET	ppp.h	/^#define PPP_DECNET /;"	d
-PPP_DECNETCP	ppp.h	/^#define PPP_DECNETCP /;"	d
-PPP_HDRLEN	ppp.h	/^#define PPP_HDRLEN /;"	d
-PPP_HELLO	ppp.h	/^#define PPP_HELLO /;"	d
-PPP_IP	ppp.h	/^#define PPP_IP /;"	d
-PPP_IPCP	ppp.h	/^#define PPP_IPCP /;"	d
-PPP_IPV6	ppp.h	/^#define PPP_IPV6 /;"	d
-PPP_IPV6CP	ppp.h	/^#define PPP_IPV6CP /;"	d
-PPP_IPX	ppp.h	/^#define PPP_IPX /;"	d
-PPP_IPXCP	ppp.h	/^#define PPP_IPXCP /;"	d
-PPP_LCP	ppp.h	/^#define PPP_LCP /;"	d
-PPP_LQM	ppp.h	/^#define PPP_LQM /;"	d
-PPP_LUXCOM	ppp.h	/^#define PPP_LUXCOM /;"	d
-PPP_MP	ppp.h	/^#define PPP_MP /;"	d
-PPP_NS	ppp.h	/^#define PPP_NS /;"	d
-PPP_NSCP	ppp.h	/^#define PPP_NSCP /;"	d
-PPP_OSI	ppp.h	/^#define PPP_OSI /;"	d
-PPP_OSICP	ppp.h	/^#define PPP_OSICP /;"	d
-PPP_PAP	ppp.h	/^#define PPP_PAP /;"	d
-PPP_SNS	ppp.h	/^#define PPP_SNS /;"	d
-PPP_STII	ppp.h	/^#define PPP_STII /;"	d
-PPP_STIICP	ppp.h	/^#define PPP_STIICP /;"	d
-PPP_VINES	ppp.h	/^#define PPP_VINES /;"	d
-PPP_VINESCP	ppp.h	/^#define PPP_VINESCP /;"	d
-PPP_VJC	ppp.h	/^#define PPP_VJC /;"	d
-PPP_VJNC	ppp.h	/^#define PPP_VJNC /;"	d
-RATES_LABEL_COLOR	ui.c	/^int RATES_LABEL_COLOR[] = {MAGENTA_FOREGROUND, BOLD};$/;"	v
-RECEIVE_BAR_COLOR	ui.c	/^int RECEIVE_BAR_COLOR[] = {GREEN_FOREGROUND, BOLD};$/;"	v
-RED_FOREGROUND	ui.c	/^#define RED_FOREGROUND /;"	d	file:
-RESOLUTION	iftop.h	/^#define RESOLUTION /;"	d
-RESOLVE_QUEUE_LENGTH	resolver.c	/^#define RESOLVE_QUEUE_LENGTH /;"	d	file:
-RIF_LENGTH	token.h	/^#define RIF_LENGTH(/;"	d
-RING_NUMBER	token.h	/^#define RING_NUMBER(/;"	d
-ROUTING_SEGMENT_MAX	token.h	/^#define ROUTING_SEGMENT_MAX /;"	d
-SCALE_BAR_COLOR	ui.c	/^int SCALE_BAR_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
-SCALE_MARKERS_COLOR	ui.c	/^int SCALE_MARKERS_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
-SEGMENT_COUNT	token.h	/^#define SEGMENT_COUNT(/;"	d
-SENT_BAR_COLOR	ui.c	/^int SENT_BAR_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
-SIZEOF_U_INT16_T	config.h	/^#define SIZEOF_U_INT16_T /;"	d
-SIZEOF_U_INT32_T	config.h	/^#define SIZEOF_U_INT32_T /;"	d
-SIZEOF_U_INT8_T	config.h	/^#define SIZEOF_U_INT8_T /;"	d
-SLL_ADDRLEN	sll.h	/^#define SLL_ADDRLEN /;"	d
-SLL_HDR_LEN	sll.h	/^#define SLL_HDR_LEN /;"	d
-STDC_HEADERS	config.h	/^#define STDC_HEADERS /;"	d
-TCPOLEN_MAXSEG	tcp.h	/^#define    TCPOLEN_MAXSEG /;"	d
-TCPOLEN_TIMESTAMP	tcp.h	/^#define    TCPOLEN_TIMESTAMP /;"	d
-TCPOLEN_TSTAMP_APPA	tcp.h	/^#define    TCPOLEN_TSTAMP_APPA /;"	d
-TCPOPT_CC	tcp.h	/^#define TCPOPT_CC /;"	d
-TCPOPT_CCECHO	tcp.h	/^#define TCPOPT_CCECHO /;"	d
-TCPOPT_CCNEW	tcp.h	/^#define TCPOPT_CCNEW /;"	d
-TCPOPT_ECHO	tcp.h	/^#define    TCPOPT_ECHO /;"	d
-TCPOPT_ECHOREPLY	tcp.h	/^#define    TCPOPT_ECHOREPLY /;"	d
-TCPOPT_EOL	tcp.h	/^#define    TCPOPT_EOL /;"	d
-TCPOPT_MAXSEG	tcp.h	/^#define    TCPOPT_MAXSEG /;"	d
-TCPOPT_NOP	tcp.h	/^#define    TCPOPT_NOP /;"	d
-TCPOPT_SACK	tcp.h	/^#define    TCPOPT_SACK /;"	d
-TCPOPT_SACKOK	tcp.h	/^#define    TCPOPT_SACKOK /;"	d
-TCPOPT_TIMESTAMP	tcp.h	/^#define TCPOPT_TIMESTAMP /;"	d
-TCPOPT_TSTAMP_HDR	tcp.h	/^#define TCPOPT_TSTAMP_HDR /;"	d
-TCPOPT_WSCALE	tcp.h	/^#define    TCPOPT_WSCALE /;"	d
-TEN_SECOND_TRANSFER_COLUMN_COLOR	ui.c	/^int TEN_SECOND_TRANSFER_COLUMN_COLOR[] = {CYAN_FOREGROUND, BOLD};$/;"	v
-TH_ACK	tcp.h	/^#define    TH_ACK /;"	d
-TH_CWR	tcp.h	/^#define TH_CWR /;"	d
-TH_ECNECHO	tcp.h	/^#define TH_ECNECHO /;"	d
-TH_FIN	tcp.h	/^#define    TH_FIN /;"	d
-TH_OFF	tcp.h	/^#define TH_OFF(/;"	d
-TH_PUSH	tcp.h	/^#define    TH_PUSH /;"	d
-TH_RST	tcp.h	/^#define    TH_RST /;"	d
-TH_SYN	tcp.h	/^#define    TH_SYN /;"	d
-TH_URG	tcp.h	/^#define    TH_URG /;"	d
-TIME_WITH_SYS_TIME	config.h	/^#define TIME_WITH_SYS_TIME /;"	d
-TOKEN_FC_LLC	token.h	/^#define TOKEN_FC_LLC /;"	d
-TOKEN_HDRLEN	token.h	/^#define TOKEN_HDRLEN /;"	d
-TOKEN_RING_MAC_LEN	token.h	/^#define TOKEN_RING_MAC_LEN /;"	d
-TOTAL_LABEL_COLOR	ui.c	/^int TOTAL_LABEL_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
-TWO_SECOND_TRANSFER_COLUMN_COLOR	ui.c	/^int TWO_SECOND_TRANSFER_COLUMN_COLOR[] = {BLUE_FOREGROUND, NONBOLD};$/;"	v
-UNIT_DIVISIONS	ui.c	/^#define UNIT_DIVISIONS /;"	d	file:
-USE_GETHOSTBYADDR	config.h	/^#define USE_GETHOSTBYADDR /;"	d
-VERSION	config.h	/^#define VERSION /;"	d
-WHITE_FOREGROUND	ui.c	/^#define WHITE_FOREGROUND /;"	d	file:
-YELLOW_FOREGROUND	ui.c	/^#define YELLOW_FOREGROUND /;"	d	file:
-__ADDR_HASH_H_	addr_hash.h	/^#define __ADDR_HASH_H_$/;"	d
-__CFGFILE_H_	cfgfile.h	/^#define __CFGFILE_H_$/;"	d
-__ETHER_H_	ether.h	/^#define __ETHER_H_$/;"	d
-__GETCOLORS_H	getColors.h	/^#define __GETCOLORS_H$/;"	d
-__HASH_H_	hash.h	/^#define __HASH_H_$/;"	d
-__IFTOP_H_	iftop.h	/^#define __IFTOP_H_$/;"	d
-__INTEGERS_H_	integers.h	/^#define __INTEGERS_H_$/;"	d
-__NS_HASH_H_	ns_hash.h	/^#define __NS_HASH_H_$/;"	d
-__OPTIONS_H_	options.h	/^#define __OPTIONS_H_$/;"	d
-__RESOLVER_H_	resolver.h	/^#define __RESOLVER_H_$/;"	d
-__SCREENFILTER_H_	screenfilter.h	/^#define __SCREENFILTER_H_$/;"	d
-__SERV_HASH_H_	serv_hash.h	/^#define __SERV_HASH_H_$/;"	d
-__SORTED_LIST_H_	sorted_list.h	/^#define __SORTED_LIST_H_$/;"	d
-__STRINGMAP_H_	stringmap.h	/^#define __STRINGMAP_H_$/;"	d
-__UI_H_	ui.h	/^#define __UI_H_$/;"	d
-__VECTOR_H_	vector.h	/^#define __VECTOR_H_$/;"	d
-_inline	vector.h	/^#define _inline /;"	d
-_item	vector.h	/^typedef union _item {$/;"	u
-_stringmap	stringmap.h	/^typedef struct _stringmap {$/;"	s
-_vector	vector.h	/^typedef struct _vector {$/;"	s
-action	iftop.h	/^    unsigned char action;$/;"	m	struct:pfloghdr
-addr	resolver.c	/^    struct in_addr *addr;$/;"	m	struct:ares_callback_comm	typeref:struct:ares_callback_comm::in_addr	file:
-addr	resolver.c	/^    } addr;$/;"	m	struct:addr_storage	typeref:union:addr_storage::__anon1	file:
-addr4	resolver.c	/^        struct in_addr addr4;$/;"	m	union:addr_storage::__anon1	typeref:struct:addr_storage::__anon1::in_addr	file:
-addr6	resolver.c	/^        struct in6_addr addr6;$/;"	m	union:addr_storage::__anon1	typeref:struct:addr_storage::__anon1::in6_addr	file:
-addr_hash_create	addr_hash.c	/^hash_type *addr_hash_create() {$/;"	f
-addr_pair	addr_hash.h	/^} addr_pair;$/;"	t	typeref:struct:__anon3
-addr_storage	resolver.c	/^struct addr_storage {$/;"	s	file:
-addrtostring	dlcommon.c	/^addrtostring(addr, length, s)$/;"	f
-af	addr_hash.h	/^    int af;$/;"	m	struct:__anon3
-af	iftop.h	/^    unsigned char af;$/;"	m	struct:pfloghdr
-af	resolver.c	/^    int af;                     \/* AF_INET or AF_INET6 *\/$/;"	m	struct:addr_storage	file:
-aggregate_dest	options.h	/^    int aggregate_dest;$/;"	m	struct:__anon16
-aggregate_src	options.h	/^    int aggregate_src;$/;"	m	struct:__anon16
-analyse_data	ui.c	/^void analyse_data() {$/;"	f
-ap	ui.c	/^    addr_pair ap;$/;"	m	struct:host_pair_line_tag	file:
-ares_callback_comm	resolver.c	/^struct ares_callback_comm {$/;"	s	file:
-arg	threadprof.c	/^    void *arg;$/;"	m	struct:wrapper_s	file:
-ary	vector.h	/^    item *ary;$/;"	m	struct:_vector
-as_addr4	resolver.c	/^#define as_addr4 /;"	d	file:
-as_addr6	resolver.c	/^#define as_addr6 /;"	d	file:
-assign_addr_pair	iftop.c	/^void assign_addr_pair(addr_pair *ap, struct ip *iptr, int flip) {$/;"	f
-bad_interface_names	options.c	/^static char *bad_interface_names[] = {$/;"	v	file:
-bandwidth_in_bytes	options.h	/^    int bandwidth_in_bytes;$/;"	m	struct:__anon16
-bar_interval	options.h	/^    int bar_interval;$/;"	m	struct:__anon16
-calculate_totals	ui.c	/^void calculate_totals() {$/;"	f
-compare	addr_hash.c	/^int compare(void *a, void *b) {$/;"	f
-compare	hash.h	/^    int (*compare)(void *, void *);$/;"	m	struct:__anon8
-compare	sorted_list.h	/^    int (*compare)(void *, void *);$/;"	m	struct:__anon18
-config	cfgfile.c	/^stringmap config;$/;"	v
-config_directives	cfgfile.c	/^char *config_directives[] = {$/;"	v
-config_enumeration_type	cfgfile.h	/^} config_enumeration_type;$/;"	t	typeref:struct:__anon6
-config_file	options.h	/^    char *config_file;$/;"	m	struct:__anon16
-config_file_specified	options.h	/^    int config_file_specified;$/;"	m	struct:__anon16
-config_get_bool	cfgfile.c	/^int config_get_bool(const char *directive) {$/;"	f
-config_get_enum	cfgfile.c	/^int config_get_enum(const char *directive, config_enumeration_type *enumeration, int *value) {$/;"	f
-config_get_float	cfgfile.c	/^int config_get_float(const char *directive, float *value) {$/;"	f
-config_get_int	cfgfile.c	/^int config_get_int(const char *directive, int *value) {$/;"	f
-config_get_string	cfgfile.c	/^char *config_get_string(const char *directive) {$/;"	f
-config_init	cfgfile.c	/^int config_init() {$/;"	f
-config_set_string	cfgfile.c	/^void config_set_string(const char *directive, const char *s) {$/;"	f
-convertBoldToInt	getColors.c	/^int convertBoldToInt(char *bold) {$/;"	f
-convertBoldToInt	ui.c	/^int convertBoldToInt(char *bold) {$/;"	f
-convertColorToInt	getColors.c	/^int convertColorToInt(char *color) {$/;"	f
-convertColorToInt	ui.c	/^int convertColorToInt(char *color) {$/;"	f
-copy_key	addr_hash.c	/^void *copy_key(void *orig) {$/;"	f
-copy_key	hash.h	/^    void *(*copy_key)(void *);$/;"	m	struct:__anon8
-ctl	llc.h	/^    } ctl;$/;"	m	struct:llc	typeref:union:llc::__anon10
-d	stringmap.h	/^    item d;$/;"	m	struct:_stringmap
-data	sorted_list.h	/^    void *data;$/;"	m	struct:sorted_list_node_tag
-delete_key	addr_hash.c	/^void delete_key(void *key) {$/;"	f
-delete_key	hash.h	/^    void (*delete_key)(void *);$/;"	m	struct:__anon8
-die	options.c	/^static void die(char *msg) {$/;"	f	file:
-dir	iftop.h	/^    unsigned char dir;$/;"	m	struct:pfloghdr
-dlattachreq	dlcommon.c	/^dlattachreq(fd, ppa)$/;"	f
-dlbindack	dlcommon.c	/^dlbindack(fd, bufp)$/;"	f
-dlbindreq	dlcommon.c	/^dlbindreq(fd, sap, max_conind, service_mode, conn_mgmt, xidtest)$/;"	f
-dldetachreq	dlcommon.c	/^dldetachreq(fd)$/;"	f
-dldisabmultireq	dlcommon.c	/^dldisabmultireq(fd, addr, length)$/;"	f
-dlenabmultireq	dlcommon.c	/^dlenabmultireq(fd, addr, length)$/;"	f
-dlerrno	dlcommon.c	/^dlerrno(errno)$/;"	f
-dlerrorack	dlcommon.c	/^dlerrorack(fd, bufp)$/;"	f
-dlinfoack	dlcommon.c	/^dlinfoack(fd, bufp)$/;"	f
-dlinforeq	dlcommon.c	/^dlinforeq(fd)$/;"	f
-dlmactype	dlcommon.c	/^dlmactype(media)$/;"	f
-dlokack	dlcommon.c	/^dlokack(fd, bufp)$/;"	f
-dlphysaddrack	dlcommon.c	/^dlphysaddrack(fd, bufp)$/;"	f
-dlphysaddrreq	dlcommon.c	/^dlphysaddrreq(fd, addrtype)$/;"	f
-dlprim	dlcommon.c	/^dlprim(prim)$/;"	f
-dlpromisclevel	dlcommon.c	/^dlpromisclevel(level)$/;"	f
-dlpromiscoff	dlcommon.c	/^dlpromiscoff(fd, level)$/;"	f
-dlpromisconreq	dlcommon.c	/^dlpromisconreq(fd, level)$/;"	f
-dlservicemode	dlcommon.c	/^dlservicemode(servicemode)$/;"	f
-dlsetphysaddrreq	dlcommon.c	/^dlsetphysaddrreq(fd, addr, length)$/;"	f
-dlstate	dlcommon.c	/^dlstate(state)$/;"	f
-dlstyle	dlcommon.c	/^dlstyle(style)$/;"	f
-dlunbindreq	dlcommon.c	/^dlunbindreq(fd)$/;"	f
-dlunitdatareq	dlcommon.c	/^dlunitdatareq(fd, addrp, addrlen, minpri, maxpri, datap, datalen)$/;"	f
-dnsresolution	options.h	/^    int dnsresolution;$/;"	m	struct:__anon16
-do_resolve	resolver.c	/^char *do_resolve(struct addr_storage * addr) {$/;"	f
-do_resolve	resolver.c	/^char *do_resolve(struct addr_storage *addr) {$/;"	f
-do_resolve	resolver.c	/^char *do_resolve(struct in6_addr *addr) {$/;"	f
-do_resolve	resolver.c	/^char* do_resolve(struct addr_storage *addr) {$/;"	f
-do_resolve_ares_callback	resolver.c	/^static void do_resolve_ares_callback(void *arg, int status, unsigned char *abuf, int alen) {$/;"	f	file:
-dontshowdisplay	ui.c	/^int dontshowdisplay = 0;$/;"	v
-draw_bar	ui.c	/^void draw_bar(float n, int y, short colorpair) {$/;"	f
-draw_bar_scale	ui.c	/^static void draw_bar_scale(int *y) {$/;"	f	file:
-draw_line_total	ui.c	/^void draw_line_total(float sent, float recv, int y, int x, option_linedisplay_t linedisplay, int bytes) {$/;"	f
-draw_line_totals	ui.c	/^void draw_line_totals(int y, host_pair_line *line, option_linedisplay_t linedisplay) {$/;"	f
-draw_totals	ui.c	/^void draw_totals(host_pair_line *totals) {$/;"	f
-dsap	llc.h	/^    u_int8_t dsap;$/;"	m	struct:llc
-dst	addr_hash.h	/^        struct in_addr dst;$/;"	m	union:__anon3::__anon5	typeref:struct:__anon3::__anon5::in_addr
-dst6	addr_hash.h	/^        struct in6_addr dst6;$/;"	m	union:__anon3::__anon5	typeref:struct:__anon3::__anon5::in6_addr
-dst_port	addr_hash.h	/^    unsigned short int dst_port;$/;"	m	struct:__anon3
-edline	edline.c	/^char *edline(int linenum, const char *prompt, const char *initial) {$/;"	f
-eraseAndLoop	ui.c	/^void eraseAndLoop() {$/;"	f
-err	dlcommon.c	/^err(fmt, a1, a2, a3, a4)$/;"	f
-ether_dhost	ether.h	/^    u_int8_t ether_dhost[ETHER_ADDR_LEN];$/;"	m	struct:ether_header
-ether_header	ether.h	/^struct ether_header {$/;"	s
-ether_shost	ether.h	/^    u_int8_t ether_shost[ETHER_ADDR_LEN];$/;"	m	struct:ether_header
-ether_type	ether.h	/^    u_int16_t ether_type;$/;"	m	struct:ether_header
-ether_type	ether.h	/^    u_int16_t ether_type;$/;"	m	struct:vlan_8021q_header
-expecting	dlcommon.c	/^expecting(prim, dlp)$/;"	f
-filtercode	options.h	/^    char *filtercode;$/;"	m	struct:__anon16
-finish	iftop.c	/^static void finish(int sig) {$/;"	f	file:
-foad	iftop.c	/^sig_atomic_t foad;$/;"	v
-forking_resolver_worker	resolver.c	/^int forking_resolver_worker(int fd) {$/;"	f
-freezeorder	options.h	/^    int freezeorder;$/;"	m	struct:__anon16
-g	stringmap.h	/^    struct _stringmap *l, *g;$/;"	m	struct:_stringmap	typeref:struct:_stringmap::
-getColors	getColors.c	/^void getColors() {$/;"	f
-getColors	ui.c	/^void getColors() {$/;"	f
-get_addrs_dlpi	addrs_dlpi.c	/^get_addrs_dlpi(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr)$/;"	f
-get_addrs_ioctl	addrs_ioctl.c	/^get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr, struct in6_addr *if_ip6_addr) {$/;"	f
-get_bar_interval	ui.c	/^static int get_bar_interval(float bandwidth) {$/;"	f	file:
-get_bar_length	ui.c	/^static int get_bar_length(const int rate) {$/;"	f	file:
-get_first_interface	options.c	/^static char *get_first_interface(void) {$/;"	f	file:
-get_max_bandwidth	ui.c	/^static float get_max_bandwidth() {$/;"	f	file:
-gprof_pthread_create	threadprof.c	/^int gprof_pthread_create(pthread_t *thread, pthread_attr_t *attr,$/;"	f
-handle_cooked_packet	iftop.c	/^static void handle_cooked_packet(unsigned char *args, const struct pcap_pkthdr *thdr, const unsigned char *packet) {$/;"	f	file:
-handle_eth_packet	iftop.c	/^static void handle_eth_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
-handle_ip_packet	iftop.c	/^static void handle_ip_packet(struct ip *iptr, int hw_dir) {$/;"	f	file:
-handle_llc_packet	iftop.c	/^static void handle_llc_packet(const struct llc *llc, int dir) {$/;"	f	file:
-handle_null_packet	iftop.c	/^static void handle_null_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
-handle_pflog_packet	iftop.c	/^static void handle_pflog_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
-handle_ppp_packet	iftop.c	/^static void handle_ppp_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
-handle_radiotap_packet	iftop.c	/^static void handle_radiotap_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
-handle_raw_packet	iftop.c	/^static void handle_raw_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
-handle_tokenring_packet	iftop.c	/^handle_tokenring_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
-hash	addr_hash.c	/^int hash(void *key) {$/;"	f
-hash	hash.h	/^    int (*hash)(void *);$/;"	m	struct:__anon8
-hash_delete	hash.c	/^hash_status_enum hash_delete(hash_type *hash_table, void *key) {$/;"	f
-hash_delete_all	hash.c	/^void hash_delete_all(hash_type *hash_table) {$/;"	f
-hash_destroy	hash.c	/^hash_status_enum hash_destroy(hash_type *hash_table) {$/;"	f
-hash_find	hash.c	/^hash_status_enum hash_find(hash_type *hash_table, void *key, void **rec) {$/;"	f
-hash_initialise	hash.c	/^hash_status_enum hash_initialise(hash_type *hash_table) {$/;"	f
-hash_insert	hash.c	/^hash_status_enum hash_insert(hash_type *hash_table, void *key, void *rec) {$/;"	f
-hash_next_item	hash.c	/^hash_status_enum hash_next_item(hash_type *hash_table, hash_node_type **ppnode) {$/;"	f
-hash_node_type	hash.h	/^} hash_node_type;$/;"	t	typeref:struct:node_tag
-hash_status_enum	hash.h	/^} hash_status_enum;$/;"	t	typeref:enum:__anon7
-hash_table_size	addr_hash.c	/^#define hash_table_size /;"	d	file:
-hash_table_size	ns_hash.c	/^#define hash_table_size /;"	d	file:
-hash_table_size	serv_hash.c	/^#define hash_table_size /;"	d	file:
-hash_type	hash.h	/^} hash_type;$/;"	t	typeref:struct:__anon8
-hash_uint32	addr_hash.c	/^static int __inline__ hash_uint32(uint32_t n) {$/;"	f	file:
-hash_uint32	ns_hash.c	/^static int __inline__ hash_uint32(uint32_t n) {$/;"	f	file:
-have_hw_addr	iftop.c	/^int have_hw_addr = 0;$/;"	v
-have_ip6_addr	iftop.c	/^int have_ip6_addr = 0;$/;"	v
-have_ip_addr	iftop.c	/^int have_ip_addr = 0;$/;"	v
-head	resolver.c	/^int head;$/;"	v
-helpmsg	ui.c	/^char helpmsg[HELP_MSG_SIZE];$/;"	v
-helptimer	ui.c	/^time_t helptimer = 0;$/;"	v
-hexnibble	dlcommon.c	/^hexnibble(c)$/;"	f	file:
-history	iftop.c	/^hash_type *history;$/;"	v
-history_create	iftop.c	/^history_type *history_create() {$/;"	f
-history_divs	ui.c	/^int history_divs[HISTORY_DIVISIONS] = {1, 5, 20};$/;"	v
-history_len	iftop.c	/^int history_len = 1;$/;"	v
-history_length	ui.c	/^int history_length(const int d) {$/;"	f
-history_pos	iftop.c	/^int history_pos = 0;$/;"	v
-history_rotate	iftop.c	/^void history_rotate() {$/;"	f
-history_totals	iftop.c	/^history_type history_totals;$/;"	v
-history_type	iftop.h	/^} history_type;$/;"	t	typeref:struct:__anon9
-host_pair_line	ui.c	/^} host_pair_line;$/;"	t	typeref:struct:host_pair_line_tag	file:
-host_pair_line_tag	ui.c	/^typedef struct host_pair_line_tag {$/;"	s	file:
-if_hw_addr	iftop.c	/^unsigned char if_hw_addr[6];$/;"	v
-if_ip6_addr	iftop.c	/^struct in6_addr if_ip6_addr;$/;"	v	typeref:struct:in6_addr
-if_ip_addr	iftop.c	/^struct in_addr if_ip_addr;$/;"	v	typeref:struct:in_addr
-ifname	iftop.h	/^    char ifname[16];$/;"	m	struct:pfloghdr
-in_filter_net	iftop.c	/^int in_filter_net(struct in_addr addr) {$/;"	f
-inet_aton	options.c	/^#   define inet_aton(/;"	d	file:
-init_history	iftop.c	/^void init_history() {$/;"	f
-interface	options.h	/^    char *interface;$/;"	m	struct:__anon16
-interval	ui.c	/^    int max, interval;$/;"	m	struct:__anon2	file:
-ip	ip.h	/^struct ip {$/;"	s
-ip6_addr_match	iftop.c	/^int __inline__ ip6_addr_match(struct in6_addr *addr) {$/;"	f
-ip_addr_match	iftop.c	/^int __inline__ ip_addr_match(struct in_addr addr) {$/;"	f
-ip_dst	ip.h	/^    struct in_addr ip_src, ip_dst;    \/* source and dest address *\/$/;"	m	struct:ip	typeref:struct:ip::
-ip_id	ip.h	/^    u_int16_t ip_id;        \/* identification *\/$/;"	m	struct:ip
-ip_len	ip.h	/^    u_int16_t ip_len;        \/* total length *\/$/;"	m	struct:ip
-ip_off	ip.h	/^    u_int16_t ip_off;        \/* fragment offset field *\/$/;"	m	struct:ip
-ip_p	ip.h	/^    u_int8_t ip_p;        \/* protocol *\/$/;"	m	struct:ip
-ip_service	serv_hash.h	/^} ip_service;$/;"	t	typeref:struct:__anon17
-ip_src	ip.h	/^    struct in_addr ip_src, ip_dst;    \/* source and dest address *\/$/;"	m	struct:ip	typeref:struct:ip::in_addr
-ip_sum	ip.h	/^    u_int16_t ip_sum;        \/* checksum *\/$/;"	m	struct:ip
-ip_timestamp	ip.h	/^struct ip_timestamp {$/;"	s
-ip_tos	ip.h	/^    u_int8_t ip_tos;        \/* type of service *\/$/;"	m	struct:ip
-ip_ttl	ip.h	/^    u_int8_t ip_ttl;        \/* time to live *\/$/;"	m	struct:ip
-ip_vhl	ip.h	/^    u_int8_t ip_vhl;        \/* header length, version *\/$/;"	m	struct:ip
-ipt_addr	ip.h	/^            struct in_addr ipt_addr;$/;"	m	struct:ip_timestamp::ipt_timestamp::ipt_ta	typeref:struct:ip_timestamp::ipt_timestamp::ipt_ta::in_addr
-ipt_code	ip.h	/^    u_int8_t ipt_code;    \/* IPOPT_TS *\/$/;"	m	struct:ip_timestamp
-ipt_len	ip.h	/^    u_int8_t ipt_len;    \/* size of structure (variable) *\/$/;"	m	struct:ip_timestamp
-ipt_oflwflg	ip.h	/^    u_int8_t ipt_oflwflg;    \/* flags, overflow counter *\/$/;"	m	struct:ip_timestamp
-ipt_ptr	ip.h	/^    u_int8_t ipt_ptr;    \/* index of current entry *\/$/;"	m	struct:ip_timestamp
-ipt_ta	ip.h	/^        struct ipt_ta {$/;"	s	union:ip_timestamp::ipt_timestamp
-ipt_ta	ip.h	/^        } ipt_ta[1];$/;"	m	union:ip_timestamp::ipt_timestamp	typeref:struct:ip_timestamp::ipt_timestamp::ipt_ta
-ipt_time	ip.h	/^            u_int32_t ipt_time;$/;"	m	struct:ip_timestamp::ipt_timestamp::ipt_ta
-ipt_time	ip.h	/^        u_int32_t ipt_time[1];$/;"	m	union:ip_timestamp::ipt_timestamp
-ipt_timestamp	ip.h	/^    union ipt_timestamp {$/;"	u	struct:ip_timestamp
-ipt_timestamp	ip.h	/^    } ipt_timestamp;$/;"	m	struct:ip_timestamp	typeref:union:ip_timestamp::ipt_timestamp
-is_bad_interface_name	options.c	/^static int is_bad_interface_name(char *i) {$/;"	f	file:
-is_cfgdirective_valid	cfgfile.c	/^int is_cfgdirective_valid(const char *s) {$/;"	f
-is_ctl	llc.h	/^        u_int16_t is_ctl;$/;"	m	union:llc::__anon10
-it_len	ether.h	/^    u_int16_t it_len;         \/* entire length *\/$/;"	m	struct:radiotap_header
-it_pad	ether.h	/^    u_int8_t it_pad;$/;"	m	struct:radiotap_header
-it_present	ether.h	/^    u_int32_t it_present;     \/* fields present *\/$/;"	m	struct:radiotap_header
-it_version	ether.h	/^    u_int8_t it_version;     \/* set to 0 *\/$/;"	m	struct:radiotap_header
-item	vector.h	/^} item;$/;"	t	typeref:union:_item
-item_long	vector.h	/^static _inline item item_long(const long l) {$/;"	f
-item_ptr	vector.h	/^static _inline item item_ptr(void *const v) {$/;"	f
-itimer	threadprof.c	/^    struct itimerval itimer;$/;"	m	struct:wrapper_s	typeref:struct:wrapper_s::itimerval	file:
-key	hash.h	/^    void *key;                \/* key *\/$/;"	m	struct:node_tag
-key	stringmap.h	/^    char *key;$/;"	m	struct:_stringmap
-key_type	addr_hash.h	/^typedef addr_pair key_type;      \/* index into hash table *\/$/;"	t
-l	stringmap.h	/^    struct _stringmap *l, *g;$/;"	m	struct:_stringmap	typeref:struct:_stringmap::_stringmap
-l	vector.h	/^    long l;$/;"	m	union:_item
-last_timestamp	iftop.c	/^time_t last_timestamp;$/;"	v
-last_write	iftop.h	/^    int last_write;$/;"	m	struct:__anon9
-len	resolver.c	/^    int len;                    \/* sizeof(struct in_addr or in6_addr) *\/$/;"	m	struct:addr_storage	file:
-length	iftop.h	/^    unsigned char length;$/;"	m	struct:pfloghdr
-linedisplay	options.h	/^    option_linedisplay_t linedisplay;$/;"	m	struct:__anon16
-linedisplay_enumeration	options.c	/^config_enumeration_type linedisplay_enumeration[] = {$/;"	v
-link_local	options.h	/^    int link_local;$/;"	m	struct:__anon16
-llc	llc.h	/^struct llc {$/;"	s
-llc_ethertype	llc.h	/^#define    llc_ethertype /;"	d
-llc_orgcode	llc.h	/^#define    llc_orgcode /;"	d
-llcis	llc.h	/^#define    llcis /;"	d
-llcpi	llc.h	/^#define    llcpi /;"	d
-llcu	llc.h	/^#define    llcu /;"	d
-llcui	llc.h	/^#define    llcui /;"	d
-lock	threadprof.c	/^    pthread_mutex_t lock;$/;"	m	struct:wrapper_s	file:
-log_scale	options.h	/^    int log_scale;$/;"	m	struct:__anon16
-main	iftop.c	/^int main(int argc, char **argv) {$/;"	f
-make_screen_list	ui.c	/^void make_screen_list() {$/;"	f
-max	ui.c	/^    int max, interval;$/;"	m	struct:__anon2	file:
-max_bandwidth	options.h	/^    long long max_bandwidth;$/;"	m	struct:__anon16
-min	edline.c	/^static int min(const int a, const int b) {$/;"	f	file:
-n	vector.h	/^    size_t n, n_used;$/;"	m	struct:_vector
-n_used	vector.h	/^    size_t n, n_used;$/;"	m	struct:_vector
-name	cfgfile.h	/^    char *name;$/;"	m	struct:__anon6
-name	resolver.c	/^    char *name;$/;"	m	struct:ares_callback_comm	file:
-netfilter	options.h	/^    int netfilter;$/;"	m	struct:__anon16
-netfilter6	options.h	/^    int netfilter6;$/;"	m	struct:__anon16
-netfilter6mask	options.h	/^    struct in6_addr netfilter6mask;$/;"	m	struct:__anon16	typeref:struct:__anon16::in6_addr
-netfilter6net	options.h	/^    struct in6_addr netfilter6net;$/;"	m	struct:__anon16	typeref:struct:__anon16::in6_addr
-netfiltermask	options.h	/^    struct in_addr netfiltermask;$/;"	m	struct:__anon16	typeref:struct:__anon16::in_addr
-netfilternet	options.h	/^    struct in_addr netfilternet;$/;"	m	struct:__anon16	typeref:struct:__anon16::in_addr
-next	hash.h	/^    struct node_tag *next;       \/* next node *\/$/;"	m	struct:node_tag	typeref:struct:node_tag::node_tag
-next	sorted_list.h	/^    struct sorted_list_node_tag *next;$/;"	m	struct:sorted_list_node_tag	typeref:struct:sorted_list_node_tag::sorted_list_node_tag
-node_tag	hash.h	/^typedef struct node_tag {$/;"	s
-ns_hash	resolver.c	/^hash_type *ns_hash;$/;"	v
-ns_hash_compare	ns_hash.c	/^int ns_hash_compare(void *a, void *b) {$/;"	f
-ns_hash_copy_key	ns_hash.c	/^void *ns_hash_copy_key(void *orig) {$/;"	f
-ns_hash_create	ns_hash.c	/^hash_type *ns_hash_create() {$/;"	f
-ns_hash_delete_key	ns_hash.c	/^void ns_hash_delete_key(void *key) {$/;"	f
-ns_hash_hash	ns_hash.c	/^int ns_hash_hash(void *key) {$/;"	f
-option_linedisplay_t	options.h	/^} option_linedisplay_t;$/;"	t	typeref:enum:__anon15
-option_port_t	options.h	/^} option_port_t;$/;"	t	typeref:enum:__anon13
-option_sort_t	options.h	/^} option_sort_t;$/;"	t	typeref:enum:__anon14
-options	options.c	/^options_t options;$/;"	v
-options_config_get_bool	options.c	/^int options_config_get_bool(const char *name, int *value) {$/;"	f
-options_config_get_bw_rate	options.c	/^int options_config_get_bw_rate(char *directive, long long *result) {$/;"	f
-options_config_get_enum	options.c	/^int options_config_get_enum(char *name, config_enumeration_type *enumeration, int *result) {$/;"	f
-options_config_get_int	options.c	/^int options_config_get_int(const char *name, int *value) {$/;"	f
-options_config_get_net_filter	options.c	/^int options_config_get_net_filter() {$/;"	f
-options_config_get_net_filter6	options.c	/^int options_config_get_net_filter6() {$/;"	f
-options_config_get_promiscuous	options.c	/^int options_config_get_promiscuous() {$/;"	f
-options_config_get_string	options.c	/^int options_config_get_string(const char *name, char **value) {$/;"	f
-options_make	options.c	/^void options_make() {$/;"	f
-options_read_args	options.c	/^void options_read_args(int argc, char **argv) {$/;"	f
-options_set_defaults	options.c	/^void options_set_defaults() {$/;"	f
-options_t	options.h	/^} options_t;$/;"	t	typeref:struct:__anon16
-optstr	options.c	/^char optstr[] = "+i:f:nNF:G:lhpbBPm:c:";$/;"	v
-packet_handler	iftop.c	/^pcap_handler packet_handler;$/;"	v
-packet_init	iftop.c	/^void packet_init() {$/;"	f
-packet_loop	iftop.c	/^void packet_loop(void *ptr) {$/;"	f
-pad	iftop.h	/^    unsigned char pad[3];$/;"	m	struct:pfloghdr
-paused	options.h	/^    int paused;$/;"	m	struct:__anon16
-pcap_filter	iftop.c	/^struct bpf_program pcap_filter;$/;"	v	typeref:struct:bpf_program
-pd	iftop.c	/^pcap_t *pd; \/* pcap descriptor *\/$/;"	v
-peakrecv	ui.c	/^int peaksent, peakrecv, peaktotal;$/;"	v
-peaksent	ui.c	/^int peaksent, peakrecv, peaktotal;$/;"	v
-peaktotal	ui.c	/^int peaksent, peakrecv, peaktotal;$/;"	v
-persistenthelp	ui.c	/^int persistenthelp = 0;$/;"	v
-pfloghdr	iftop.h	/^struct pfloghdr {$/;"	s
-port	serv_hash.h	/^    int port;$/;"	m	struct:__anon17
-portresolution	options.h	/^    int portresolution;$/;"	m	struct:__anon16
-preg	screenfilter.c	/^regex_t preg;$/;"	v
-printdlattachreq	dlcommon.c	/^printdlattachreq(dlp)$/;"	f
-printdlbindack	dlcommon.c	/^printdlbindack(dlp)$/;"	f
-printdlbindreq	dlcommon.c	/^printdlbindreq(dlp)$/;"	f
-printdldetachreq	dlcommon.c	/^printdldetachreq(dlp)$/;"	f
-printdldisabmultireq	dlcommon.c	/^printdldisabmultireq(dlp)$/;"	f
-printdlenabmultireq	dlcommon.c	/^printdlenabmultireq(dlp)$/;"	f
-printdlerrorack	dlcommon.c	/^printdlerrorack(dlp)$/;"	f
-printdlinfoack	dlcommon.c	/^printdlinfoack(dlp)$/;"	f
-printdlinforeq	dlcommon.c	/^printdlinforeq(dlp)$/;"	f
-printdlokack	dlcommon.c	/^printdlokack(dlp)$/;"	f
-printdlphysaddrack	dlcommon.c	/^printdlphysaddrack(dlp)$/;"	f
-printdlphysaddrreq	dlcommon.c	/^printdlphysaddrreq(dlp)$/;"	f
-printdlprim	dlcommon.c	/^printdlprim(dlp)$/;"	f
-printdlpromiscoffreq	dlcommon.c	/^printdlpromiscoffreq(dlp)$/;"	f
-printdlpromisconreq	dlcommon.c	/^printdlpromisconreq(dlp)$/;"	f
-printdlsetphysaddrreq	dlcommon.c	/^printdlsetphysaddrreq(dlp)$/;"	f
-printdlsubsbindack	dlcommon.c	/^printdlsubsbindack(dlp)$/;"	f
-printdlsubsbindreq	dlcommon.c	/^printdlsubsbindreq(dlp)$/;"	f
-printdlsubsunbindreq	dlcommon.c	/^printdlsubsunbindreq(dlp)$/;"	f
-printdltestcon	dlcommon.c	/^printdltestcon(dlp)$/;"	f
-printdltestind	dlcommon.c	/^printdltestind(dlp)$/;"	f
-printdltestreq	dlcommon.c	/^printdltestreq(dlp)$/;"	f
-printdltestres	dlcommon.c	/^printdltestres(dlp)$/;"	f
-printdluderrorind	dlcommon.c	/^printdluderrorind(dlp)$/;"	f
-printdludqosreq	dlcommon.c	/^printdludqosreq(dlp)$/;"	f
-printdlunbindreq	dlcommon.c	/^printdlunbindreq(dlp)$/;"	f
-printdlunitdataind	dlcommon.c	/^printdlunitdataind(dlp)$/;"	f
-printdlunitdatareq	dlcommon.c	/^printdlunitdatareq(dlp)$/;"	f
-printdlxidcon	dlcommon.c	/^printdlxidcon(dlp)$/;"	f
-printdlxidind	dlcommon.c	/^printdlxidind(dlp)$/;"	f
-printdlxidreq	dlcommon.c	/^printdlxidreq(dlp)$/;"	f
-printdlxidres	dlcommon.c	/^printdlxidres(dlp)$/;"	f
-priority_cfi_vid	ether.h	/^    u_int16_t priority_cfi_vid;$/;"	m	struct:vlan_8021q_header
-promiscuous	options.h	/^    int promiscuous;$/;"	m	struct:__anon16
-promiscuous_but_choosy	options.h	/^    int promiscuous_but_choosy;$/;"	m	struct:__anon16
-protocol	addr_hash.h	/^    unsigned short int protocol;$/;"	m	struct:__anon3
-protocol	serv_hash.h	/^    int protocol;$/;"	m	struct:__anon17
-pthread_create	threadprof.c	/^#undef pthread_create$/;"	d	file:
-pthread_create	threadprof.h	/^#define pthread_create(/;"	d
-radiotap_header	ether.h	/^struct radiotap_header {$/;"	s
-rateidx	ui.c	/^static int rateidx = 0, wantbiggerrate;$/;"	v	file:
-rateidx_init	ui.c	/^static int rateidx_init = 0;$/;"	v	file:
-rcsid	edline.c	/^static const char rcsid[] = "$Id: edline.c,v 1.2 2002\/11\/04 12:27:35 chris Exp $";$/;"	v	file:
-rcsid	screenfilter.c	/^static const char rcsid[] = "$Id: screenfilter.c,v 1.3 2002\/11\/04 12:27:35 chris Exp $";$/;"	v	file:
-rcsid	stringmap.c	/^static const char rcsid[] = "$Id: stringmap.c,v 1.4 2010\/11\/27 11:06:12 pdw Exp $";$/;"	v	file:
-rcsid	util.c	/^static const char rcsid[] = "$Id: util.c,v 1.1 2002\/03\/24 17:27:12 chris Exp $";$/;"	v	file:
-rcsid	vector.c	/^static const char rcsid[] = "$Id: vector.c,v 1.3 2003\/11\/07 02:16:41 pdw Exp $";$/;"	v	file:
-read_config	cfgfile.c	/^int read_config(char *file, int whinge_on_error) {$/;"	f
-read_config_file	cfgfile.c	/^int read_config_file(const char *f, int whinge) {$/;"	f
-readable_size	ui.c	/^void readable_size(float n, char *buf, int bsize, int ksize, int bytes) {$/;"	f
-reason	iftop.h	/^    unsigned char reason;$/;"	m	struct:pfloghdr
-rec	hash.h	/^    void *rec;                \/* user data *\/$/;"	m	struct:node_tag
-recv	iftop.h	/^    long recv[HISTORY_LENGTH];$/;"	m	struct:__anon9
-recv	ui.c	/^    double long recv[HISTORY_DIVISIONS];$/;"	m	struct:host_pair_line_tag	file:
-resolve	resolver.c	/^void resolve(int af, void *addr, char *result, int buflen) {$/;"	f
-resolve_queue	resolver.c	/^struct addr_storage resolve_queue[RESOLVE_QUEUE_LENGTH];$/;"	v	typeref:struct:addr_storage
-resolver_initialise	resolver.c	/^void resolver_initialise() {$/;"	f
-resolver_queue_cond	resolver.c	/^pthread_cond_t resolver_queue_cond;$/;"	v
-resolver_queue_mutex	resolver.c	/^pthread_mutex_t resolver_queue_mutex;$/;"	v
-resolver_worker	resolver.c	/^void resolver_worker(void *ptr) {$/;"	f
-result	resolver.c	/^    int result;$/;"	m	struct:ares_callback_comm	file:
-root	sorted_list.h	/^    sorted_list_node root;$/;"	m	struct:__anon18
-rulenr	iftop.h	/^    unsigned int rulenr;$/;"	m	struct:pfloghdr
-ruleset	iftop.h	/^    char ruleset[16];$/;"	m	struct:pfloghdr
-scale	ui.c	/^} scale[] = {$/;"	v	typeref:struct:__anon2	file:
-screen_filter_match	screenfilter.c	/^int screen_filter_match(char *s) {$/;"	f
-screen_filter_set	screenfilter.c	/^int screen_filter_set(char *s) {$/;"	f
-screen_hash	ui.c	/^hash_type *screen_hash;$/;"	v
-screen_hash_clear	ui.c	/^void screen_hash_clear() {$/;"	f
-screen_line_bandwidth_compare	ui.c	/^int screen_line_bandwidth_compare(host_pair_line *aa, host_pair_line *bb, int start_div) {$/;"	f
-screen_line_compare	ui.c	/^int screen_line_compare(void *a, void *b) {$/;"	f
-screen_line_host_compare	ui.c	/^int screen_line_host_compare(void *a, void *b, host_pair_line *aa, host_pair_line *bb) {$/;"	f
-screen_list	ui.c	/^sorted_list_type screen_list;$/;"	v
-screen_list_clear	ui.c	/^void screen_list_clear() {$/;"	f
-screen_list_init	ui.c	/^void screen_list_init() {$/;"	f
-screen_offset	options.h	/^    int screen_offset;$/;"	m	struct:__anon16
-screenfilter	options.h	/^    char *screenfilter;$/;"	m	struct:__anon16
-sent	iftop.h	/^    long sent[HISTORY_LENGTH];$/;"	m	struct:__anon9
-sent	ui.c	/^    double long sent[HISTORY_DIVISIONS];$/;"	m	struct:host_pair_line_tag	file:
-serv_hash_compare	serv_hash.c	/^int serv_hash_compare(void *a, void *b) {$/;"	f
-serv_hash_copy_key	serv_hash.c	/^void *serv_hash_copy_key(void *orig) {$/;"	f
-serv_hash_create	serv_hash.c	/^hash_type *serv_hash_create() {$/;"	f
-serv_hash_delete_key	serv_hash.c	/^void serv_hash_delete_key(void *key) {$/;"	f
-serv_hash_hash	serv_hash.c	/^int serv_hash_hash(void *key) {$/;"	f
-serv_hash_initialise	serv_hash.c	/^void serv_hash_initialise(hash_type *sh) {$/;"	f
-service_hash	ui.c	/^hash_type *service_hash;$/;"	v
-set_filter_code	iftop.c	/^char *set_filter_code(const char *filter) {$/;"	f
-set_max_bandwidth	options.c	/^static void set_max_bandwidth(char *arg) {$/;"	f	file:
-set_net_filter	options.c	/^static void set_net_filter(char *arg) {$/;"	f	file:
-show_totals	options.h	/^    int show_totals;$/;"	m	struct:__anon16
-showbars	options.h	/^    int showbars;$/;"	m	struct:__anon16
-showhelp	options.h	/^    int showhelp;$/;"	m	struct:__anon16
-showhelp	ui.c	/^void showhelp(const char *s) {$/;"	f
-showhelphint	ui.c	/^int showhelphint = 0;$/;"	v
-showports	options.h	/^    option_port_t showports;$/;"	m	struct:__anon16
-showports_enumeration	options.c	/^config_enumeration_type showports_enumeration[] = {$/;"	v
-showportstatus	ui.c	/^void showportstatus() {$/;"	f
-sigalrm	dlcommon.c	/^sigalrm()$/;"	f	file:
-size	hash.h	/^    int size;$/;"	m	struct:__anon8
-sll_addr	sll.h	/^    u_int8_t sll_addr[SLL_ADDRLEN];    \/* link-layer address *\/$/;"	m	struct:sll_header
-sll_halen	sll.h	/^    u_int16_t sll_halen;        \/* link-layer address length *\/$/;"	m	struct:sll_header
-sll_hatype	sll.h	/^    u_int16_t sll_hatype;        \/* link-layer address type *\/$/;"	m	struct:sll_header
-sll_header	sll.h	/^struct sll_header {$/;"	s
-sll_pkttype	sll.h	/^    u_int16_t sll_pkttype;        \/* packet type *\/$/;"	m	struct:sll_header
-sll_protocol	sll.h	/^    u_int16_t sll_protocol;        \/* protocol *\/$/;"	m	struct:sll_header
-snap	llc.h	/^        } snap;$/;"	m	union:llc::__anon10	typeref:struct:llc::__anon10::__anon11
-snap_ether	llc.h	/^        } snap_ether;$/;"	m	union:llc::__anon10	typeref:struct:llc::__anon10::__anon12
-snap_ethertype	llc.h	/^            u_int8_t snap_ethertype[2];$/;"	m	struct:llc::__anon10::__anon12
-snap_orgcode	llc.h	/^            u_int8_t snap_orgcode[3];$/;"	m	struct:llc::__anon10::__anon12
-snap_pi	llc.h	/^            u_int8_t snap_pi[5];$/;"	m	struct:llc::__anon10::__anon11
-snap_ui	llc.h	/^            u_int8_t snap_ui;$/;"	m	struct:llc::__anon10::__anon11
-snap_ui	llc.h	/^            u_int8_t snap_ui;$/;"	m	struct:llc::__anon10::__anon12
-sort	options.h	/^    option_sort_t sort;$/;"	m	struct:__anon16
-sort_enumeration	options.c	/^config_enumeration_type sort_enumeration[] = {$/;"	v
-sorted_list_destroy	sorted_list.c	/^void sorted_list_destroy(sorted_list_type *list) {$/;"	f
-sorted_list_initialise	sorted_list.c	/^void sorted_list_initialise(sorted_list_type *list) {$/;"	f
-sorted_list_insert	sorted_list.c	/^void sorted_list_insert(sorted_list_type *list, void *item) {$/;"	f
-sorted_list_next_item	sorted_list.c	/^sorted_list_node *sorted_list_next_item(sorted_list_type *list, sorted_list_node *prev) {$/;"	f
-sorted_list_node	sorted_list.h	/^} sorted_list_node;$/;"	t	typeref:struct:sorted_list_node_tag
-sorted_list_node_tag	sorted_list.h	/^typedef struct sorted_list_node_tag {$/;"	s
-sorted_list_type	sorted_list.h	/^} sorted_list_type;$/;"	t	typeref:struct:__anon18
-split_dname	addrs_dlpi.c	/^split_dname(char *device, int *unitp)$/;"	f
-sprint_host	ui.c	/^void sprint_host(char *line, int af, struct in6_addr *addr, unsigned int port, unsigned int protocol, int L) {$/;"	f
-src	addr_hash.h	/^        struct in_addr src;$/;"	m	union:__anon3::__anon4	typeref:struct:__anon3::__anon4::in_addr
-src6	addr_hash.h	/^        struct in6_addr src6;$/;"	m	union:__anon3::__anon4	typeref:struct:__anon3::__anon4::in6_addr
-src_port	addr_hash.h	/^    unsigned short int src_port;$/;"	m	struct:__anon3
-ssap	llc.h	/^    u_int8_t ssap;$/;"	m	struct:llc
-start_routine	threadprof.c	/^    void *(*start_routine)(void *);$/;"	m	struct:wrapper_s	file:
-strgetmsg	dlcommon.c	/^strgetmsg(fd, ctlp, datap, flagsp, caller)$/;"	f
-stringmap	stringmap.h	/^} *stringmap;$/;"	t	typeref:struct:_stringmap
-stringmap_delete	stringmap.c	/^void stringmap_delete(stringmap S) {$/;"	f
-stringmap_delete_free	stringmap.c	/^void stringmap_delete_free(stringmap S) {$/;"	f
-stringmap_find	stringmap.c	/^stringmap stringmap_find(const stringmap S, const char *k) {$/;"	f
-stringmap_insert	stringmap.c	/^item *stringmap_insert(stringmap S, const char *k, const item d) {$/;"	f
-stringmap_new	stringmap.c	/^stringmap stringmap_new() {$/;"	f
-stringtoaddr	dlcommon.c	/^stringtoaddr(sp, addr)$/;"	f
-strioctl	dlcommon.c	/^strioctl(fd, cmd, timout, len, dp)$/;"	f
-strncat2	addrs_dlpi.c	/^strncat2(char *dest, char *src, int n)$/;"	f
-strncpy2	addrs_dlpi.c	/^strncpy2(char *dest, char *src, int n)$/;"	f
-subrulenr	iftop.h	/^    unsigned int subrulenr;$/;"	m	struct:pfloghdr
-syserr	dlcommon.c	/^syserr(s)$/;"	f
-table	hash.h	/^    hash_node_type **table;$/;"	m	struct:__anon8
-tail	resolver.c	/^int tail;$/;"	v
-tcp_seq	tcp.h	/^typedef u_int32_t tcp_seq;$/;"	t
-tcphdr	tcp.h	/^struct tcphdr {$/;"	s
-th_ack	tcp.h	/^    tcp_seq th_ack;            \/* acknowledgement number *\/$/;"	m	struct:tcphdr
-th_dport	tcp.h	/^    u_int16_t th_dport;        \/* destination port *\/$/;"	m	struct:tcphdr
-th_flags	tcp.h	/^    u_int8_t th_flags;$/;"	m	struct:tcphdr
-th_offx2	tcp.h	/^    u_int8_t th_offx2;        \/* data offset, rsvd *\/$/;"	m	struct:tcphdr
-th_seq	tcp.h	/^    tcp_seq th_seq;            \/* sequence number *\/$/;"	m	struct:tcphdr
-th_sport	tcp.h	/^    u_int16_t th_sport;        \/* source port *\/$/;"	m	struct:tcphdr
-th_sum	tcp.h	/^    u_int16_t th_sum;            \/* checksum *\/$/;"	m	struct:tcphdr
-th_urp	tcp.h	/^    u_int16_t th_urp;            \/* urgent pointer *\/$/;"	m	struct:tcphdr
-th_win	tcp.h	/^    u_int16_t th_win;            \/* window *\/$/;"	m	struct:tcphdr
-tick	iftop.c	/^void tick(int print) {$/;"	f
-tick_mutex	iftop.c	/^pthread_mutex_t tick_mutex;$/;"	v
-token_ac	token.h	/^    u_int8_t token_ac;$/;"	m	struct:token_header
-token_dhost	token.h	/^    u_int8_t token_dhost[TOKEN_RING_MAC_LEN];$/;"	m	struct:token_header
-token_fc	token.h	/^    u_int8_t token_fc;$/;"	m	struct:token_header
-token_header	token.h	/^struct token_header {$/;"	s
-token_rcf	token.h	/^    u_int16_t token_rcf;$/;"	m	struct:token_header
-token_rseg	token.h	/^    u_int16_t token_rseg[ROUTING_SEGMENT_MAX];$/;"	m	struct:token_header
-token_shost	token.h	/^    u_int8_t token_shost[TOKEN_RING_MAC_LEN];$/;"	m	struct:token_header
-total_recv	iftop.h	/^    double long total_recv;$/;"	m	struct:__anon9
-total_recv	ui.c	/^    double long total_recv;$/;"	m	struct:host_pair_line_tag	file:
-total_sent	iftop.h	/^    double long total_sent;$/;"	m	struct:__anon9
-total_sent	ui.c	/^    double long total_sent;$/;"	m	struct:host_pair_line_tag	file:
-totals	ui.c	/^host_pair_line totals;$/;"	v
-turnOffColor	ui.c	/^void turnOffColor(int color_ary[]) {$/;"	f
-turnOnColor	ui.c	/^void turnOnColor(int color_ary[]) {$/;"	f
-u_ctl	llc.h	/^        u_int8_t u_ctl;$/;"	m	union:llc::__anon10
-u_int16_t	integers.h	/^        typedef unsigned int u_int16_t;     \/* Not likely. *\/$/;"	t
-u_int16_t	integers.h	/^        typedef unsigned short int u_int16_t;$/;"	t
-u_int16_t	integers.h	/^typedef uint16_t u_int16_t;$/;"	t
-u_int32_t	integers.h	/^        typedef unsigned int u_int32_t;$/;"	t
-u_int32_t	integers.h	/^        typedef unsigned long int u_int32_t;$/;"	t
-u_int32_t	integers.h	/^typedef uint32_t u_int32_t;$/;"	t
-u_int8_t	integers.h	/^    typedef unsigned char u_int8_t;         \/* By definition. *\/$/;"	t
-u_int8_t	integers.h	/^typedef uint8_t u_int8_t;$/;"	t
-ui_curses_init	ui.c	/^void ui_curses_init() {$/;"	f
-ui_finish	ui.c	/^void ui_finish() {$/;"	f
-ui_init	ui.c	/^void ui_init() {$/;"	f
-ui_loop	ui.c	/^void ui_loop() {$/;"	f
-ui_print	ui.c	/^void ui_print() {$/;"	f
-ui_tick	ui.c	/^void ui_tick(int print) {$/;"	f
-unit_bits	ui.c	/^char *unit_bits[UNIT_DIVISIONS] = {"b", "kb", "Mb", "Gb"};$/;"	v
-unit_bytes	ui.c	/^char *unit_bytes[UNIT_DIVISIONS] = {"B", "kB", "MB", "GB"};$/;"	v
-usage	options.c	/^static void usage(FILE *fp) {$/;"	f	file:
-v	vector.h	/^    void *v;$/;"	m	union:_item
-value	cfgfile.h	/^    int value;$/;"	m	struct:__anon6
-vector	vector.h	/^} *vector;$/;"	t	typeref:struct:_vector
-vector_back	vector.c	/^item vector_back(vector v) {$/;"	f
-vector_delete	vector.c	/^void vector_delete(vector v) {$/;"	f
-vector_delete_free	vector.c	/^void vector_delete_free(vector v) {$/;"	f
-vector_iterate	vector.h	/^#define vector_iterate(/;"	d
-vector_new	vector.c	/^vector vector_new(void) {$/;"	f
-vector_pop_back	vector.c	/^void vector_pop_back(vector v) {$/;"	f
-vector_push_back	vector.c	/^void vector_push_back(vector v, const item t) {$/;"	f
-vector_reallocate	vector.c	/^void vector_reallocate(vector v, const size_t n) {$/;"	f
-vector_remove	vector.c	/^item *vector_remove(vector v, item *t) {$/;"	f
-vlan_8021q_header	ether.h	/^struct vlan_8021q_header {$/;"	s
-wait	threadprof.c	/^    pthread_cond_t wait;$/;"	m	struct:wrapper_s	file:
-wantbiggerrate	ui.c	/^static int rateidx = 0, wantbiggerrate;$/;"	v	file:
-wrapper_routine	threadprof.c	/^static void *wrapper_routine(void *data) {$/;"	f	file:
-wrapper_s	threadprof.c	/^typedef struct wrapper_s {$/;"	s	file:
-wrapper_t	threadprof.c	/^} wrapper_t;$/;"	t	typeref:struct:wrapper_s	file:
-xcalloc	util.c	/^void *xcalloc(size_t n, size_t m) {$/;"	f
-xfree	util.c	/^void xfree(void *v) {$/;"	f
-xmalloc	util.c	/^void *xmalloc(size_t n) {$/;"	f
-xrealloc	util.c	/^void *xrealloc(void *w, size_t n) {$/;"	f
-xstrdup	util.c	/^char *xstrdup(const char *s) {$/;"	f
+-b	config/install-sh	/^	-b=*) transformbasename=`echo $1 | sed 's\/-b=\/\/'`$/;"	v
+-t	config/install-sh	/^	-t=*) transformarg=`echo $1 | sed 's\/-t=\/\/'`$/;"	v
+ALPHA_CPU_TYPE	config/config.guess	/^	ALPHA_CPU_TYPE=`\/usr\/sbin\/psrinfo -v | sed -n -e 's\/^  The alpha \\(.*\\) processor.*$\/\\1\/p' | head -n 1`$/;"	v
+ARCHITECTURE_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#   define ARCHITECTURE_ID /;"	d	file:
+ARCHITECTURE_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define ARCHITECTURE_ID /;"	d	file:
+ARCHITECTURE_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define ARCHITECTURE_ID$/;"	d	file:
+ARCHITECTURE_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#   define ARCHITECTURE_ID /;"	d	file:
+ARCHITECTURE_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define ARCHITECTURE_ID /;"	d	file:
+ARCHITECTURE_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define ARCHITECTURE_ID$/;"	d	file:
+BLACK_FOREGROUND	src/ui.c	/^#define BLACK_FOREGROUND /;"	d	file:
+BLUE_FOREGROUND	src/ui.c	/^#define BLUE_FOREGROUND /;"	d	file:
+BOLD	src/ui.c	/^#define BOLD /;"	d	file:
+BOTH_BAR_COLOR	src/ui.c	/^int BOTH_BAR_COLOR[] = {RED_FOREGROUND, BOLD};$/;"	v
+BOTTOM_BAR_COLOR	src/ui.c	/^int BOTTOM_BAR_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
+BRIDGE_NUMBER	src/token.h	/^#define BRIDGE_NUMBER(/;"	d
+BROADCAST	src/token.h	/^#define BROADCAST(/;"	d
+CAPTURE_LENGTH	src/iftop.c	/^#define CAPTURE_LENGTH /;"	d	file:
+CASERET	src/dlcommon.c	/^#define		CASERET(/;"	d	file:
+CC_FOR_BUILD	config/config.guess	/^		       CC_FOR_BUILD="$driver"$/;"	v
+CC_FOR_BUILD	config/config.guess	/^		   CC_FOR_BUILD=no_compiler_found$/;"	v
+CMAKE_BINARY_DIR	cmake-build-debug/Makefile	/^CMAKE_BINARY_DIR = \/Users\/wizard\/forkedRepos\/iftopcolor\/cmake-build-debug$/;"	m
+CMAKE_COMMAND	cmake-build-debug/Makefile	/^CMAKE_COMMAND = \/Applications\/CLion.app\/Contents\/bin\/cmake\/mac\/bin\/cmake$/;"	m
+CMAKE_SOURCE_DIR	cmake-build-debug/Makefile	/^CMAKE_SOURCE_DIR = \/Users\/wizard\/forkedRepos\/iftopcolor$/;"	m
+COLOR_PAIR_BOTH	src/ui.c	/^#define COLOR_PAIR_BOTH /;"	d	file:
+COLOR_PAIR_RECV	src/ui.c	/^#define COLOR_PAIR_RECV /;"	d	file:
+COLOR_PAIR_SENT	src/ui.c	/^#define COLOR_PAIR_SENT /;"	d	file:
+COMPILER_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^# define COMPILER_ID /;"	d	file:
+COMPILER_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define COMPILER_ID /;"	d	file:
+COMPILER_VERSION_INTERNAL	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define COMPILER_VERSION_INTERNAL /;"	d	file:
+COMPILER_VERSION_INTERNAL	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^# define COMPILER_VERSION_INTERNAL /;"	d	file:
+COMPILER_VERSION_INTERNAL	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define COMPILER_VERSION_INTERNAL /;"	d	file:
+COMPILER_VERSION_INTERNAL	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define COMPILER_VERSION_INTERNAL /;"	d	file:
+COMPILER_VERSION_MAJOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^  # define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MAJOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MAJOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^# define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MAJOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^  # define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MAJOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MAJOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define COMPILER_VERSION_MAJOR /;"	d	file:
+COMPILER_VERSION_MINOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^  # define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_MINOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_MINOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^# define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_MINOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^  # define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_MINOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_MINOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define COMPILER_VERSION_MINOR /;"	d	file:
+COMPILER_VERSION_PATCH	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^  # define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#   define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^# define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^  # define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#   define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_PATCH	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define COMPILER_VERSION_PATCH /;"	d	file:
+COMPILER_VERSION_TWEAK	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define COMPILER_VERSION_TWEAK /;"	d	file:
+COMPILER_VERSION_TWEAK	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^# define COMPILER_VERSION_TWEAK /;"	d	file:
+COMPILER_VERSION_TWEAK	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define COMPILER_VERSION_TWEAK /;"	d	file:
+COMPILER_VERSION_TWEAK	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define COMPILER_VERSION_TWEAK /;"	d	file:
+CONFIG_TYPE_BOOL	src/cfgfile.c	/^#define CONFIG_TYPE_BOOL /;"	d	file:
+CONFIG_TYPE_INT	src/cfgfile.c	/^#define CONFIG_TYPE_INT /;"	d	file:
+CONFIG_TYPE_STRING	src/cfgfile.c	/^#define CONFIG_TYPE_STRING /;"	d	file:
+CPU	config/config.guess	/^	CPU=mips$/;"	v
+CPU	config/config.guess	/^	CPU=mips64$/;"	v
+CPU	config/config.guess	/^	CPU=mipsisa32r6$/;"	v
+CPU	config/config.guess	/^	CPU=mipsisa64r6$/;"	v
+CUM_LABEL_COLOR	src/ui.c	/^int CUM_LABEL_COLOR[] = {YELLOW_FOREGROUND, NONBOLD};$/;"	v
+CUM_TRANSFER_COLUMN_COLOR	src/ui.c	/^int CUM_TRANSFER_COLUMN_COLOR[] = {YELLOW_FOREGROUND, BOLD};$/;"	v
+CXX_STD	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#      define CXX_STD /;"	d	file:
+CXX_STD	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#    define CXX_STD /;"	d	file:
+CXX_STD	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define CXX_STD /;"	d	file:
+CYAN_FOREGROUND	src/ui.c	/^#define CYAN_FOREGROUND /;"	d	file:
+C_DIALECT	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define C_DIALECT /;"	d	file:
+C_DIALECT	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define C_DIALECT$/;"	d	file:
+C_DIALECT	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^# define C_DIALECT /;"	d	file:
+DEB_BUILD_MAINT_OPTIONS	debian/rules	/^export DEB_BUILD_MAINT_OPTIONS = hardening=+all$/;"	m
+DEB_CFLAGS_MAINT_APPEND	debian/rules	/^export DEB_CFLAGS_MAINT_APPEND = -DNO_SYSTEM -Wall -DUSE_GETNAMEINFO=1 -DUSE_GETIFADDRS=1$/;"	m
+DEB_LDFLAGS_MAINT_APPEND	debian/rules	/^export DEB_LDFLAGS_MAINT_APPEND = -Wl,-z,defs$/;"	m
+DEC	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#define DEC(/;"	d	file:
+DEC	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#define DEC(/;"	d	file:
+DIRECTION	src/token.h	/^#define DIRECTION(/;"	d
+DLCOMMON_H	src/dlcommon.h	/^#define DLCOMMON_H$/;"	d
+DL_UL_INDICATOR_COLOR	src/ui.c	/^int DL_UL_INDICATOR_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
+DUMP_RESOLUTION	src/iftop.h	/^#define DUMP_RESOLUTION /;"	d
+EQUALS	cmake-build-debug/Makefile	/^EQUALS = =$/;"	m
+ETHERTYPE_8021Q	src/ethertype.h	/^#define    ETHERTYPE_8021Q /;"	d
+ETHERTYPE_AARP	src/ethertype.h	/^#define ETHERTYPE_AARP /;"	d
+ETHERTYPE_ARP	src/ether.h	/^#define    ETHERTYPE_ARP /;"	d
+ETHERTYPE_ARP	src/ethertype.h	/^#define ETHERTYPE_ARP	/;"	d
+ETHERTYPE_ATALK	src/ethertype.h	/^#define ETHERTYPE_ATALK /;"	d
+ETHERTYPE_CISCO_CDP	src/llc.h	/^#define    ETHERTYPE_CISCO_CDP /;"	d
+ETHERTYPE_DECDNS	src/ethertype.h	/^#define    ETHERTYPE_DECDNS /;"	d
+ETHERTYPE_DECDTS	src/ethertype.h	/^#define    ETHERTYPE_DECDTS /;"	d
+ETHERTYPE_DN	src/ethertype.h	/^#define    ETHERTYPE_DN /;"	d
+ETHERTYPE_IP	src/ether.h	/^#define    ETHERTYPE_IP /;"	d
+ETHERTYPE_IP	src/ethertype.h	/^#define	ETHERTYPE_IP	/;"	d
+ETHERTYPE_IPV6	src/ethertype.h	/^#define ETHERTYPE_IPV6 /;"	d
+ETHERTYPE_IPX	src/ethertype.h	/^#define ETHERTYPE_IPX /;"	d
+ETHERTYPE_LANBRIDGE	src/ethertype.h	/^#define    ETHERTYPE_LANBRIDGE /;"	d
+ETHERTYPE_LAT	src/ethertype.h	/^#define    ETHERTYPE_LAT /;"	d
+ETHERTYPE_LOOPBACK	src/ethertype.h	/^#define    ETHERTYPE_LOOPBACK /;"	d
+ETHERTYPE_MOPDL	src/ethertype.h	/^#define    ETHERTYPE_MOPDL /;"	d
+ETHERTYPE_MOPRC	src/ethertype.h	/^#define    ETHERTYPE_MOPRC /;"	d
+ETHERTYPE_MPLS	src/ethertype.h	/^#define    ETHERTYPE_MPLS /;"	d
+ETHERTYPE_MPLS_MULTI	src/ethertype.h	/^#define    ETHERTYPE_MPLS_MULTI /;"	d
+ETHERTYPE_NS	src/ethertype.h	/^#define ETHERTYPE_NS /;"	d
+ETHERTYPE_PPP	src/ethertype.h	/^#define    ETHERTYPE_PPP /;"	d
+ETHERTYPE_PPPOED	src/ethertype.h	/^#define ETHERTYPE_PPPOED /;"	d
+ETHERTYPE_PPPOES	src/ethertype.h	/^#define ETHERTYPE_PPPOES /;"	d
+ETHERTYPE_PUP	src/ether.h	/^#define    ETHERTYPE_PUP /;"	d
+ETHERTYPE_PUP	src/ethertype.h	/^#define	ETHERTYPE_PUP	/;"	d
+ETHERTYPE_REVARP	src/ether.h	/^#define    ETHERTYPE_REVARP /;"	d
+ETHERTYPE_REVARP	src/ethertype.h	/^#define ETHERTYPE_REVARP	/;"	d
+ETHERTYPE_SCA	src/ethertype.h	/^#define ETHERTYPE_SCA /;"	d
+ETHERTYPE_SPRITE	src/ethertype.h	/^#define    ETHERTYPE_SPRITE /;"	d
+ETHERTYPE_TRAIL	src/ethertype.h	/^#define ETHERTYPE_TRAIL /;"	d
+ETHERTYPE_VEXP	src/ethertype.h	/^#define    ETHERTYPE_VEXP /;"	d
+ETHERTYPE_VPROD	src/ethertype.h	/^#define    ETHERTYPE_VPROD /;"	d
+ETHER_ADDR_LEN	src/ether.h	/^#define    ETHER_ADDR_LEN /;"	d
+EXTRACT_16BITS	src/extract.h	/^#define EXTRACT_16BITS(/;"	d
+EXTRACT_24BITS	src/extract.h	/^#define EXTRACT_24BITS(/;"	d
+EXTRACT_32BITS	src/extract.h	/^#define EXTRACT_32BITS(/;"	d
+EXTRACT_LE_16BITS	src/extract.h	/^#define EXTRACT_LE_16BITS(/;"	d
+EXTRACT_LE_32BITS	src/extract.h	/^#define EXTRACT_LE_32BITS(/;"	d
+EXTRACT_LE_8BITS	src/extract.h	/^#define EXTRACT_LE_8BITS(/;"	d
+FOURTY_SECOND_TRANSFER_COLUMN_COLOR	src/ui.c	/^int FOURTY_SECOND_TRANSFER_COLUMN_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
+FRAME_TYPE	src/token.h	/^#define FRAME_TYPE(/;"	d
+FUJITSU_PROC	config/config.guess	/^	FUJITSU_PROC=`uname -m | tr ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz`$/;"	v
+FUJITSU_REL	config/config.guess	/^	FUJITSU_REL=`echo "$UNAME_RELEASE" | sed -e 's\/ \/_\/'`$/;"	v
+FUJITSU_REL	config/config.guess	/^	FUJITSU_REL=`echo "$UNAME_RELEASE" | tr ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz | sed -e 's\/ \/_\/'`$/;"	v
+FUJITSU_SYS	config/config.guess	/^	FUJITSU_SYS=`uname -p | tr ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz | sed -e 's\/\\\/\/\/'`$/;"	v
+GREEN_FOREGROUND	src/ui.c	/^#define GREEN_FOREGROUND /;"	d	file:
+HASH_STATUS_KEY_NOT_FOUND	src/hash.h	/^    HASH_STATUS_KEY_NOT_FOUND$/;"	e	enum:__anon17
+HASH_STATUS_MEM_EXHAUSTED	src/hash.h	/^    HASH_STATUS_MEM_EXHAUSTED,$/;"	e	enum:__anon17
+HASH_STATUS_OK	src/hash.h	/^    HASH_STATUS_OK,$/;"	e	enum:__anon17
+HAVE_C99_INTS	src/config.h	/^#define HAVE_C99_INTS /;"	d
+HAVE_INET_ATON	src/config.h	/^#define HAVE_INET_ATON /;"	d
+HAVE_INET_PTON	src/config.h	/^#define HAVE_INET_PTON /;"	d
+HAVE_INTTYPES_H	src/config.h	/^#define HAVE_INTTYPES_H /;"	d
+HAVE_LIBPCAP	src/config.h	/^#define HAVE_LIBPCAP /;"	d
+HAVE_MEMORY_H	src/config.h	/^#define HAVE_MEMORY_H /;"	d
+HAVE_PCAP_H	src/config.h	/^#define HAVE_PCAP_H /;"	d
+HAVE_REGCOMP	src/config.h	/^#define HAVE_REGCOMP /;"	d
+HAVE_SELECT	src/config.h	/^#define HAVE_SELECT /;"	d
+HAVE_STDINT_H	src/config.h	/^#define HAVE_STDINT_H /;"	d
+HAVE_STDLIB_H	src/config.h	/^#define HAVE_STDLIB_H /;"	d
+HAVE_STRDUP	src/config.h	/^#define HAVE_STRDUP /;"	d
+HAVE_STRERROR	src/config.h	/^#define HAVE_STRERROR /;"	d
+HAVE_STRINGS_H	src/config.h	/^#define HAVE_STRINGS_H /;"	d
+HAVE_STRING_H	src/config.h	/^#define HAVE_STRING_H /;"	d
+HAVE_STRSPN	src/config.h	/^#define HAVE_STRSPN /;"	d
+HAVE_SYS_IOCTL_H	src/config.h	/^#define HAVE_SYS_IOCTL_H /;"	d
+HAVE_SYS_SOCKIO_H	src/config.h	/^#define HAVE_SYS_SOCKIO_H /;"	d
+HAVE_SYS_STAT_H	src/config.h	/^#define HAVE_SYS_STAT_H /;"	d
+HAVE_SYS_TIME_H	src/config.h	/^#define HAVE_SYS_TIME_H /;"	d
+HAVE_SYS_TYPES_H	src/config.h	/^#define HAVE_SYS_TYPES_H /;"	d
+HAVE_UNISTD_H	src/config.h	/^#define HAVE_UNISTD_H /;"	d
+HELP_MESSAGE	src/ui.c	/^#define HELP_MESSAGE /;"	d	file:
+HELP_MSG_SIZE	src/ui.c	/^#define HELP_MSG_SIZE /;"	d	file:
+HELP_TIME	src/ui.c	/^#define HELP_TIME /;"	d	file:
+HEX	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#define HEX(/;"	d	file:
+HEX	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#define HEX(/;"	d	file:
+HISTORY_DIVISIONS	src/ui.c	/^#define HISTORY_DIVISIONS /;"	d	file:
+HISTORY_LENGTH	src/iftop.h	/^#define HISTORY_LENGTH /;"	d
+HOST1_COLOR	src/ui.c	/^int HOST1_COLOR[] = {CYAN_FOREGROUND, BOLD};$/;"	v
+HOST2_COLOR	src/ui.c	/^int HOST2_COLOR[] = {MAGENTA_FOREGROUND, BOLD};$/;"	v
+HOSTNAME_LENGTH	src/ui.c	/^#define HOSTNAME_LENGTH /;"	d	file:
+HPUX_REV	config/config.guess	/^	HPUX_REV=`echo "$UNAME_RELEASE"|sed -e 's\/[^.]*.[0B]*\/\/'`$/;"	v
+HP_ARCH	config/config.guess	/^		HP_ARCH=hppa2.0w$/;"	v
+HP_ARCH	config/config.guess	/^		HP_ARCH=hppa64$/;"	v
+IBM_ARCH	config/config.guess	/^		IBM_ARCH=powerpc$/;"	v
+IBM_ARCH	config/config.guess	/^		IBM_ARCH=rs6000$/;"	v
+IBM_CPU_ID	config/config.guess	/^	IBM_CPU_ID=`\/usr\/sbin\/lsdev -C -c processor -S available | sed 1q | awk '{ print $1 }'`$/;"	v
+IBM_REV	config/config.guess	/^		IBM_REV="$UNAME_VERSION.$UNAME_RELEASE"$/;"	v
+IBM_REV	config/config.guess	/^		IBM_REV=`\/usr\/bin\/lslpp -Lqc bos.rte.libc |$/;"	v
+IBM_REV	config/config.guess	/^		IBM_REV=`\/usr\/bin\/oslevel`$/;"	v
+ID_VOID_MAIN	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^# define ID_VOID_MAIN$/;"	d	file:
+IFS	config/compile	/^	    IFS="$save_ifs"$/;"	v
+IFS	config/compile	/^	  IFS="$save_ifs"$/;"	v
+IFS	config/compile	/^    IFS=$save_IFS$/;"	v
+IFS	config/compile	/^  IFS=$save_IFS$/;"	v
+IFS	config/compile	/^  IFS=';'$/;"	v
+IFS	config/compile	/^IFS=" ""	$nl"$/;"	v
+IFS	config/depcomp	/^  IFS=" "$/;"	v
+IFS	config/install-sh	/^IFS="${IFS-${defaultIFS}}"$/;"	v
+IFS	config/install-sh	/^IFS="${oIFS}"$/;"	v
+IFS	config/install-sh	/^IFS='%'$/;"	v
+IFTOP_VERSION	src/config.h	/^#define IFTOP_VERSION /;"	d
+IPDEFTTL	src/ip.h	/^#define    IPDEFTTL /;"	d
+IPFRAGTTL	src/ip.h	/^#define    IPFRAGTTL /;"	d
+IPOPT_CLASS	src/ip.h	/^#define    IPOPT_CLASS(/;"	d
+IPOPT_CONTROL	src/ip.h	/^#define    IPOPT_CONTROL /;"	d
+IPOPT_COPIED	src/ip.h	/^#define    IPOPT_COPIED(/;"	d
+IPOPT_DEBMEAS	src/ip.h	/^#define    IPOPT_DEBMEAS /;"	d
+IPOPT_EOL	src/ip.h	/^#define    IPOPT_EOL /;"	d
+IPOPT_LSRR	src/ip.h	/^#define    IPOPT_LSRR /;"	d
+IPOPT_MINOFF	src/ip.h	/^#define    IPOPT_MINOFF /;"	d
+IPOPT_NOP	src/ip.h	/^#define    IPOPT_NOP /;"	d
+IPOPT_NUMBER	src/ip.h	/^#define    IPOPT_NUMBER(/;"	d
+IPOPT_OFFSET	src/ip.h	/^#define IPOPT_OFFSET /;"	d
+IPOPT_OLEN	src/ip.h	/^#define    IPOPT_OLEN /;"	d
+IPOPT_OPTVAL	src/ip.h	/^#define    IPOPT_OPTVAL /;"	d
+IPOPT_RESERVED1	src/ip.h	/^#define    IPOPT_RESERVED1 /;"	d
+IPOPT_RESERVED2	src/ip.h	/^#define    IPOPT_RESERVED2 /;"	d
+IPOPT_RR	src/ip.h	/^#define    IPOPT_RR /;"	d
+IPOPT_SATID	src/ip.h	/^#define    IPOPT_SATID /;"	d
+IPOPT_SECURITY	src/ip.h	/^#define    IPOPT_SECURITY /;"	d
+IPOPT_SECUR_CONFID	src/ip.h	/^#define    IPOPT_SECUR_CONFID /;"	d
+IPOPT_SECUR_EFTO	src/ip.h	/^#define    IPOPT_SECUR_EFTO /;"	d
+IPOPT_SECUR_MMMM	src/ip.h	/^#define    IPOPT_SECUR_MMMM /;"	d
+IPOPT_SECUR_RESTR	src/ip.h	/^#define    IPOPT_SECUR_RESTR /;"	d
+IPOPT_SECUR_SECRET	src/ip.h	/^#define    IPOPT_SECUR_SECRET /;"	d
+IPOPT_SECUR_TOPSECRET	src/ip.h	/^#define    IPOPT_SECUR_TOPSECRET /;"	d
+IPOPT_SECUR_UNCLASS	src/ip.h	/^#define    IPOPT_SECUR_UNCLASS /;"	d
+IPOPT_SSRR	src/ip.h	/^#define    IPOPT_SSRR /;"	d
+IPOPT_TS	src/ip.h	/^#define    IPOPT_TS /;"	d
+IPOPT_TS_PRESPEC	src/ip.h	/^#define    IPOPT_TS_PRESPEC /;"	d
+IPOPT_TS_TSANDADDR	src/ip.h	/^#define    IPOPT_TS_TSANDADDR /;"	d
+IPOPT_TS_TSONLY	src/ip.h	/^#define    IPOPT_TS_TSONLY /;"	d
+IPTOS_LOWDELAY	src/ip.h	/^#define    IPTOS_LOWDELAY /;"	d
+IPTOS_PREC_CRITIC_ECP	src/ip.h	/^#define    IPTOS_PREC_CRITIC_ECP /;"	d
+IPTOS_PREC_FLASH	src/ip.h	/^#define    IPTOS_PREC_FLASH /;"	d
+IPTOS_PREC_FLASHOVERRIDE	src/ip.h	/^#define    IPTOS_PREC_FLASHOVERRIDE /;"	d
+IPTOS_PREC_IMMEDIATE	src/ip.h	/^#define    IPTOS_PREC_IMMEDIATE /;"	d
+IPTOS_PREC_INTERNETCONTROL	src/ip.h	/^#define    IPTOS_PREC_INTERNETCONTROL /;"	d
+IPTOS_PREC_NETCONTROL	src/ip.h	/^#define    IPTOS_PREC_NETCONTROL /;"	d
+IPTOS_PREC_PRIORITY	src/ip.h	/^#define    IPTOS_PREC_PRIORITY /;"	d
+IPTOS_PREC_ROUTINE	src/ip.h	/^#define    IPTOS_PREC_ROUTINE /;"	d
+IPTOS_RELIABILITY	src/ip.h	/^#define    IPTOS_RELIABILITY /;"	d
+IPTOS_THROUGHPUT	src/ip.h	/^#define    IPTOS_THROUGHPUT /;"	d
+IPTS_FLG	src/ip.h	/^#define IPTS_FLG(/;"	d
+IPTS_OFLW	src/ip.h	/^#define IPTS_OFLW(/;"	d
+IPTTLDEC	src/ip.h	/^#define    IPTTLDEC /;"	d
+IPVERSION	src/ip.h	/^#define    IPVERSION /;"	d
+IP_DF	src/ip.h	/^#define    IP_DF /;"	d
+IP_HL	src/ip.h	/^#define IP_HL(/;"	d
+IP_MAXPACKET	src/ip.h	/^#define    IP_MAXPACKET /;"	d
+IP_MF	src/ip.h	/^#define    IP_MF /;"	d
+IP_MSS	src/ip.h	/^#define    IP_MSS /;"	d
+IP_OFFMASK	src/ip.h	/^#define    IP_OFFMASK /;"	d
+IP_V	src/ip.h	/^#define IP_V(/;"	d
+IS_GLIBC	config/config.guess	/^	IS_GLIBC=0$/;"	v
+IS_SOURCE_ROUTED	src/token.h	/^#define IS_SOURCE_ROUTED(/;"	d
+LARGEST_FRAME	src/token.h	/^#define LARGEST_FRAME(/;"	d
+LIBC	config/config.guess	/^	    LIBC=musl$/;"	v
+LIBC	config/config.guess	/^	LIBC=dietlibc$/;"	v
+LIBC	config/config.guess	/^	LIBC=gnu$/;"	v
+LIBC	config/config.guess	/^	LIBC=uclibc$/;"	v
+LIBCABI	config/config.guess	/^	LIBCABI=${LIBC}$/;"	v
+LIBCABI	config/config.guess	/^	LIBCABI=gnuabi64$/;"	v
+LIBCABI	config/config.guess	/^	LIBCABI=gnuabin32$/;"	v
+LINUX_SLL_BROADCAST	src/sll.h	/^#define LINUX_SLL_BROADCAST /;"	d
+LINUX_SLL_HOST	src/sll.h	/^#define LINUX_SLL_HOST /;"	d
+LINUX_SLL_MULTICAST	src/sll.h	/^#define LINUX_SLL_MULTICAST /;"	d
+LINUX_SLL_OTHERHOST	src/sll.h	/^#define LINUX_SLL_OTHERHOST /;"	d
+LINUX_SLL_OUTGOING	src/sll.h	/^#define LINUX_SLL_OUTGOING /;"	d
+LINUX_SLL_P_802_2	src/sll.h	/^#define LINUX_SLL_P_802_2 /;"	d
+LINUX_SLL_P_802_3	src/sll.h	/^#define LINUX_SLL_P_802_3 /;"	d
+LLCSAP_8021B_G	src/llc.h	/^#define    LLCSAP_8021B_G /;"	d
+LLCSAP_8021B_I	src/llc.h	/^#define    LLCSAP_8021B_I /;"	d
+LLCSAP_8021D	src/llc.h	/^#define    LLCSAP_8021D /;"	d
+LLCSAP_GLOBAL	src/llc.h	/^#define    LLCSAP_GLOBAL /;"	d
+LLCSAP_IP	src/llc.h	/^#define    LLCSAP_IP /;"	d
+LLCSAP_IPX	src/llc.h	/^#define LLCSAP_IPX /;"	d
+LLCSAP_ISO8208	src/llc.h	/^#define    LLCSAP_ISO8208 /;"	d
+LLCSAP_ISONS	src/llc.h	/^#define    LLCSAP_ISONS /;"	d
+LLCSAP_NETBEUI	src/llc.h	/^#define LLCSAP_NETBEUI /;"	d
+LLCSAP_NULL	src/llc.h	/^#define    LLCSAP_NULL /;"	d
+LLCSAP_PROWAY	src/llc.h	/^#define    LLCSAP_PROWAY /;"	d
+LLCSAP_PROWAYNM	src/llc.h	/^#define    LLCSAP_PROWAYNM /;"	d
+LLCSAP_RS511	src/llc.h	/^#define    LLCSAP_RS511 /;"	d
+LLCSAP_SNAP	src/llc.h	/^#define    LLCSAP_SNAP /;"	d
+LLC_DISC	src/llc.h	/^#define    LLC_DISC /;"	d
+LLC_DM	src/llc.h	/^#define    LLC_DM /;"	d
+LLC_FRMR	src/llc.h	/^#define    LLC_FRMR /;"	d
+LLC_GSAP	src/llc.h	/^#define    LLC_GSAP /;"	d
+LLC_IS_NR	src/llc.h	/^#define LLC_IS_NR(/;"	d
+LLC_IS_POLL	src/llc.h	/^#define    LLC_IS_POLL /;"	d
+LLC_I_NS	src/llc.h	/^#define LLC_I_NS(/;"	d
+LLC_REJ	src/llc.h	/^#define    LLC_REJ /;"	d
+LLC_RNR	src/llc.h	/^#define    LLC_RNR /;"	d
+LLC_RR	src/llc.h	/^#define    LLC_RR /;"	d
+LLC_SABME	src/llc.h	/^#define    LLC_SABME /;"	d
+LLC_S_CMD	src/llc.h	/^#define    LLC_S_CMD(/;"	d
+LLC_S_FMT	src/llc.h	/^#define LLC_S_FMT /;"	d
+LLC_TEST	src/llc.h	/^#define    LLC_TEST /;"	d
+LLC_UA	src/llc.h	/^#define    LLC_UA /;"	d
+LLC_UI	src/llc.h	/^#define    LLC_UI /;"	d
+LLC_U_CMD	src/llc.h	/^#define    LLC_U_CMD(/;"	d
+LLC_U_FMT	src/llc.h	/^#define    LLC_U_FMT /;"	d
+LLC_U_POLL	src/llc.h	/^#define    LLC_U_POLL /;"	d
+LLC_XID	src/llc.h	/^#define    LLC_XID /;"	d
+LLC_XID_FI	src/llc.h	/^#define    LLC_XID_FI /;"	d
+MAGENTA_FOREGROUND	src/ui.c	/^#define MAGENTA_FOREGROUND /;"	d	file:
+MAXDLADDR	src/dlcommon.h	/^#define        MAXDLADDR /;"	d
+MAXDLBUF	src/dlcommon.h	/^#define        MAXDLBUF /;"	d
+MAXTTL	src/ip.h	/^#define    MAXTTL /;"	d
+MAXWAIT	src/dlcommon.h	/^#define        MAXWAIT /;"	d
+MAX_CONFIG_LINE	src/cfgfile.c	/^#define MAX_CONFIG_LINE /;"	d	file:
+MIPS_ENDIAN	config/config.guess	/^	MIPS_ENDIAN=$/;"	v
+MIPS_ENDIAN	config/config.guess	/^	MIPS_ENDIAN=el$/;"	v
+NAMESIZE	src/resolver.c	/^#define NAMESIZE /;"	d	file:
+NONBOLD	src/ui.c	/^#define NONBOLD /;"	d	file:
+OFFADDR	src/dlcommon.h	/^#define        OFFADDR(/;"	d
+OPTION_LINEDISPLAY_ONE_LINE_BOTH	src/options.h	/^    OPTION_LINEDISPLAY_ONE_LINE_BOTH,$/;"	e	enum:__anon10
+OPTION_LINEDISPLAY_ONE_LINE_RECV	src/options.h	/^    OPTION_LINEDISPLAY_ONE_LINE_RECV,$/;"	e	enum:__anon10
+OPTION_LINEDISPLAY_ONE_LINE_SENT	src/options.h	/^    OPTION_LINEDISPLAY_ONE_LINE_SENT$/;"	e	enum:__anon10
+OPTION_LINEDISPLAY_TWO_LINE	src/options.h	/^    OPTION_LINEDISPLAY_TWO_LINE,$/;"	e	enum:__anon10
+OPTION_PORTS_DEST	src/options.h	/^    OPTION_PORTS_DEST,$/;"	e	enum:__anon8
+OPTION_PORTS_OFF	src/options.h	/^    OPTION_PORTS_OFF,$/;"	e	enum:__anon8
+OPTION_PORTS_ON	src/options.h	/^    OPTION_PORTS_ON$/;"	e	enum:__anon8
+OPTION_PORTS_SRC	src/options.h	/^    OPTION_PORTS_SRC,$/;"	e	enum:__anon8
+OPTION_SORT_DEST	src/options.h	/^    OPTION_SORT_DEST$/;"	e	enum:__anon9
+OPTION_SORT_DIV1	src/options.h	/^    OPTION_SORT_DIV1,$/;"	e	enum:__anon9
+OPTION_SORT_DIV2	src/options.h	/^    OPTION_SORT_DIV2,$/;"	e	enum:__anon9
+OPTION_SORT_DIV3	src/options.h	/^    OPTION_SORT_DIV3,$/;"	e	enum:__anon9
+OPTION_SORT_SRC	src/options.h	/^    OPTION_SORT_SRC,$/;"	e	enum:__anon9
+OS_REL	config/config.guess	/^	OS_REL=''$/;"	v
+OS_REL	config/config.guess	/^	OS_REL='.3'$/;"	v
+OUI_APPLETALK	src/llc.h	/^#define    OUI_APPLETALK /;"	d
+OUI_CISCO	src/llc.h	/^#define    OUI_CISCO /;"	d
+OUI_CISCO_90	src/llc.h	/^#define    OUI_CISCO_90 /;"	d
+OUI_ENCAP_ETHER	src/llc.h	/^#define    OUI_ENCAP_ETHER /;"	d
+PACKAGE	src/config.h	/^#define PACKAGE /;"	d
+PACKAGE_BUGREPORT	src/config.h	/^#define PACKAGE_BUGREPORT /;"	d
+PACKAGE_NAME	src/config.h	/^#define PACKAGE_NAME /;"	d
+PACKAGE_STRING	src/config.h	/^#define PACKAGE_STRING /;"	d
+PACKAGE_TARNAME	src/config.h	/^#define PACKAGE_TARNAME /;"	d
+PACKAGE_URL	src/config.h	/^#define PACKAGE_URL /;"	d
+PACKAGE_VERSION	src/config.h	/^#define PACKAGE_VERSION /;"	d
+PATH	config/config.guess	/^	PATH=$PATH:\/.attbin ; export PATH$/;"	v
+PEAK_LABEL_COLOR	src/ui.c	/^int PEAK_LABEL_COLOR[] = {MAGENTA_FOREGROUND, BOLD};$/;"	v
+PEAK_TRANSFER_COLUMN_COLOR	src/ui.c	/^int PEAK_TRANSFER_COLUMN_COLOR[] = {YELLOW_FOREGROUND, BOLD};$/;"	v
+PLATFORM_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define PLATFORM_ID /;"	d	file:
+PLATFORM_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define PLATFORM_ID$/;"	d	file:
+PLATFORM_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^# define PLATFORM_ID /;"	d	file:
+PLATFORM_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^# define PLATFORM_ID$/;"	d	file:
+PLATFORM_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define PLATFORM_ID /;"	d	file:
+PLATFORM_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define PLATFORM_ID$/;"	d	file:
+PLATFORM_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define PLATFORM_ID /;"	d	file:
+PLATFORM_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^# define PLATFORM_ID$/;"	d	file:
+PPP_ADDRESS	src/ppp.h	/^#define PPP_ADDRESS /;"	d
+PPP_APPLE	src/ppp.h	/^#define PPP_APPLE /;"	d
+PPP_APPLECP	src/ppp.h	/^#define PPP_APPLECP /;"	d
+PPP_BACP	src/ppp.h	/^#define PPP_BACP /;"	d
+PPP_BAP	src/ppp.h	/^#define PPP_BAP /;"	d
+PPP_BRPDU	src/ppp.h	/^#define PPP_BRPDU /;"	d
+PPP_CCP	src/ppp.h	/^#define PPP_CCP /;"	d
+PPP_CHAP	src/ppp.h	/^#define PPP_CHAP /;"	d
+PPP_COMP	src/ppp.h	/^#define    PPP_COMP /;"	d
+PPP_CONTROL	src/ppp.h	/^#define PPP_CONTROL /;"	d
+PPP_DECNET	src/ppp.h	/^#define PPP_DECNET /;"	d
+PPP_DECNETCP	src/ppp.h	/^#define PPP_DECNETCP /;"	d
+PPP_HDRLEN	src/ppp.h	/^#define PPP_HDRLEN /;"	d
+PPP_HELLO	src/ppp.h	/^#define PPP_HELLO /;"	d
+PPP_IP	src/ppp.h	/^#define PPP_IP /;"	d
+PPP_IPCP	src/ppp.h	/^#define PPP_IPCP /;"	d
+PPP_IPV6	src/ppp.h	/^#define PPP_IPV6 /;"	d
+PPP_IPV6CP	src/ppp.h	/^#define PPP_IPV6CP /;"	d
+PPP_IPX	src/ppp.h	/^#define PPP_IPX /;"	d
+PPP_IPXCP	src/ppp.h	/^#define PPP_IPXCP /;"	d
+PPP_LCP	src/ppp.h	/^#define PPP_LCP /;"	d
+PPP_LQM	src/ppp.h	/^#define PPP_LQM /;"	d
+PPP_LUXCOM	src/ppp.h	/^#define PPP_LUXCOM /;"	d
+PPP_MP	src/ppp.h	/^#define PPP_MP /;"	d
+PPP_NS	src/ppp.h	/^#define PPP_NS /;"	d
+PPP_NSCP	src/ppp.h	/^#define PPP_NSCP /;"	d
+PPP_OSI	src/ppp.h	/^#define PPP_OSI /;"	d
+PPP_OSICP	src/ppp.h	/^#define PPP_OSICP /;"	d
+PPP_PAP	src/ppp.h	/^#define PPP_PAP /;"	d
+PPP_SNS	src/ppp.h	/^#define PPP_SNS /;"	d
+PPP_STII	src/ppp.h	/^#define PPP_STII /;"	d
+PPP_STIICP	src/ppp.h	/^#define PPP_STIICP /;"	d
+PPP_VINES	src/ppp.h	/^#define PPP_VINES /;"	d
+PPP_VINESCP	src/ppp.h	/^#define PPP_VINESCP /;"	d
+PPP_VJC	src/ppp.h	/^#define PPP_VJC /;"	d
+PPP_VJNC	src/ppp.h	/^#define PPP_VJNC /;"	d
+RATES_LABEL_COLOR	src/ui.c	/^int RATES_LABEL_COLOR[] = {MAGENTA_FOREGROUND, BOLD};$/;"	v
+RECEIVE_BAR_COLOR	src/ui.c	/^int RECEIVE_BAR_COLOR[] = {GREEN_FOREGROUND, BOLD};$/;"	v
+RED_FOREGROUND	src/ui.c	/^#define RED_FOREGROUND /;"	d	file:
+RESOLUTION	src/iftop.h	/^#define RESOLUTION /;"	d
+RESOLVE_QUEUE_LENGTH	src/resolver.c	/^#define RESOLVE_QUEUE_LENGTH /;"	d	file:
+RIF_LENGTH	src/token.h	/^#define RIF_LENGTH(/;"	d
+RING_NUMBER	src/token.h	/^#define RING_NUMBER(/;"	d
+RM	cmake-build-debug/Makefile	/^RM = \/Applications\/CLion.app\/Contents\/bin\/cmake\/mac\/bin\/cmake -E rm -f$/;"	m
+ROUTING_SEGMENT_MAX	src/token.h	/^#define ROUTING_SEGMENT_MAX /;"	d
+SCALE_BAR_COLOR	src/ui.c	/^int SCALE_BAR_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
+SCALE_MARKERS_COLOR	src/ui.c	/^int SCALE_MARKERS_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
+SEGMENT_COUNT	src/token.h	/^#define SEGMENT_COUNT(/;"	d
+SENT_BAR_COLOR	src/ui.c	/^int SENT_BAR_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
+SHELL	cmake-build-debug/Makefile	/^SHELL = \/bin\/sh$/;"	m
+SIMULATE_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define SIMULATE_ID /;"	d	file:
+SIMULATE_ID	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define SIMULATE_ID /;"	d	file:
+SIMULATE_VERSION_MAJOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define SIMULATE_VERSION_MAJOR /;"	d	file:
+SIMULATE_VERSION_MAJOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define SIMULATE_VERSION_MAJOR /;"	d	file:
+SIMULATE_VERSION_MINOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define SIMULATE_VERSION_MINOR /;"	d	file:
+SIMULATE_VERSION_MINOR	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define SIMULATE_VERSION_MINOR /;"	d	file:
+SIMULATE_VERSION_PATCH	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define SIMULATE_VERSION_PATCH /;"	d	file:
+SIMULATE_VERSION_PATCH	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#  define SIMULATE_VERSION_PATCH /;"	d	file:
+SIZEOF_U_INT16_T	src/config.h	/^#define SIZEOF_U_INT16_T /;"	d
+SIZEOF_U_INT32_T	src/config.h	/^#define SIZEOF_U_INT32_T /;"	d
+SIZEOF_U_INT8_T	src/config.h	/^#define SIZEOF_U_INT8_T /;"	d
+SLL_ADDRLEN	src/sll.h	/^#define SLL_ADDRLEN /;"	d
+SLL_HDR_LEN	src/sll.h	/^#define SLL_HDR_LEN /;"	d
+SRCFILE	config/missing	/^	    SRCFILE=`echo "$LASTARG" | sed 's\/l$\/c\/'`$/;"	v
+SRCFILE	config/missing	/^	    SRCFILE=`echo "$LASTARG" | sed 's\/y$\/c\/'`$/;"	v
+SRCFILE	config/missing	/^	    SRCFILE=`echo "$LASTARG" | sed 's\/y$\/h\/'`$/;"	v
+STDC_HEADERS	src/config.h	/^#define STDC_HEADERS /;"	d
+STRINGIFY	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#define STRINGIFY(/;"	d	file:
+STRINGIFY	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#define STRINGIFY(/;"	d	file:
+STRINGIFY_HELPER	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#define STRINGIFY_HELPER(/;"	d	file:
+STRINGIFY_HELPER	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^#define STRINGIFY_HELPER(/;"	d	file:
+SUN_ARCH	config/config.guess	/^		SUN_ARCH=x86_64$/;"	v
+SUN_ARCH	config/config.guess	/^	SUN_ARCH=i386$/;"	v
+SYSTEM_NAME	config/config.guess	/^	  SYSTEM_NAME=`"$dummy" "$dummyarg"` &&$/;"	v
+TCPOLEN_MAXSEG	src/tcp.h	/^#define    TCPOLEN_MAXSEG /;"	d
+TCPOLEN_TIMESTAMP	src/tcp.h	/^#define    TCPOLEN_TIMESTAMP /;"	d
+TCPOLEN_TSTAMP_APPA	src/tcp.h	/^#define    TCPOLEN_TSTAMP_APPA /;"	d
+TCPOPT_CC	src/tcp.h	/^#define TCPOPT_CC /;"	d
+TCPOPT_CCECHO	src/tcp.h	/^#define TCPOPT_CCECHO /;"	d
+TCPOPT_CCNEW	src/tcp.h	/^#define TCPOPT_CCNEW /;"	d
+TCPOPT_ECHO	src/tcp.h	/^#define    TCPOPT_ECHO /;"	d
+TCPOPT_ECHOREPLY	src/tcp.h	/^#define    TCPOPT_ECHOREPLY /;"	d
+TCPOPT_EOL	src/tcp.h	/^#define    TCPOPT_EOL /;"	d
+TCPOPT_MAXSEG	src/tcp.h	/^#define    TCPOPT_MAXSEG /;"	d
+TCPOPT_NOP	src/tcp.h	/^#define    TCPOPT_NOP /;"	d
+TCPOPT_SACK	src/tcp.h	/^#define    TCPOPT_SACK /;"	d
+TCPOPT_SACKOK	src/tcp.h	/^#define    TCPOPT_SACKOK /;"	d
+TCPOPT_TIMESTAMP	src/tcp.h	/^#define TCPOPT_TIMESTAMP /;"	d
+TCPOPT_TSTAMP_HDR	src/tcp.h	/^#define TCPOPT_TSTAMP_HDR /;"	d
+TCPOPT_WSCALE	src/tcp.h	/^#define    TCPOPT_WSCALE /;"	d
+TEN_SECOND_TRANSFER_COLUMN_COLOR	src/ui.c	/^int TEN_SECOND_TRANSFER_COLUMN_COLOR[] = {CYAN_FOREGROUND, BOLD};$/;"	v
+TH_ACK	src/tcp.h	/^#define    TH_ACK /;"	d
+TH_CWR	src/tcp.h	/^#define TH_CWR /;"	d
+TH_ECNECHO	src/tcp.h	/^#define TH_ECNECHO /;"	d
+TH_FIN	src/tcp.h	/^#define    TH_FIN /;"	d
+TH_OFF	src/tcp.h	/^#define TH_OFF(/;"	d
+TH_PUSH	src/tcp.h	/^#define    TH_PUSH /;"	d
+TH_RST	src/tcp.h	/^#define    TH_RST /;"	d
+TH_SYN	src/tcp.h	/^#define    TH_SYN /;"	d
+TH_URG	src/tcp.h	/^#define    TH_URG /;"	d
+TIME_WITH_SYS_TIME	src/config.h	/^#define TIME_WITH_SYS_TIME /;"	d
+TOKEN_FC_LLC	src/token.h	/^#define TOKEN_FC_LLC /;"	d
+TOKEN_HDRLEN	src/token.h	/^#define TOKEN_HDRLEN /;"	d
+TOKEN_RING_MAC_LEN	src/token.h	/^#define TOKEN_RING_MAC_LEN /;"	d
+TOTAL_LABEL_COLOR	src/ui.c	/^int TOTAL_LABEL_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
+TWO_SECOND_TRANSFER_COLUMN_COLOR	src/ui.c	/^int TWO_SECOND_TRANSFER_COLUMN_COLOR[] = {BLUE_FOREGROUND, NONBOLD};$/;"	v
+UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=`(uname -p) 2>\/dev\/null`$/;"	v
+UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=alpha ;;$/;"	v
+UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=alphaev5 ;;$/;"	v
+UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=alphaev56 ;;$/;"	v
+UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=alphaev6 ;;$/;"	v
+UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=alphaev67 ;;$/;"	v
+UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=alphaev68 ;;$/;"	v
+UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=alphaev69 ;;$/;"	v
+UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=alphaev7 ;;$/;"	v
+UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=alphaev79 ;;$/;"	v
+UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=alphapca56 ;;$/;"	v
+UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=alphapca57 ;;$/;"	v
+UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=pc$/;"	v
+UNAME_MACHINE	config/config.guess	/^	    UNAME_MACHINE="$cputype"$/;"	v
+UNAME_MACHINE	config/config.guess	/^	    UNAME_MACHINE=i386$/;"	v
+UNAME_MACHINE	config/config.guess	/^	UNAME_MACHINE=`(uname -p) 2>\/dev\/null`$/;"	v
+UNAME_MACHINE	config/config.guess	/^	UNAME_MACHINE=aarch64_be$/;"	v
+UNAME_MACHINE	config/config.guess	/^UNAME_MACHINE=`(uname -m) 2>\/dev\/null` || UNAME_MACHINE=unknown$/;"	v
+UNAME_MACHINE_ARCH	config/config.guess	/^	UNAME_MACHINE_ARCH=`(uname -p 2>\/dev\/null || \\$/;"	v
+UNAME_MACHINE_ARCH	config/config.guess	/^	UNAME_MACHINE_ARCH=`arch | sed 's\/Bitrig.\/\/'`$/;"	v
+UNAME_MACHINE_ARCH	config/config.guess	/^	UNAME_MACHINE_ARCH=`arch | sed 's\/OpenBSD.\/\/'`$/;"	v
+UNAME_MACHINE_ARCH	config/config.guess	/^	UNAME_MACHINE_ARCH=`arch | sed 's\/^.*BSD\\.\/\/'`$/;"	v
+UNAME_PROCESSOR	config/config.guess	/^		    UNAME_PROCESSOR=powerpc$/;"	v
+UNAME_PROCESSOR	config/config.guess	/^		UNAME_PROCESSOR=i386$/;"	v
+UNAME_PROCESSOR	config/config.guess	/^		UNAME_PROCESSOR=i586 ;;$/;"	v
+UNAME_PROCESSOR	config/config.guess	/^		UNAME_PROCESSOR=x86_64 ;;$/;"	v
+UNAME_PROCESSOR	config/config.guess	/^	    UNAME_PROCESSOR=powerpc$/;"	v
+UNAME_PROCESSOR	config/config.guess	/^	    UNAME_PROCESSOR=x86_64$/;"	v
+UNAME_PROCESSOR	config/config.guess	/^	UNAME_PROCESSOR=`\/usr\/bin\/uname -p`$/;"	v
+UNAME_PROCESSOR	config/config.guess	/^	UNAME_PROCESSOR=`uname -p` || UNAME_PROCESSOR=unknown$/;"	v
+UNAME_PROCESSOR	config/config.guess	/^	UNAME_PROCESSOR=`uname -p`$/;"	v
+UNAME_REL	config/config.guess	/^		UNAME_REL=`(\/bin\/uname -X|grep Release|sed -e 's\/.*= \/\/')`$/;"	v
+UNAME_REL	config/config.guess	/^		UNAME_REL=`sed -n 's\/.*Version \/\/p' <\/usr\/options\/cb.name`$/;"	v
+UNAME_REL	config/config.guess	/^	UNAME_REL=`echo "$UNAME_RELEASE" | sed 's\/\\\/MP$\/\/'`$/;"	v
+UNAME_RELEASE	config/config.guess	/^		UNAME_RELEASE=`\/usr\/sbin\/sizer -v | awk '{print $3}'`$/;"	v
+UNAME_RELEASE	config/config.guess	/^		UNAME_RELEASE=`\/usr\/sbin\/sizer -v | awk '{print $4}'`$/;"	v
+UNAME_RELEASE	config/config.guess	/^		UNAME_RELEASE=`uname -v`$/;"	v
+UNAME_RELEASE	config/config.guess	/^	UNAME_RELEASE=`(sed 1q \/etc\/motd | awk '{print substr($5,1,3)}') 2>\/dev\/null`$/;"	v
+UNAME_RELEASE	config/config.guess	/^UNAME_RELEASE=`(uname -r) 2>\/dev\/null` || UNAME_RELEASE=unknown$/;"	v
+UNAME_SYSTEM	config/config.guess	/^UNAME_SYSTEM=`(uname -s) 2>\/dev\/null`  || UNAME_SYSTEM=unknown$/;"	v
+UNAME_VERSION	config/config.guess	/^UNAME_VERSION=`(uname -v) 2>\/dev\/null` || UNAME_VERSION=unknown$/;"	v
+UNIT_DIVISIONS	src/ui.c	/^#define UNIT_DIVISIONS /;"	d	file:
+USE_GETHOSTBYADDR	src/config.h	/^#define USE_GETHOSTBYADDR /;"	d
+VERSION	src/config.h	/^#define VERSION /;"	d
+WHITE_FOREGROUND	src/ui.c	/^#define WHITE_FOREGROUND /;"	d	file:
+YELLOW_FOREGROUND	src/ui.c	/^#define YELLOW_FOREGROUND /;"	d	file:
+__ADDR_HASH_H_	src/addr_hash.h	/^#define __ADDR_HASH_H_$/;"	d
+__CFGFILE_H_	src/cfgfile.h	/^#define __CFGFILE_H_$/;"	d
+__ETHER_H_	src/ether.h	/^#define __ETHER_H_$/;"	d
+__GETCOLORS_H	src/getColors.h	/^#define __GETCOLORS_H$/;"	d
+__HASH_H_	src/hash.h	/^#define __HASH_H_$/;"	d
+__IFTOP_H_	src/iftop.h	/^#define __IFTOP_H_$/;"	d
+__INTEGERS_H_	src/integers.h	/^#define __INTEGERS_H_$/;"	d
+__NS_HASH_H_	src/ns_hash.h	/^#define __NS_HASH_H_$/;"	d
+__OPTIONS_H_	src/options.h	/^#define __OPTIONS_H_$/;"	d
+__RESOLVER_H_	src/resolver.h	/^#define __RESOLVER_H_$/;"	d
+__SCREENFILTER_H_	src/screenfilter.h	/^#define __SCREENFILTER_H_$/;"	d
+__SERV_HASH_H_	src/serv_hash.h	/^#define __SERV_HASH_H_$/;"	d
+__SORTED_LIST_H_	src/sorted_list.h	/^#define __SORTED_LIST_H_$/;"	d
+__STRINGMAP_H_	src/stringmap.h	/^#define __STRINGMAP_H_$/;"	d
+__UI_H_	src/ui.h	/^#define __UI_H_$/;"	d
+__VECTOR_H_	src/vector.h	/^#define __VECTOR_H_$/;"	d
+_inline	src/vector.h	/^#define _inline /;"	d
+_item	src/vector.h	/^typedef union _item {$/;"	u
+_stringmap	src/stringmap.h	/^typedef struct _stringmap {$/;"	s
+_vector	src/vector.h	/^typedef struct _vector {$/;"	s
+abi	config/config.guess	/^		abi=`echo "$UNAME_MACHINE_ARCH" | sed -e "$expr"`$/;"	v
+action	src/iftop.h	/^    unsigned char action;$/;"	m	struct:pfloghdr
+addr	src/resolver.c	/^    struct in_addr *addr;$/;"	m	struct:ares_callback_comm	typeref:struct:ares_callback_comm::in_addr	file:
+addr	src/resolver.c	/^    } addr;$/;"	m	struct:addr_storage	typeref:union:addr_storage::__anon1	file:
+addr4	src/resolver.c	/^        struct in_addr addr4;$/;"	m	union:addr_storage::__anon1	typeref:struct:addr_storage::__anon1::in_addr	file:
+addr6	src/resolver.c	/^        struct in6_addr addr6;$/;"	m	union:addr_storage::__anon1	typeref:struct:addr_storage::__anon1::in6_addr	file:
+addr_hash_create	src/addr_hash.c	/^hash_type *addr_hash_create() {$/;"	f
+addr_pair	src/addr_hash.h	/^} addr_pair;$/;"	t	typeref:struct:__anon12
+addr_storage	src/resolver.c	/^struct addr_storage {$/;"	s	file:
+addrtostring	src/dlcommon.c	/^addrtostring(addr, length, s)$/;"	f
+af	src/addr_hash.h	/^    int af;$/;"	m	struct:__anon12
+af	src/iftop.h	/^    unsigned char af;$/;"	m	struct:pfloghdr
+af	src/resolver.c	/^    int af;                     \/* AF_INET or AF_INET6 *\/$/;"	m	struct:addr_storage	file:
+aggregate_dest	src/options.h	/^    int aggregate_dest;$/;"	m	struct:__anon11
+aggregate_src	src/options.h	/^    int aggregate_src;$/;"	m	struct:__anon11
+alpha	config/depcomp	/^  alpha=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$/;"	v
+analyse_data	src/ui.c	/^void analyse_data() {$/;"	f
+ap	src/ui.c	/^    addr_pair ap;$/;"	m	struct:host_pair_line_tag	file:
+arch	config/config.guess	/^		arch=`echo "$UNAME_MACHINE_ARCH" | sed -e 's,^e\\(armv[0-9]\\).*$,\\1,'`$/;"	v
+ares_callback_comm	src/resolver.c	/^struct ares_callback_comm {$/;"	s	file:
+arg	config/compile	/^	  arg=${1#-Wl,}$/;"	v
+arg	src/threadprof.c	/^    void *arg;$/;"	m	struct:wrapper_s	file:
+ary	src/vector.h	/^    item *ary;$/;"	m	struct:_vector
+as_addr4	src/resolver.c	/^#define as_addr4 /;"	d	file:
+as_addr6	src/resolver.c	/^#define as_addr6 /;"	d	file:
+assign_addr_pair	src/iftop.c	/^void assign_addr_pair(addr_pair *ap, struct ip *iptr, int flip) {$/;"	f
+bad_interface_names	src/options.c	/^static char *bad_interface_names[] = {$/;"	v	file:
+bandwidth_in_bytes	src/options.h	/^    int bandwidth_in_bytes;$/;"	m	struct:__anon11
+bar_interval	src/options.h	/^    int bar_interval;$/;"	m	struct:__anon11
+base	config/depcomp	/^   base=`echo "$object" | sed -e 's,^.*\/,,' -e 's,\\.\\([^.]*\\)$,.P\\1,'`$/;"	v
+base	config/depcomp	/^   base=`echo "$object" | sed -e 's|^.*\/||' -e 's\/\\.o$\/\/' -e 's\/\\.lo$\/\/'`$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=$1$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=$basic_machine-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=580-amdahl$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=`echo $1 | sed -e 's\/86-.*\/86-pc\/'`$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=`echo $1 | sed -e 's\/86-.*\/86-sequent\/'`$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=`echo $1 | sed -e 's\/86.*\/86-pc\/'`$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=`echo $basic_machine | sed "s\/unknown\/$vendor\/"`$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=`echo $basic_machine | sed 's\/commodore.*\/cbm\/'`$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=`echo $basic_machine | sed 's\/digital.*\/dec\/'`$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=`echo $basic_machine | sed -e 's\/mips3\/mips64\/'`$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=`echo $basic_machine | sed -e 's\/mips3\/mips64\/'`-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=a29k-amd$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=a29k-none$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=a29k-nyu$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=a29k-wrs$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=alpha-cray$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=alphaev5-cray$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=armv4l-rebel$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=c1-convex$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=c2-convex$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=c32-convex$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=c34-convex$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=c38-convex$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=c4x-none$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=c90-cray$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=clipper-highlevel$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=clipper-intergraph$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=cris-axis$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=cydra-cydrome$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=elxsi-elxsi$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=fx80-alliant$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=h8300-hitachi$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=h8500-hitachi$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=hppa1.0-hp$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=hppa1.1-hitachi$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=hppa1.1-hp$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=hppa1.1-oki$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=hppa1.1-winbond$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i370-ibm$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i386-ibm$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i386-mach$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i386-pc$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i386-sequent$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i386-sun$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i386-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i486-ncr$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i586-`echo $basic_machine | sed 's\/^[^-]*-\/\/'`$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i586-pc$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i586-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i686-`echo $basic_machine | sed 's\/^[^-]*-\/\/'`$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i686-pc$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i860-alliant$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i860-intel$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i860-stratus$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i960-intel$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=i960-wrs$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=j90-cray$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68000-att$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68000-convergent$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68000-ericsson$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68000-hp$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68000-sun$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68010-adobe$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68030-sony$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-altos$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-apollo$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-apple$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-atari$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-bull$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-crds$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-da30$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-ericsson$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-harris$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-hp$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-isi$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-motorola$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-ncr$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-next$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-none$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-rom68k$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-sony$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-sun$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-tandem$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-tti$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m68k-wrs$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m88k-harris$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m88k-motorola$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=m88k-omron$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=mips-compaq$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=mips-dec$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=mips-mips$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=mips-sgi$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=mips-siemens$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=mips-sony$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=mipstx39-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=mipstx39el-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=mmix-knuth$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=none-none$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=np1-gould$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=ns32k-encore$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=ns32k-ns$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=ns32k-pc532$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=ns32k-sequent$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=ns32k-utek$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=nsr-tandem$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=or32-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=orion-highlevel$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=pdp10-dec$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=pdp10-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=pdp10-xkl$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=pdp11-dec$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=pn-gould$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=powerpc-apple$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=powerpc-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=powerpc64le-`echo $basic_machine | sed 's\/^[^-]*-\/\/'`$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=powerpc64le-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=powerpcle-`echo $basic_machine | sed 's\/^[^-]*-\/\/'`$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=powerpcle-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=romp-ibm$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=rs6000-bull$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=rs6000-ibm$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=s390-ibm$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=s390x-ibm$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=sh-hitachi$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=sh-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=sh64-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=sparc-sun$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=sparc-tti$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=sparclite-wrs$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=spur-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=sv1-cray$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=t90-cray$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=tic54x-unknown$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=tron-gmicro$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=v70-nec$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=v810-nec$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=vax-dec$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=w65-wdc$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=we32k-att$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=xps100-honeywell$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=ymp-cray$/;"	v
+basic_machine	config/config.sub	/^		basic_machine=z8k-unknown$/;"	v
+basic_machine	config/config.sub	/^	  basic_machine=$basic_machine-pc$/;"	v
+basic_machine	config/config.sub	/^               basic_machine=f301-fujitsu$/;"	v
+basic_machine	config/config.sub	/^    basic_machine=`echo $1 | sed 's\/-[^-]*$\/\/'`$/;"	v
+basic_machine	config/config.sub	/^    basic_machine=`echo $1 | sed 's\/^\\(.*\\)-\\([^-]*-[^-]*\\)$\/\\1\/'`$/;"	v
+calculate_totals	src/ui.c	/^void calculate_totals() {$/;"	f
+cfile	config/compile	/^	cfile=$1$/;"	v
+cfile	config/compile	/^cfile=$/;"	v
+chgrpcmd	config/install-sh	/^chgrpcmd=""$/;"	v
+chgrpprog	config/install-sh	/^chgrpprog="${CHGRPPROG-chgrp}"$/;"	v
+chmodcmd	config/install-sh	/^		chmodcmd=""$/;"	v
+chmodcmd	config/install-sh	/^chmodcmd="$chmodprog 0755"$/;"	v
+chmodprog	config/install-sh	/^chmodprog="${CHMODPROG-chmod}"$/;"	v
+chowncmd	config/install-sh	/^chowncmd=""$/;"	v
+chownprog	config/install-sh	/^chownprog="${CHOWNPROG-chown}"$/;"	v
+cleared	config/depcomp	/^      cleared=yes ;;$/;"	v
+cleared	config/depcomp	/^  cleared=no$/;"	v
+cofile	config/compile	/^cofile=`echo "$cfile" | sed 's|^.*[\\\\\/]||; s|^[a-zA-Z]:||; s\/\\.c$\/.o\/'`$/;"	v
+compare	src/addr_hash.c	/^int compare(void *a, void *b) {$/;"	f
+compare	src/hash.h	/^    int (*compare)(void *, void *);$/;"	m	struct:__anon18
+compare	src/sorted_list.h	/^    int (*compare)(void *, void *);$/;"	m	struct:__anon7
+cond	config/pthread.c	/^static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;$/;"	v	file:
+config	src/cfgfile.c	/^stringmap config;$/;"	v
+config_directives	src/cfgfile.c	/^char *config_directives[] = {$/;"	v
+config_enumeration_type	src/cfgfile.h	/^} config_enumeration_type;$/;"	t	typeref:struct:__anon2
+config_file	src/options.h	/^    char *config_file;$/;"	m	struct:__anon11
+config_file_specified	src/options.h	/^    int config_file_specified;$/;"	m	struct:__anon11
+config_get_bool	src/cfgfile.c	/^int config_get_bool(const char *directive) {$/;"	f
+config_get_enum	src/cfgfile.c	/^int config_get_enum(const char *directive, config_enumeration_type *enumeration, int *value) {$/;"	f
+config_get_float	src/cfgfile.c	/^int config_get_float(const char *directive, float *value) {$/;"	f
+config_get_int	src/cfgfile.c	/^int config_get_int(const char *directive, int *value) {$/;"	f
+config_get_string	src/cfgfile.c	/^char *config_get_string(const char *directive) {$/;"	f
+config_init	src/cfgfile.c	/^int config_init() {$/;"	f
+config_set_string	src/cfgfile.c	/^void config_set_string(const char *directive, const char *s) {$/;"	f
+configure_ac	config/missing	/^  configure_ac=configure.ac$/;"	v
+configure_ac	config/missing	/^  configure_ac=configure.in$/;"	v
+const	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^# define const$/;"	d	file:
+convertBoldToInt	src/getColors.c	/^int convertBoldToInt(char *bold) {$/;"	f
+convertBoldToInt	src/ui.c	/^int convertBoldToInt(char *bold) {$/;"	f
+convertColorToInt	src/getColors.c	/^int convertColorToInt(char *color) {$/;"	f
+convertColorToInt	src/ui.c	/^int convertColorToInt(char *color) {$/;"	f
+copy_key	src/addr_hash.c	/^void *copy_key(void *orig) {$/;"	f
+copy_key	src/hash.h	/^    void *(*copy_key)(void *);$/;"	m	struct:__anon18
+cpprog	config/install-sh	/^cpprog="${CPPROG-cp}"$/;"	v
+ctl	src/llc.h	/^    } ctl;$/;"	m	struct:llc	typeref:union:llc::__anon3
+d	src/stringmap.h	/^    item d;$/;"	m	struct:_stringmap
+dashmflag	config/depcomp	/^   dashmflag=-xM$/;"	v
+data	src/sorted_list.h	/^    void *data;$/;"	m	struct:sorted_list_node_tag
+defaultIFS	config/install-sh	/^defaultIFS='$/;"	v
+delete_key	src/addr_hash.c	/^void delete_key(void *key) {$/;"	f
+delete_key	src/hash.h	/^    void (*delete_key)(void *);$/;"	m	struct:__anon18
+depfile	config/depcomp	/^   depfile="$dir.deps\/$base"$/;"	v
+depmode	config/depcomp	/^   depmode=dashmstdout$/;"	v
+depmode	config/depcomp	/^  depmode=gcc$/;"	v
+die	src/options.c	/^static void die(char *msg) {$/;"	f	file:
+dir	config/depcomp	/^      dir=$/;"	v
+dir	config/depcomp	/^   dir=`echo "$object" | sed 's,\/.*$,\/,'`$/;"	v
+dir	config/depcomp	/^   dir=`echo "$object" | sed -e 's|\/[^\/]*$|\/|'`$/;"	v
+dir	src/iftop.h	/^    unsigned char dir;$/;"	m	struct:pfloghdr
+dir_arg	config/install-sh	/^dir_arg=""$/;"	v
+dirmode	config/mkinstalldirs	/^	dirmode="${1}"$/;"	v
+dirmode	config/mkinstalldirs	/^dirmode=""$/;"	v
+dlattachreq	src/dlcommon.c	/^dlattachreq(fd, ppa)$/;"	f
+dlbindack	src/dlcommon.c	/^dlbindack(fd, bufp)$/;"	f
+dlbindreq	src/dlcommon.c	/^dlbindreq(fd, sap, max_conind, service_mode, conn_mgmt, xidtest)$/;"	f
+dldetachreq	src/dlcommon.c	/^dldetachreq(fd)$/;"	f
+dldisabmultireq	src/dlcommon.c	/^dldisabmultireq(fd, addr, length)$/;"	f
+dlenabmultireq	src/dlcommon.c	/^dlenabmultireq(fd, addr, length)$/;"	f
+dlerrno	src/dlcommon.c	/^dlerrno(errno)$/;"	f
+dlerrorack	src/dlcommon.c	/^dlerrorack(fd, bufp)$/;"	f
+dlinfoack	src/dlcommon.c	/^dlinfoack(fd, bufp)$/;"	f
+dlinforeq	src/dlcommon.c	/^dlinforeq(fd)$/;"	f
+dlmactype	src/dlcommon.c	/^dlmactype(media)$/;"	f
+dlokack	src/dlcommon.c	/^dlokack(fd, bufp)$/;"	f
+dlphysaddrack	src/dlcommon.c	/^dlphysaddrack(fd, bufp)$/;"	f
+dlphysaddrreq	src/dlcommon.c	/^dlphysaddrreq(fd, addrtype)$/;"	f
+dlprim	src/dlcommon.c	/^dlprim(prim)$/;"	f
+dlpromisclevel	src/dlcommon.c	/^dlpromisclevel(level)$/;"	f
+dlpromiscoff	src/dlcommon.c	/^dlpromiscoff(fd, level)$/;"	f
+dlpromisconreq	src/dlcommon.c	/^dlpromisconreq(fd, level)$/;"	f
+dlservicemode	src/dlcommon.c	/^dlservicemode(servicemode)$/;"	f
+dlsetphysaddrreq	src/dlcommon.c	/^dlsetphysaddrreq(fd, addr, length)$/;"	f
+dlstate	src/dlcommon.c	/^dlstate(state)$/;"	f
+dlstyle	src/dlcommon.c	/^dlstyle(style)$/;"	f
+dlunbindreq	src/dlcommon.c	/^dlunbindreq(fd)$/;"	f
+dlunitdatareq	src/dlcommon.c	/^dlunitdatareq(fd, addrp, addrlen, minpri, maxpri, datap, datalen)$/;"	f
+dnsresolution	src/options.h	/^    int dnsresolution;$/;"	m	struct:__anon11
+do_resolve	src/resolver.c	/^char *do_resolve(struct addr_storage * addr) {$/;"	f
+do_resolve	src/resolver.c	/^char *do_resolve(struct addr_storage *addr) {$/;"	f
+do_resolve	src/resolver.c	/^char *do_resolve(struct in6_addr *addr) {$/;"	f
+do_resolve	src/resolver.c	/^char* do_resolve(struct addr_storage *addr) {$/;"	f
+do_resolve_ares_callback	src/resolver.c	/^static void do_resolve_ares_callback(void *arg, int status, unsigned char *abuf, int alen) {$/;"	f	file:
+doit	config/install-sh	/^doit="${DOITPROG-}"$/;"	v
+dontshowdisplay	src/ui.c	/^int dontshowdisplay = 0;$/;"	v
+draw_bar	src/ui.c	/^void draw_bar(float n, int y, short colorpair) {$/;"	f
+draw_bar_scale	src/ui.c	/^static void draw_bar_scale(int *y) {$/;"	f	file:
+draw_line_total	src/ui.c	/^void draw_line_total(float sent, float recv, int y, int x, option_linedisplay_t linedisplay, int bytes) {$/;"	f
+draw_line_totals	src/ui.c	/^void draw_line_totals(int y, host_pair_line *line, option_linedisplay_t linedisplay) {$/;"	f
+draw_totals	src/ui.c	/^void draw_totals(host_pair_line *totals) {$/;"	f
+dsap	src/llc.h	/^    u_int8_t dsap;$/;"	m	struct:llc
+dst	config/install-sh	/^		dst="$dst"\/`basename $src`$/;"	v
+dst	config/install-sh	/^		dst=$1$/;"	v
+dst	config/install-sh	/^	dst=$src$/;"	v
+dst	config/install-sh	/^dst=""$/;"	v
+dst	src/addr_hash.h	/^        struct in_addr dst;$/;"	m	union:__anon12::__anon14	typeref:struct:__anon12::__anon14::in_addr
+dst6	src/addr_hash.h	/^        struct in6_addr dst6;$/;"	m	union:__anon12::__anon14	typeref:struct:__anon12::__anon14::in6_addr
+dst_port	src/addr_hash.h	/^    unsigned short int dst_port;$/;"	m	struct:__anon12
+dstdir	config/install-sh	/^dstdir=`echo $dst | sed -e 's,[^\/]*$,,;s,\/$,,;s,^$,.,'`$/;"	v
+dstfile	config/install-sh	/^		dstfile=`basename $dst $transformbasename | $/;"	v
+dstfile	config/install-sh	/^		dstfile=`basename $dst`$/;"	v
+dsttmp	config/install-sh	/^	dsttmp=$dstdir\/#inst.$$#$/;"	v
+dummy	config/config.guess	/^    dummy=$tmp\/dummy$/;"	v
+dummyarg	config/config.guess	/^	  dummyarg=`echo "$UNAME_RELEASE" | sed -n 's\/\\([0-9]*\\).*\/\\1\/p'` &&$/;"	v
+eat	config/compile	/^	  eat=1$/;"	v
+eat	config/compile	/^	eat=1$/;"	v
+eat	config/compile	/^      eat=$/;"	v
+eat	config/compile	/^    eat=$/;"	v
+eat	config/compile	/^eat=$/;"	v
+edline	src/edline.c	/^char *edline(int linenum, const char *prompt, const char *initial) {$/;"	f
+endian	config/config.guess	/^		endian=`echo "$UNAME_MACHINE_ARCH" | sed -ne 's,^.*\\(eb\\)$,\\1,p'`$/;"	v
+eraseAndLoop	src/ui.c	/^void eraseAndLoop() {$/;"	f
+err	src/dlcommon.c	/^err(fmt, a1, a2, a3, a4)$/;"	f
+errstatus	config/mkinstalldirs	/^	       errstatus=$lasterr$/;"	v
+errstatus	config/mkinstalldirs	/^	  errstatus=$lasterr$/;"	v
+errstatus	config/mkinstalldirs	/^errstatus=0$/;"	v
+ether_dhost	src/ether.h	/^    u_int8_t ether_dhost[ETHER_ADDR_LEN];$/;"	m	struct:ether_header
+ether_header	src/ether.h	/^struct ether_header {$/;"	s
+ether_shost	src/ether.h	/^    u_int8_t ether_shost[ETHER_ADDR_LEN];$/;"	m	struct:ether_header
+ether_type	src/ether.h	/^    u_int16_t ether_type;$/;"	m	struct:ether_header
+ether_type	src/ether.h	/^    u_int16_t ether_type;$/;"	m	struct:vlan_8021q_header
+exitcode	config/config.guess	/^	exitcode=$?$/;"	v
+expecting	src/dlcommon.c	/^expecting(prim, dlp)$/;"	f
+expr	config/config.guess	/^		expr='s\/^earmv[0-9]\/-eabi\/;s\/eb$\/\/'$/;"	v
+file	config/compile	/^	  file=`cmd \/\/C echo "$file " | sed -e 's\/"\\(.*\\) " *$\/\\1\/'`$/;"	v
+file	config/compile	/^	  file=`cygpath -m "$file" || echo "$file"`$/;"	v
+file	config/compile	/^	  file=`winepath -w "$file" || echo "$file"`$/;"	v
+file	config/compile	/^  file=$1$/;"	v
+file	config/missing	/^	file=`echo "$*" | sed -n 's\/.*--output=\\([^ ]*\\).*\/\\1\/p'`$/;"	v
+file	config/missing	/^      file=`echo "$*" | sed 's\/.* \\([^ ]*\\) *$\/\\1\/'`$/;"	v
+file	config/missing	/^      file=`sed -n '\/^@setfilename\/ { s\/.* \\([^ ]*\\) *$\/\\1\/; p; q; }' $file`$/;"	v
+file	config/missing	/^    file=`echo "$*" | sed -n 's\/.*--output[ =]*\\([^ ]*\\).*\/\\1\/p'`$/;"	v
+file	config/missing	/^    file=`echo "$*" | sed -n 's\/.*-o \\([^ ]*\\).*\/\\1\/p'`$/;"	v
+file_conv	config/compile	/^	    file_conv=cygwin$/;"	v
+file_conv	config/compile	/^	    file_conv=mingw$/;"	v
+file_conv	config/compile	/^	    file_conv=wine$/;"	v
+file_conv	config/compile	/^file_conv=$/;"	v
+files	config/missing	/^    files=`sed -n 's\/^[ ]*A[CM]_CONFIG_HEADER(\\([^)]*\\)).*\/\\1\/p' ${configure_ac}`$/;"	v
+filtercode	src/options.h	/^    char *filtercode;$/;"	m	struct:__anon11
+finish	src/iftop.c	/^static void finish(int sig) {$/;"	f	file:
+firstarg	config/missing	/^	    firstarg=`echo "$firstarg" | sed s\/h\/\/`$/;"	v
+firstarg	config/missing	/^	    firstarg=`echo "$firstarg" | sed s\/o\/\/`$/;"	v
+firstarg	config/missing	/^    firstarg="$1"$/;"	v
+foad	src/iftop.c	/^sig_atomic_t foad;$/;"	v
+forking_resolver_worker	src/resolver.c	/^int forking_resolver_worker(int fd) {$/;"	f
+found	config/compile	/^      found=yes$/;"	v
+found	config/compile	/^  found=no$/;"	v
+freezeorder	src/options.h	/^    int freezeorder;$/;"	m	struct:__anon11
+func_cl_dashL	config/compile	/^func_cl_dashL ()$/;"	f
+func_cl_dashl	config/compile	/^func_cl_dashl ()$/;"	f
+func_cl_wrapper	config/compile	/^func_cl_wrapper ()$/;"	f
+func_file_conv	config/compile	/^func_file_conv ()$/;"	f
+g	src/stringmap.h	/^    struct _stringmap *l, *g;$/;"	m	struct:_stringmap	typeref:struct:_stringmap::
+gccflag	config/depcomp	/^    gccflag=-MD,$/;"	v
+gccflag	config/depcomp	/^  gccflag=-M$/;"	v
+getColors	src/getColors.c	/^void getColors() {$/;"	f
+getColors	src/ui.c	/^void getColors() {$/;"	f
+get_addrs_dlpi	src/addrs_dlpi.c	/^get_addrs_dlpi(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr)$/;"	f
+get_addrs_ioctl	src/addrs_ioctl.c	/^get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr, struct in6_addr *if_ip6_addr) {$/;"	f
+get_bar_interval	src/ui.c	/^static int get_bar_interval(float bandwidth) {$/;"	f	file:
+get_bar_length	src/ui.c	/^static int get_bar_length(const int rate) {$/;"	f	file:
+get_first_interface	src/options.c	/^static char *get_first_interface(void) {$/;"	f	file:
+get_max_bandwidth	src/ui.c	/^static float get_max_bandwidth() {$/;"	f	file:
+gprof_pthread_create	src/threadprof.c	/^int gprof_pthread_create(pthread_t *thread, pthread_attr_t *attr,$/;"	f
+handle_cooked_packet	src/iftop.c	/^static void handle_cooked_packet(unsigned char *args, const struct pcap_pkthdr *thdr, const unsigned char *packet) {$/;"	f	file:
+handle_eth_packet	src/iftop.c	/^static void handle_eth_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
+handle_ip_packet	src/iftop.c	/^static void handle_ip_packet(struct ip *iptr, int hw_dir) {$/;"	f	file:
+handle_llc_packet	src/iftop.c	/^static void handle_llc_packet(const struct llc *llc, int dir) {$/;"	f	file:
+handle_null_packet	src/iftop.c	/^static void handle_null_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
+handle_pflog_packet	src/iftop.c	/^static void handle_pflog_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
+handle_ppp_packet	src/iftop.c	/^static void handle_ppp_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
+handle_radiotap_packet	src/iftop.c	/^static void handle_radiotap_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
+handle_raw_packet	src/iftop.c	/^static void handle_raw_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
+handle_tokenring_packet	src/iftop.c	/^handle_tokenring_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr, const unsigned char *packet) {$/;"	f	file:
+hash	src/addr_hash.c	/^int hash(void *key) {$/;"	f
+hash	src/hash.h	/^    int (*hash)(void *);$/;"	m	struct:__anon18
+hash_delete	src/hash.c	/^hash_status_enum hash_delete(hash_type *hash_table, void *key) {$/;"	f
+hash_delete_all	src/hash.c	/^void hash_delete_all(hash_type *hash_table) {$/;"	f
+hash_destroy	src/hash.c	/^hash_status_enum hash_destroy(hash_type *hash_table) {$/;"	f
+hash_find	src/hash.c	/^hash_status_enum hash_find(hash_type *hash_table, void *key, void **rec) {$/;"	f
+hash_initialise	src/hash.c	/^hash_status_enum hash_initialise(hash_type *hash_table) {$/;"	f
+hash_insert	src/hash.c	/^hash_status_enum hash_insert(hash_type *hash_table, void *key, void *rec) {$/;"	f
+hash_next_item	src/hash.c	/^hash_status_enum hash_next_item(hash_type *hash_table, hash_node_type **ppnode) {$/;"	f
+hash_node_type	src/hash.h	/^} hash_node_type;$/;"	t	typeref:struct:node_tag
+hash_status_enum	src/hash.h	/^} hash_status_enum;$/;"	t	typeref:enum:__anon17
+hash_table_size	src/addr_hash.c	/^#define hash_table_size /;"	d	file:
+hash_table_size	src/ns_hash.c	/^#define hash_table_size /;"	d	file:
+hash_table_size	src/serv_hash.c	/^#define hash_table_size /;"	d	file:
+hash_type	src/hash.h	/^} hash_type;$/;"	t	typeref:struct:__anon18
+hash_uint32	src/addr_hash.c	/^static int __inline__ hash_uint32(uint32_t n) {$/;"	f	file:
+hash_uint32	src/ns_hash.c	/^static int __inline__ hash_uint32(uint32_t n) {$/;"	f	file:
+have_hw_addr	src/iftop.c	/^int have_hw_addr = 0;$/;"	v
+have_ip6_addr	src/iftop.c	/^int have_ip6_addr = 0;$/;"	v
+have_ip_addr	src/iftop.c	/^int have_ip_addr = 0;$/;"	v
+head	src/resolver.c	/^int head;$/;"	v
+help	config/config.guess	/^help="$/;"	v
+help	config/config.sub	/^help="$/;"	v
+helpmsg	src/ui.c	/^char helpmsg[HELP_MSG_SIZE];$/;"	v
+helptimer	src/ui.c	/^time_t helptimer = 0;$/;"	v
+hexnibble	src/dlcommon.c	/^hexnibble(c)$/;"	f	file:
+history	src/iftop.c	/^hash_type *history;$/;"	v
+history_create	src/iftop.c	/^history_type *history_create() {$/;"	f
+history_divs	src/ui.c	/^int history_divs[HISTORY_DIVISIONS] = {1, 5, 20};$/;"	v
+history_len	src/iftop.c	/^int history_len = 1;$/;"	v
+history_length	src/ui.c	/^int history_length(const int d) {$/;"	f
+history_pos	src/iftop.c	/^int history_pos = 0;$/;"	v
+history_rotate	src/iftop.c	/^void history_rotate() {$/;"	f
+history_totals	src/iftop.c	/^history_type history_totals;$/;"	v
+history_type	src/iftop.h	/^} history_type;$/;"	t	typeref:struct:__anon6
+host_pair_line	src/ui.c	/^} host_pair_line;$/;"	t	typeref:struct:host_pair_line_tag	file:
+host_pair_line_tag	src/ui.c	/^typedef struct host_pair_line_tag {$/;"	s	file:
+if_hw_addr	src/iftop.c	/^unsigned char if_hw_addr[6];$/;"	v
+if_ip6_addr	src/iftop.c	/^struct in6_addr if_ip6_addr;$/;"	v	typeref:struct:in6_addr
+if_ip_addr	src/iftop.c	/^struct in_addr if_ip_addr;$/;"	v	typeref:struct:in_addr
+ifname	src/iftop.h	/^    char ifname[16];$/;"	m	struct:pfloghdr
+in_filter_net	src/iftop.c	/^int in_filter_net(struct in_addr addr) {$/;"	f
+inet_aton	src/options.c	/^#   define inet_aton(/;"	d	file:
+info_arch	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^char const* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";$/;"	v
+info_arch	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";$/;"	v
+info_compiler	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^char const* info_compiler = "INFO" ":" "compiler[" COMPILER_ID "]";$/;"	v
+info_compiler	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_compiler = "INFO" ":" "compiler[" COMPILER_ID "]";$/;"	v
+info_cray	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^char const *info_cray = "INFO" ":" "compiler_wrapper[CrayPrgEnv]";$/;"	v
+info_cray	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const *info_cray = "INFO" ":" "compiler_wrapper[CrayPrgEnv]";$/;"	v
+info_language_dialect_default	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^const char* info_language_dialect_default =$/;"	v
+info_language_dialect_default	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^const char* info_language_dialect_default = "INFO" ":" "dialect_default["$/;"	v
+info_platform	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^char const* info_platform = "INFO" ":" "platform[" PLATFORM_ID "]";$/;"	v
+info_platform	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_platform = "INFO" ":" "platform[" PLATFORM_ID "]";$/;"	v
+info_simulate	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^char const* info_simulate = "INFO" ":" "simulate[" SIMULATE_ID "]";$/;"	v
+info_simulate	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_simulate = "INFO" ":" "simulate[" SIMULATE_ID "]";$/;"	v
+info_simulate_version	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^char const info_simulate_version[] = {$/;"	v
+info_simulate_version	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const info_simulate_version[] = {$/;"	v
+info_version	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^char const info_version[] = {$/;"	v
+info_version	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const info_version[] = {$/;"	v
+info_version_internal	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^char const info_version_internal[] = {$/;"	v
+info_version_internal	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const info_version_internal[] = {$/;"	v
+init_history	src/iftop.c	/^void init_history() {$/;"	f
+instcmd	config/install-sh	/^		instcmd=$mkdirprog$/;"	v
+instcmd	config/install-sh	/^		instcmd=:$/;"	v
+instcmd	config/install-sh	/^instcmd="$mvprog"$/;"	v
+interface	src/options.h	/^    char *interface;$/;"	m	struct:__anon11
+interval	src/ui.c	/^    int max, interval;$/;"	m	struct:__anon15	file:
+ip	src/ip.h	/^struct ip {$/;"	s
+ip6_addr_match	src/iftop.c	/^static inline int ip6_addr_match(struct in6_addr *addr) {$/;"	f	file:
+ip_addr_match	src/iftop.c	/^static inline int ip_addr_match(struct in_addr addr) {$/;"	f	file:
+ip_dst	src/ip.h	/^    struct in_addr ip_src, ip_dst;    \/* source and dest address *\/$/;"	m	struct:ip	typeref:struct:ip::
+ip_id	src/ip.h	/^    u_int16_t ip_id;        \/* identification *\/$/;"	m	struct:ip
+ip_len	src/ip.h	/^    u_int16_t ip_len;        \/* total length *\/$/;"	m	struct:ip
+ip_off	src/ip.h	/^    u_int16_t ip_off;        \/* fragment offset field *\/$/;"	m	struct:ip
+ip_p	src/ip.h	/^    u_int8_t ip_p;        \/* protocol *\/$/;"	m	struct:ip
+ip_service	src/serv_hash.h	/^} ip_service;$/;"	t	typeref:struct:__anon16
+ip_src	src/ip.h	/^    struct in_addr ip_src, ip_dst;    \/* source and dest address *\/$/;"	m	struct:ip	typeref:struct:ip::in_addr
+ip_sum	src/ip.h	/^    u_int16_t ip_sum;        \/* checksum *\/$/;"	m	struct:ip
+ip_timestamp	src/ip.h	/^struct ip_timestamp {$/;"	s
+ip_tos	src/ip.h	/^    u_int8_t ip_tos;        \/* type of service *\/$/;"	m	struct:ip
+ip_ttl	src/ip.h	/^    u_int8_t ip_ttl;        \/* time to live *\/$/;"	m	struct:ip
+ip_vhl	src/ip.h	/^    u_int8_t ip_vhl;        \/* header length, version *\/$/;"	m	struct:ip
+ipt_addr	src/ip.h	/^            struct in_addr ipt_addr;$/;"	m	struct:ip_timestamp::ipt_timestamp::ipt_ta	typeref:struct:ip_timestamp::ipt_timestamp::ipt_ta::in_addr
+ipt_code	src/ip.h	/^    u_int8_t ipt_code;    \/* IPOPT_TS *\/$/;"	m	struct:ip_timestamp
+ipt_len	src/ip.h	/^    u_int8_t ipt_len;    \/* size of structure (variable) *\/$/;"	m	struct:ip_timestamp
+ipt_oflwflg	src/ip.h	/^    u_int8_t ipt_oflwflg;    \/* flags, overflow counter *\/$/;"	m	struct:ip_timestamp
+ipt_ptr	src/ip.h	/^    u_int8_t ipt_ptr;    \/* index of current entry *\/$/;"	m	struct:ip_timestamp
+ipt_ta	src/ip.h	/^        struct ipt_ta {$/;"	s	union:ip_timestamp::ipt_timestamp
+ipt_ta	src/ip.h	/^        } ipt_ta[1];$/;"	m	union:ip_timestamp::ipt_timestamp	typeref:struct:ip_timestamp::ipt_timestamp::ipt_ta
+ipt_time	src/ip.h	/^            u_int32_t ipt_time;$/;"	m	struct:ip_timestamp::ipt_timestamp::ipt_ta
+ipt_time	src/ip.h	/^        u_int32_t ipt_time[1];$/;"	m	union:ip_timestamp::ipt_timestamp
+ipt_timestamp	src/ip.h	/^    union ipt_timestamp {$/;"	u	struct:ip_timestamp
+ipt_timestamp	src/ip.h	/^    } ipt_timestamp;$/;"	m	struct:ip_timestamp	typeref:union:ip_timestamp::ipt_timestamp
+is_bad_interface_name	src/options.c	/^static int is_bad_interface_name(char *i) {$/;"	f	file:
+is_cfgdirective_valid	src/cfgfile.c	/^int is_cfgdirective_valid(const char *s) {$/;"	f
+is_ctl	src/llc.h	/^        u_int16_t is_ctl;$/;"	m	union:llc::__anon3
+it_len	src/ether.h	/^    u_int16_t it_len;         \/* entire length *\/$/;"	m	struct:radiotap_header
+it_pad	src/ether.h	/^    u_int8_t it_pad;$/;"	m	struct:radiotap_header
+it_present	src/ether.h	/^    u_int32_t it_present;     \/* fields present *\/$/;"	m	struct:radiotap_header
+it_version	src/ether.h	/^    u_int8_t it_version;     \/* set to 0 *\/$/;"	m	struct:radiotap_header
+item	src/vector.h	/^} item;$/;"	t	typeref:union:_item
+item_long	src/vector.h	/^static _inline item item_long(const long l) {$/;"	f
+item_ptr	src/vector.h	/^static _inline item item_ptr(void *const v) {$/;"	f
+itimer	src/threadprof.c	/^    struct itimerval itimer;$/;"	m	struct:wrapper_s	typeref:struct:wrapper_s::itimerval	file:
+key	src/hash.h	/^    void *key;                \/* key *\/$/;"	m	struct:node_tag
+key	src/stringmap.h	/^    char *key;$/;"	m	struct:_stringmap
+key_type	src/addr_hash.h	/^typedef addr_pair key_type;      \/* index into hash table *\/$/;"	t
+l	src/stringmap.h	/^    struct _stringmap *l, *g;$/;"	m	struct:_stringmap	typeref:struct:_stringmap::_stringmap
+l	src/vector.h	/^    long l;$/;"	m	union:_item
+last_timestamp	src/iftop.c	/^time_t last_timestamp;$/;"	v
+last_write	src/iftop.h	/^    int last_write;$/;"	m	struct:__anon6
+lasterr	config/mkinstalldirs	/^	     lasterr=""$/;"	v
+len	src/resolver.c	/^    int len;                    \/* sizeof(struct in_addr or in6_addr) *\/$/;"	m	struct:addr_storage	file:
+length	src/iftop.h	/^    unsigned char length;$/;"	m	struct:pfloghdr
+lib	config/compile	/^      lib=$dir\/$lib.dll.lib$/;"	v
+lib	config/compile	/^      lib=$dir\/$lib.lib$/;"	v
+lib	config/compile	/^      lib=$dir\/lib$lib.a$/;"	v
+lib	config/compile	/^    lib=$lib.lib$/;"	v
+lib	config/compile	/^  lib=$1$/;"	v
+lib_path	config/compile	/^    lib_path="$lib_path;$file"$/;"	v
+lib_path	config/compile	/^    lib_path=$file$/;"	v
+lib_path	config/compile	/^  lib_path=$/;"	v
+linedisplay	src/options.h	/^    option_linedisplay_t linedisplay;$/;"	m	struct:__anon11
+linedisplay_enumeration	src/options.c	/^config_enumeration_type linedisplay_enumeration[] = {$/;"	v
+link_local	src/options.h	/^    int link_local;$/;"	m	struct:__anon11
+linker_opts	config/compile	/^	    linker_opts="$linker_opts $flag"$/;"	v
+linker_opts	config/compile	/^	  linker_opts="$linker_opts $2"$/;"	v
+linker_opts	config/compile	/^    linker_opts="-link$linker_opts"$/;"	v
+linker_opts	config/compile	/^  linker_opts="$linker_opts -LIBPATH:$file"$/;"	v
+linker_opts	config/compile	/^  linker_opts=$/;"	v
+llc	src/llc.h	/^struct llc {$/;"	s
+llc_ethertype	src/llc.h	/^#define    llc_ethertype /;"	d
+llc_orgcode	src/llc.h	/^#define    llc_orgcode /;"	d
+llcis	src/llc.h	/^#define    llcis /;"	d
+llcpi	src/llc.h	/^#define    llcpi /;"	d
+llcu	src/llc.h	/^#define    llcu /;"	d
+llcui	src/llc.h	/^#define    llcui /;"	d
+lock	src/threadprof.c	/^    pthread_mutex_t lock;$/;"	m	struct:wrapper_s	file:
+lockdir	config/compile	/^lockdir=`echo "$cofile" | sed -e 's|[\/\\\\:.-]|_|g'`.d$/;"	v
+log_scale	src/options.h	/^    int log_scale;$/;"	m	struct:__anon11
+machine	config/config.guess	/^		machine="${arch}${endian}"-unknown$/;"	v
+main	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^int main(argc, argv) int argc; char *argv[];$/;"	f
+main	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^void main() {}$/;"	f
+main	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^int main(int argc, char* argv[])$/;"	f
+main	config/config.guess	/^		main()$/;"	f
+main	config/config.guess	/^	main ()$/;"	f
+main	config/config.guess	/^main ()$/;"	f
+main	config/hostentp_ghba_r.c	/^int main(void) {$/;"	f
+main	config/int_ghba_r.c	/^int main(void) {$/;"	f
+main	config/pthread.c	/^int main(void) {$/;"	f
+main	src/iftop.c	/^int main(int argc, char **argv) {$/;"	f
+make_screen_list	src/ui.c	/^void make_screen_list() {$/;"	f
+max	src/ui.c	/^    int max, interval;$/;"	m	struct:__anon15	file:
+max_bandwidth	src/options.h	/^    long long max_bandwidth;$/;"	m	struct:__anon11
+maybe_os	config/config.sub	/^maybe_os=`echo $1 | sed 's\/^\\(.*\\)-\\([^-]*-[^-]*\\)$\/\\2\/'`$/;"	v
+me	config/config.guess	/^me=`echo "$0" | sed -e 's,.*\/,,'`$/;"	v
+me	config/config.sub	/^me=`echo "$0" | sed -e 's,.*\/,,'`$/;"	v
+min	src/edline.c	/^static int min(const int a, const int b) {$/;"	f	file:
+mkdirprog	config/install-sh	/^mkdirprog="${MKDIRPROG-mkdir}"$/;"	v
+mtx	config/pthread.c	/^static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;$/;"	v	file:
+mvcmd	config/install-sh	/^mvcmd="$mvprog"$/;"	v
+mvprog	config/install-sh	/^mvprog="${MVPROG-mv}"$/;"	v
+n	src/vector.h	/^    size_t n, n_used;$/;"	m	struct:_vector
+n_used	src/vector.h	/^    size_t n, n_used;$/;"	m	struct:_vector
+name	src/cfgfile.h	/^    char *name;$/;"	m	struct:__anon2
+name	src/resolver.c	/^    char *name;$/;"	m	struct:ares_callback_comm	file:
+netfilter	src/options.h	/^    int netfilter;$/;"	m	struct:__anon11
+netfilter6	src/options.h	/^    int netfilter6;$/;"	m	struct:__anon11
+netfilter6mask	src/options.h	/^    struct in6_addr netfilter6mask;$/;"	m	struct:__anon11	typeref:struct:__anon11::in6_addr
+netfilter6net	src/options.h	/^    struct in6_addr netfilter6net;$/;"	m	struct:__anon11	typeref:struct:__anon11::in6_addr
+netfiltermask	src/options.h	/^    struct in_addr netfiltermask;$/;"	m	struct:__anon11	typeref:struct:__anon11::in_addr
+netfilternet	src/options.h	/^    struct in_addr netfilternet;$/;"	m	struct:__anon11	typeref:struct:__anon11::in_addr
+next	src/hash.h	/^    struct node_tag *next;       \/* next node *\/$/;"	m	struct:node_tag	typeref:struct:node_tag::node_tag
+next	src/sorted_list.h	/^    struct sorted_list_node_tag *next;$/;"	m	struct:sorted_list_node_tag	typeref:struct:sorted_list_node_tag::sorted_list_node_tag
+nl	config/compile	/^nl='$/;"	v
+node_tag	src/hash.h	/^typedef struct node_tag {$/;"	s
+ns_hash	src/resolver.c	/^hash_type *ns_hash;$/;"	v
+ns_hash_compare	src/ns_hash.c	/^int ns_hash_compare(void *a, void *b) {$/;"	f
+ns_hash_copy_key	src/ns_hash.c	/^void *ns_hash_copy_key(void *orig) {$/;"	f
+ns_hash_create	src/ns_hash.c	/^hash_type *ns_hash_create() {$/;"	f
+ns_hash_delete_key	src/ns_hash.c	/^void ns_hash_delete_key(void *key) {$/;"	f
+ns_hash_hash	src/ns_hash.c	/^int ns_hash_hash(void *key) {$/;"	f
+oIFS	config/install-sh	/^oIFS="${IFS}"$/;"	v
+obj_suffix	config/depcomp	/^  obj_suffix="`echo $object | sed 's\/^.*\\.\/.\/'`"$/;"	v
+ofile	config/compile	/^	    ofile=$2$/;"	v
+ofile	config/compile	/^ofile=$/;"	v
+option_linedisplay_t	src/options.h	/^} option_linedisplay_t;$/;"	t	typeref:enum:__anon10
+option_port_t	src/options.h	/^} option_port_t;$/;"	t	typeref:enum:__anon8
+option_sort_t	src/options.h	/^} option_sort_t;$/;"	t	typeref:enum:__anon9
+options	src/options.c	/^options_t options;$/;"	v
+options_config_get_bool	src/options.c	/^int options_config_get_bool(const char *name, int *value) {$/;"	f
+options_config_get_bw_rate	src/options.c	/^int options_config_get_bw_rate(char *directive, long long *result) {$/;"	f
+options_config_get_enum	src/options.c	/^int options_config_get_enum(char *name, config_enumeration_type *enumeration, int *result) {$/;"	f
+options_config_get_int	src/options.c	/^int options_config_get_int(const char *name, int *value) {$/;"	f
+options_config_get_net_filter	src/options.c	/^int options_config_get_net_filter() {$/;"	f
+options_config_get_net_filter6	src/options.c	/^int options_config_get_net_filter6() {$/;"	f
+options_config_get_promiscuous	src/options.c	/^int options_config_get_promiscuous() {$/;"	f
+options_config_get_string	src/options.c	/^int options_config_get_string(const char *name, char **value) {$/;"	f
+options_make	src/options.c	/^void options_make() {$/;"	f
+options_read_args	src/options.c	/^void options_read_args(int argc, char **argv) {$/;"	f
+options_set_defaults	src/options.c	/^void options_set_defaults() {$/;"	f
+options_t	src/options.h	/^} options_t;$/;"	t	typeref:struct:__anon11
+optstr	src/options.c	/^char optstr[] = "+i:f:nNF:G:lhpbBPm:c:";$/;"	v
+os	config/config.guess	/^		    os=netbsd$/;"	v
+os	config/config.guess	/^		    os=netbsdelf$/;"	v
+os	config/config.guess	/^		os=netbsd$/;"	v
+os	config/config.guess	/^		os=netbsdelf$/;"	v
+os	config/config.sub	/^			os=-irix4$/;"	v
+os	config/config.sub	/^			os=-nto$os$/;"	v
+os	config/config.sub	/^		      os=-nextstep2$/;"	v
+os	config/config.sub	/^		      os=-nextstep3$/;"	v
+os	config/config.sub	/^		os=$/;"	v
+os	config/config.sub	/^		os=-aix$/;"	v
+os	config/config.sub	/^		os=-amigaos$/;"	v
+os	config/config.sub	/^		os=-aos$/;"	v
+os	config/config.sub	/^		os=-aout$/;"	v
+os	config/config.sub	/^		os=-atheos$/;"	v
+os	config/config.sub	/^		os=-aux$/;"	v
+os	config/config.sub	/^		os=-beos$/;"	v
+os	config/config.sub	/^		os=-bosx$/;"	v
+os	config/config.sub	/^		os=-bsd$/;"	v
+os	config/config.sub	/^		os=-chorusos$/;"	v
+os	config/config.sub	/^		os=-coff$/;"	v
+os	config/config.sub	/^		os=-cxux$/;"	v
+os	config/config.sub	/^		os=-dgux$/;"	v
+os	config/config.sub	/^		os=-domain$/;"	v
+os	config/config.sub	/^		os=-dynix$/;"	v
+os	config/config.sub	/^		os=-ebmon$/;"	v
+os	config/config.sub	/^		os=-elf$/;"	v
+os	config/config.sub	/^		os=-genix$/;"	v
+os	config/config.sub	/^		os=-go32$/;"	v
+os	config/config.sub	/^		os=-hiux$/;"	v
+os	config/config.sub	/^		os=-hiuxwe2$/;"	v
+os	config/config.sub	/^		os=-hms$/;"	v
+os	config/config.sub	/^		os=-hpux$/;"	v
+os	config/config.sub	/^		os=-irix$/;"	v
+os	config/config.sub	/^		os=-isc2.2$/;"	v
+os	config/config.sub	/^		os=-linux$/;"	v
+os	config/config.sub	/^		os=-luna$/;"	v
+os	config/config.sub	/^		os=-lynxos$/;"	v
+os	config/config.sub	/^		os=-mach$/;"	v
+os	config/config.sub	/^		os=-macos$/;"	v
+os	config/config.sub	/^		os=-mingw32$/;"	v
+os	config/config.sub	/^		os=-mint$/;"	v
+os	config/config.sub	/^		os=-mmixware$/;"	v
+os	config/config.sub	/^		os=-mon960$/;"	v
+os	config/config.sub	/^		os=-morphos$/;"	v
+os	config/config.sub	/^		os=-msdos$/;"	v
+os	config/config.sub	/^		os=-mvs$/;"	v
+os	config/config.sub	/^		os=-netbsd$/;"	v
+os	config/config.sub	/^		os=-newsos$/;"	v
+os	config/config.sub	/^		os=-nextstep$/;"	v
+os	config/config.sub	/^		os=-nextstep3$/;"	v
+os	config/config.sub	/^		os=-nindy$/;"	v
+os	config/config.sub	/^		os=-none$/;"	v
+os	config/config.sub	/^		os=-nonstopux$/;"	v
+os	config/config.sub	/^		os=-nsk$/;"	v
+os	config/config.sub	/^		os=-nto-qnx$/;"	v
+os	config/config.sub	/^		os=-openedition$/;"	v
+os	config/config.sub	/^		os=-os68k$/;"	v
+os	config/config.sub	/^		os=-ose$/;"	v
+os	config/config.sub	/^		os=-osf$/;"	v
+os	config/config.sub	/^		os=-osfrose$/;"	v
+os	config/config.sub	/^		os=-proelf$/;"	v
+os	config/config.sub	/^		os=-psos$/;"	v
+os	config/config.sub	/^		os=-ptx$/;"	v
+os	config/config.sub	/^		os=-pw32$/;"	v
+os	config/config.sub	/^		os=-riscix1.2$/;"	v
+os	config/config.sub	/^		os=-rtmk-nova$/;"	v
+os	config/config.sub	/^		os=-rtu$/;"	v
+os	config/config.sub	/^		os=-sco3.2v2$/;"	v
+os	config/config.sub	/^		os=-sco3.2v4$/;"	v
+os	config/config.sub	/^		os=-sco3.2v5$/;"	v
+os	config/config.sub	/^		os=-scout$/;"	v
+os	config/config.sub	/^		os=-sim$/;"	v
+os	config/config.sub	/^		os=-solaris2$/;"	v
+os	config/config.sub	/^		os=-sunos3$/;"	v
+os	config/config.sub	/^		os=-sunos4$/;"	v
+os	config/config.sub	/^		os=-sunos4.0.2$/;"	v
+os	config/config.sub	/^		os=-sunos4.1.1$/;"	v
+os	config/config.sub	/^		os=-sym1$/;"	v
+os	config/config.sub	/^		os=-sysv$/;"	v
+os	config/config.sub	/^		os=-sysv2$/;"	v
+os	config/config.sub	/^		os=-sysv3$/;"	v
+os	config/config.sub	/^		os=-sysv32$/;"	v
+os	config/config.sub	/^		os=-sysv4$/;"	v
+os	config/config.sub	/^		os=-sysv4.2uw$/;"	v
+os	config/config.sub	/^		os=-tops10$/;"	v
+os	config/config.sub	/^		os=-tops20$/;"	v
+os	config/config.sub	/^		os=-udi$/;"	v
+os	config/config.sub	/^		os=-ultrix4.2$/;"	v
+os	config/config.sub	/^		os=-unicos$/;"	v
+os	config/config.sub	/^		os=-unos$/;"	v
+os	config/config.sub	/^		os=-uxpv$/;"	v
+os	config/config.sub	/^		os=-vms$/;"	v
+os	config/config.sub	/^		os=-vsta$/;"	v
+os	config/config.sub	/^		os=-vxworks$/;"	v
+os	config/config.sub	/^		os=-wince$/;"	v
+os	config/config.sub	/^		os=-windows32-msvcrt$/;"	v
+os	config/config.sub	/^		os=-xenix$/;"	v
+os	config/config.sub	/^		os=-xray$/;"	v
+os	config/config.sub	/^		os=`echo $os | sed 's\/[^-]*-\/\/'`$/;"	v
+os	config/config.sub	/^		os=`echo $os | sed -e 's\/sco3.2.\/sco3.2v\/'`$/;"	v
+os	config/config.sub	/^		os=`echo $os | sed -e 's\/windowsnt\/winnt\/'`$/;"	v
+os	config/config.sub	/^		os=`echo $os | sed -e 's|gnu\/linux|linux-gnu|'`$/;"	v
+os	config/config.sub	/^		os=`echo $os | sed -e 's|linux|linux-gnu|'`$/;"	v
+os	config/config.sub	/^		os=`echo $os | sed -e 's|mac|macos|'`$/;"	v
+os	config/config.sub	/^		os=`echo $os | sed -e 's|sinix|sysv|'`$/;"	v
+os	config/config.sub	/^		os=`echo $os | sed -e 's|solaris1|sunos4|'`$/;"	v
+os	config/config.sub	/^		os=`echo $os | sed -e 's|sunos5|solaris2|'`$/;"	v
+os	config/config.sub	/^		os=`echo $os | sed -e 's|sunos6|solaris3|'`$/;"	v
+os	config/config.sub	/^	        os=-mint$/;"	v
+os	config/config.sub	/^	        os=-nextstep2$/;"	v
+os	config/config.sub	/^ 		os=-chorusrdb$/;"	v
+os	config/config.sub	/^    os=-$maybe_os$/;"	v
+outname	config/depcomp	/^  outname="$stripped.o"$/;"	v
+packet_handler	src/iftop.c	/^pcap_handler packet_handler;$/;"	v
+packet_init	src/iftop.c	/^void packet_init() {$/;"	f
+packet_loop	src/iftop.c	/^void packet_loop(void *ptr) {$/;"	f
+pad	src/iftop.h	/^    unsigned char pad[3];$/;"	m	struct:pfloghdr
+pane	utils/run.sh	/^pane=iftop:1.0$/;"	v
+pathcomp	config/install-sh	/^	pathcomp="${pathcomp}${1}"$/;"	v
+pathcomp	config/install-sh	/^	pathcomp="${pathcomp}\/"$/;"	v
+pathcomp	config/install-sh	/^pathcomp=''$/;"	v
+pathcomp	config/mkinstalldirs	/^     pathcomp="$pathcomp$d"$/;"	v
+pathcomp	config/mkinstalldirs	/^     pathcomp="$pathcomp\/"$/;"	v
+pathcomp	config/mkinstalldirs	/^   pathcomp=$/;"	v
+paused	src/options.h	/^    int paused;$/;"	m	struct:__anon11
+pcap_filter	src/iftop.c	/^struct bpf_program pcap_filter;$/;"	v	typeref:struct:bpf_program
+pd	src/iftop.c	/^pcap_t *pd; \/* pcap descriptor *\/$/;"	v
+peakrecv	src/ui.c	/^int peaksent, peakrecv, peaktotal;$/;"	v
+peaksent	src/ui.c	/^int peaksent, peakrecv, peaktotal;$/;"	v
+peaktotal	src/ui.c	/^int peaksent, peakrecv, peaktotal;$/;"	v
+persistenthelp	src/ui.c	/^int persistenthelp = 0;$/;"	v
+pfloghdr	src/iftop.h	/^struct pfloghdr {$/;"	s
+port	src/serv_hash.h	/^    int port;$/;"	m	struct:__anon16
+portresolution	src/options.h	/^    int portresolution;$/;"	m	struct:__anon11
+preg	src/screenfilter.c	/^regex_t preg;$/;"	v
+printdlattachreq	src/dlcommon.c	/^printdlattachreq(dlp)$/;"	f
+printdlbindack	src/dlcommon.c	/^printdlbindack(dlp)$/;"	f
+printdlbindreq	src/dlcommon.c	/^printdlbindreq(dlp)$/;"	f
+printdldetachreq	src/dlcommon.c	/^printdldetachreq(dlp)$/;"	f
+printdldisabmultireq	src/dlcommon.c	/^printdldisabmultireq(dlp)$/;"	f
+printdlenabmultireq	src/dlcommon.c	/^printdlenabmultireq(dlp)$/;"	f
+printdlerrorack	src/dlcommon.c	/^printdlerrorack(dlp)$/;"	f
+printdlinfoack	src/dlcommon.c	/^printdlinfoack(dlp)$/;"	f
+printdlinforeq	src/dlcommon.c	/^printdlinforeq(dlp)$/;"	f
+printdlokack	src/dlcommon.c	/^printdlokack(dlp)$/;"	f
+printdlphysaddrack	src/dlcommon.c	/^printdlphysaddrack(dlp)$/;"	f
+printdlphysaddrreq	src/dlcommon.c	/^printdlphysaddrreq(dlp)$/;"	f
+printdlprim	src/dlcommon.c	/^printdlprim(dlp)$/;"	f
+printdlpromiscoffreq	src/dlcommon.c	/^printdlpromiscoffreq(dlp)$/;"	f
+printdlpromisconreq	src/dlcommon.c	/^printdlpromisconreq(dlp)$/;"	f
+printdlsetphysaddrreq	src/dlcommon.c	/^printdlsetphysaddrreq(dlp)$/;"	f
+printdlsubsbindack	src/dlcommon.c	/^printdlsubsbindack(dlp)$/;"	f
+printdlsubsbindreq	src/dlcommon.c	/^printdlsubsbindreq(dlp)$/;"	f
+printdlsubsunbindreq	src/dlcommon.c	/^printdlsubsunbindreq(dlp)$/;"	f
+printdltestcon	src/dlcommon.c	/^printdltestcon(dlp)$/;"	f
+printdltestind	src/dlcommon.c	/^printdltestind(dlp)$/;"	f
+printdltestreq	src/dlcommon.c	/^printdltestreq(dlp)$/;"	f
+printdltestres	src/dlcommon.c	/^printdltestres(dlp)$/;"	f
+printdluderrorind	src/dlcommon.c	/^printdluderrorind(dlp)$/;"	f
+printdludqosreq	src/dlcommon.c	/^printdludqosreq(dlp)$/;"	f
+printdlunbindreq	src/dlcommon.c	/^printdlunbindreq(dlp)$/;"	f
+printdlunitdataind	src/dlcommon.c	/^printdlunitdataind(dlp)$/;"	f
+printdlunitdatareq	src/dlcommon.c	/^printdlunitdatareq(dlp)$/;"	f
+printdlxidcon	src/dlcommon.c	/^printdlxidcon(dlp)$/;"	f
+printdlxidind	src/dlcommon.c	/^printdlxidind(dlp)$/;"	f
+printdlxidreq	src/dlcommon.c	/^printdlxidreq(dlp)$/;"	f
+printdlxidres	src/dlcommon.c	/^printdlxidres(dlp)$/;"	f
+priority_cfi_vid	src/ether.h	/^    u_int16_t priority_cfi_vid;$/;"	m	struct:vlan_8021q_header
+promiscuous	src/options.h	/^    int promiscuous;$/;"	m	struct:__anon11
+promiscuous_but_choosy	src/options.h	/^    int promiscuous_but_choosy;$/;"	m	struct:__anon11
+protocol	src/addr_hash.h	/^    unsigned short int protocol;$/;"	m	struct:__anon12
+protocol	src/serv_hash.h	/^    int protocol;$/;"	m	struct:__anon16
+pthread_create	src/threadprof.c	/^#undef pthread_create$/;"	d	file:
+pthread_create	src/threadprof.h	/^#define pthread_create(/;"	d
+qnxnto	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v
+qnxnto	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v
+radiotap_header	src/ether.h	/^struct radiotap_header {$/;"	s
+rateidx	src/ui.c	/^static int rateidx = 0, wantbiggerrate;$/;"	v	file:
+rateidx_init	src/ui.c	/^static int rateidx_init = 0;$/;"	v	file:
+rcsid	config/hostentp_ghba_r.c	/^static const char rcsid[] = "$Id: hostentp_ghba_r.c,v 1.1 2002\/11\/04 12:27:35 chris Exp $";$/;"	v	file:
+rcsid	config/int_ghba_r.c	/^static const char rcsid[] = "$Id: int_ghba_r.c,v 1.4 2011\/10\/03 18:19:13 pdw Exp $";$/;"	v	file:
+rcsid	config/pthread.c	/^static const char rcsid[] = "$Id: pthread.c,v 1.4 2005\/10\/26 22:56:05 chris Exp $";$/;"	v	file:
+rcsid	src/edline.c	/^static const char rcsid[] = "$Id: edline.c,v 1.2 2002\/11\/04 12:27:35 chris Exp $";$/;"	v	file:
+rcsid	src/screenfilter.c	/^static const char rcsid[] = "$Id: screenfilter.c,v 1.3 2002\/11\/04 12:27:35 chris Exp $";$/;"	v	file:
+rcsid	src/stringmap.c	/^static const char rcsid[] = "$Id: stringmap.c,v 1.4 2010\/11\/27 11:06:12 pdw Exp $";$/;"	v	file:
+rcsid	src/util.c	/^static const char rcsid[] = "$Id: util.c,v 1.1 2002\/03\/24 17:27:12 chris Exp $";$/;"	v	file:
+rcsid	src/vector.c	/^static const char rcsid[] = "$Id: vector.c,v 1.3 2003\/11\/07 02:16:41 pdw Exp $";$/;"	v	file:
+read_config	src/cfgfile.c	/^int read_config(char *file, int whinge_on_error) {$/;"	f
+read_config_file	src/cfgfile.c	/^int read_config_file(const char *f, int whinge) {$/;"	f
+readable_size	src/ui.c	/^void readable_size(float n, char *buf, int bsize, int ksize, int bytes) {$/;"	f
+reason	src/iftop.h	/^    unsigned char reason;$/;"	m	struct:pfloghdr
+rec	src/hash.h	/^    void *rec;                \/* user data *\/$/;"	m	struct:node_tag
+recv	src/iftop.h	/^    long recv[HISTORY_LENGTH];$/;"	m	struct:__anon6
+recv	src/ui.c	/^    double long recv[HISTORY_DIVISIONS];$/;"	m	struct:host_pair_line_tag	file:
+release	config/config.guess	/^		release='-gnu'$/;"	v
+release	config/config.guess	/^		release=`echo "$UNAME_RELEASE" | sed -e 's\/[-_].*\/\/' | cut -d. -f1,2`$/;"	v
+resolve	src/resolver.c	/^void resolve(int af, void *addr, char *result, int buflen) {$/;"	f
+resolve_queue	src/resolver.c	/^struct addr_storage resolve_queue[RESOLVE_QUEUE_LENGTH];$/;"	v	typeref:struct:addr_storage
+resolver_initialise	src/resolver.c	/^void resolver_initialise() {$/;"	f
+resolver_queue_cond	src/resolver.c	/^pthread_cond_t resolver_queue_cond;$/;"	v
+resolver_queue_mutex	src/resolver.c	/^pthread_mutex_t resolver_queue_mutex;$/;"	v
+resolver_worker	src/resolver.c	/^void resolver_worker(void *ptr) {$/;"	f
+result	src/resolver.c	/^    int result;$/;"	m	struct:ares_callback_comm	file:
+ret	config/compile	/^ret=$?$/;"	v
+return_value	config/pthread.c	/^static int return_value = -1;$/;"	v	file:
+rmcmd	config/install-sh	/^rmcmd="$rmprog -f"$/;"	v
+rmprog	config/install-sh	/^rmprog="${RMPROG-rm}"$/;"	v
+root	src/sorted_list.h	/^    sorted_list_node root;$/;"	m	struct:__anon7
+rulenr	src/iftop.h	/^    unsigned int rulenr;$/;"	m	struct:pfloghdr
+ruleset	src/iftop.h	/^    char ruleset[16];$/;"	m	struct:pfloghdr
+run	config/missing	/^  run=$/;"	v
+run	config/missing	/^run=:$/;"	v
+save_IFS	config/compile	/^  save_IFS=$IFS$/;"	v
+save_ifs	config/compile	/^	  save_ifs="$IFS"; IFS=','$/;"	v
+sc_cpu_version	config/config.guess	/^		    sc_cpu_version=`\/usr\/bin\/getconf SC_CPU_VERSION 2>\/dev\/null`$/;"	v
+sc_kernel_bits	config/config.guess	/^		    sc_kernel_bits=`\/usr\/bin\/getconf SC_KERNEL_BITS 2>\/dev\/null`$/;"	v
+scale	src/ui.c	/^} scale[] = {$/;"	v	typeref:struct:__anon15	file:
+screen_filter_match	src/screenfilter.c	/^int screen_filter_match(char *s) {$/;"	f
+screen_filter_set	src/screenfilter.c	/^int screen_filter_set(char *s) {$/;"	f
+screen_hash	src/ui.c	/^hash_type *screen_hash;$/;"	v
+screen_hash_clear	src/ui.c	/^void screen_hash_clear() {$/;"	f
+screen_line_bandwidth_compare	src/ui.c	/^int screen_line_bandwidth_compare(host_pair_line *aa, host_pair_line *bb, int start_div) {$/;"	f
+screen_line_compare	src/ui.c	/^int screen_line_compare(void *a, void *b) {$/;"	f
+screen_line_host_compare	src/ui.c	/^int screen_line_host_compare(void *a, void *b, host_pair_line *aa, host_pair_line *bb) {$/;"	f
+screen_list	src/ui.c	/^sorted_list_type screen_list;$/;"	v
+screen_list_clear	src/ui.c	/^void screen_list_clear() {$/;"	f
+screen_list_init	src/ui.c	/^void screen_list_init() {$/;"	f
+screen_offset	src/options.h	/^    int screen_offset;$/;"	m	struct:__anon11
+screenfilter	src/options.h	/^    char *screenfilter;$/;"	m	struct:__anon11
+scriptversion	config/compile	/^scriptversion=2018-03-07.03; # UTC$/;"	v
+sent	src/iftop.h	/^    long sent[HISTORY_LENGTH];$/;"	m	struct:__anon6
+sent	src/ui.c	/^    double long sent[HISTORY_DIVISIONS];$/;"	m	struct:host_pair_line_tag	file:
+serv_hash_compare	src/serv_hash.c	/^int serv_hash_compare(void *a, void *b) {$/;"	f
+serv_hash_copy_key	src/serv_hash.c	/^void *serv_hash_copy_key(void *orig) {$/;"	f
+serv_hash_create	src/serv_hash.c	/^hash_type *serv_hash_create() {$/;"	f
+serv_hash_delete_key	src/serv_hash.c	/^void serv_hash_delete_key(void *key) {$/;"	f
+serv_hash_hash	src/serv_hash.c	/^int serv_hash_hash(void *key) {$/;"	f
+serv_hash_initialise	src/serv_hash.c	/^void serv_hash_initialise(hash_type *sh) {$/;"	f
+service_hash	src/ui.c	/^hash_type *service_hash;$/;"	v
+set_cc_for_build	config/config.guess	/^set_cc_for_build() {$/;"	f
+set_filter_code	src/iftop.c	/^char *set_filter_code(const char *filter) {$/;"	f
+set_max_bandwidth	src/options.c	/^static void set_max_bandwidth(char *arg) {$/;"	f	file:
+set_net_filter	src/options.c	/^static void set_net_filter(char *arg) {$/;"	f	file:
+shared	config/compile	/^	  shared=false$/;"	v
+shared	config/compile	/^  shared=:$/;"	v
+show_totals	src/options.h	/^    int show_totals;$/;"	m	struct:__anon11
+showbars	src/options.h	/^    int showbars;$/;"	m	struct:__anon11
+showhelp	src/options.h	/^    int showhelp;$/;"	m	struct:__anon11
+showhelp	src/ui.c	/^void showhelp(const char *s) {$/;"	f
+showhelphint	src/ui.c	/^int showhelphint = 0;$/;"	v
+showports	src/options.h	/^    option_port_t showports;$/;"	m	struct:__anon11
+showports_enumeration	src/options.c	/^config_enumeration_type showports_enumeration[] = {$/;"	v
+showportstatus	src/ui.c	/^void showportstatus() {$/;"	f
+sigalrm	src/dlcommon.c	/^sigalrm()$/;"	f	file:
+size	src/hash.h	/^    int size;$/;"	m	struct:__anon18
+sll_addr	src/sll.h	/^    u_int8_t sll_addr[SLL_ADDRLEN];    \/* link-layer address *\/$/;"	m	struct:sll_header
+sll_halen	src/sll.h	/^    u_int16_t sll_halen;        \/* link-layer address length *\/$/;"	m	struct:sll_header
+sll_hatype	src/sll.h	/^    u_int16_t sll_hatype;        \/* link-layer address type *\/$/;"	m	struct:sll_header
+sll_header	src/sll.h	/^struct sll_header {$/;"	s
+sll_pkttype	src/sll.h	/^    u_int16_t sll_pkttype;        \/* packet type *\/$/;"	m	struct:sll_header
+sll_protocol	src/sll.h	/^    u_int16_t sll_protocol;        \/* protocol *\/$/;"	m	struct:sll_header
+snap	src/llc.h	/^        } snap;$/;"	m	union:llc::__anon3	typeref:struct:llc::__anon3::__anon4
+snap_ether	src/llc.h	/^        } snap_ether;$/;"	m	union:llc::__anon3	typeref:struct:llc::__anon3::__anon5
+snap_ethertype	src/llc.h	/^            u_int8_t snap_ethertype[2];$/;"	m	struct:llc::__anon3::__anon5
+snap_orgcode	src/llc.h	/^            u_int8_t snap_orgcode[3];$/;"	m	struct:llc::__anon3::__anon5
+snap_pi	src/llc.h	/^            u_int8_t snap_pi[5];$/;"	m	struct:llc::__anon3::__anon4
+snap_ui	src/llc.h	/^            u_int8_t snap_ui;$/;"	m	struct:llc::__anon3::__anon4
+snap_ui	src/llc.h	/^            u_int8_t snap_ui;$/;"	m	struct:llc::__anon3::__anon5
+sort	src/options.h	/^    option_sort_t sort;$/;"	m	struct:__anon11
+sort_enumeration	src/options.c	/^config_enumeration_type sort_enumeration[] = {$/;"	v
+sorted_list_destroy	src/sorted_list.c	/^void sorted_list_destroy(sorted_list_type *list) {$/;"	f
+sorted_list_initialise	src/sorted_list.c	/^void sorted_list_initialise(sorted_list_type *list) {$/;"	f
+sorted_list_insert	src/sorted_list.c	/^void sorted_list_insert(sorted_list_type *list, void *item) {$/;"	f
+sorted_list_next_item	src/sorted_list.c	/^sorted_list_node *sorted_list_next_item(sorted_list_type *list, sorted_list_node *prev) {$/;"	f
+sorted_list_node	src/sorted_list.h	/^} sorted_list_node;$/;"	t	typeref:struct:sorted_list_node_tag
+sorted_list_node_tag	src/sorted_list.h	/^typedef struct sorted_list_node_tag {$/;"	s
+sorted_list_type	src/sorted_list.h	/^} sorted_list_type;$/;"	t	typeref:struct:__anon7
+split_dname	src/addrs_dlpi.c	/^split_dname(char *device, int *unitp)$/;"	f
+sprint_host	src/ui.c	/^void sprint_host(char *line, int af, struct in6_addr *addr, unsigned int port, unsigned int protocol, int L) {$/;"	f
+src	config/install-sh	/^		src=$1$/;"	v
+src	config/install-sh	/^	src=""$/;"	v
+src	config/install-sh	/^src=""$/;"	v
+src	src/addr_hash.h	/^        struct in_addr src;$/;"	m	union:__anon12::__anon13	typeref:struct:__anon12::__anon13::in_addr
+src6	src/addr_hash.h	/^        struct in6_addr src6;$/;"	m	union:__anon12::__anon13	typeref:struct:__anon12::__anon13::in6_addr
+src_port	src/addr_hash.h	/^    unsigned short int src_port;$/;"	m	struct:__anon12
+ssap	src/llc.h	/^    u_int8_t ssap;$/;"	m	struct:llc
+start_routine	src/threadprof.c	/^    void *(*start_routine)(void *);$/;"	m	struct:wrapper_s	file:
+stat	config/depcomp	/^   stat=$?$/;"	v
+stat	config/depcomp	/^  stat=$?$/;"	v
+strgetmsg	src/dlcommon.c	/^strgetmsg(fd, ctlp, datap, flagsp, caller)$/;"	f
+stringmap	src/stringmap.h	/^} *stringmap;$/;"	t	typeref:struct:_stringmap
+stringmap_delete	src/stringmap.c	/^void stringmap_delete(stringmap S) {$/;"	f
+stringmap_delete_free	src/stringmap.c	/^void stringmap_delete_free(stringmap S) {$/;"	f
+stringmap_find	src/stringmap.c	/^stringmap stringmap_find(const stringmap S, const char *k) {$/;"	f
+stringmap_insert	src/stringmap.c	/^item *stringmap_insert(stringmap S, const char *k, const item d) {$/;"	f
+stringmap_new	src/stringmap.c	/^stringmap stringmap_new() {$/;"	f
+stringtoaddr	src/dlcommon.c	/^stringtoaddr(sp, addr)$/;"	f
+strioctl	src/dlcommon.c	/^strioctl(fd, cmd, timout, len, dp)$/;"	f
+stripcmd	config/install-sh	/^stripcmd=""$/;"	v
+stripped	config/depcomp	/^  stripped=`echo "$object" | sed -e 's,^.*\/,,' -e 's\/\\(.*\\)\\..*$\/\\1\/'`$/;"	v
+stripprog	config/install-sh	/^stripprog="${STRIPPROG-strip}"$/;"	v
+strncat2	src/addrs_dlpi.c	/^strncat2(char *dest, char *src, int n)$/;"	f
+strncpy2	src/addrs_dlpi.c	/^strncpy2(char *dest, char *src, int n)$/;"	f
+subrulenr	src/iftop.h	/^    unsigned int subrulenr;$/;"	m	struct:pfloghdr
+sysctl	config/config.guess	/^	sysctl="sysctl -n hw.machine_arch"$/;"	v
+syserr	src/dlcommon.c	/^syserr(s)$/;"	f
+table	src/hash.h	/^    hash_node_type **table;$/;"	m	struct:__anon18
+tail	src/resolver.c	/^int tail;$/;"	v
+tcp_seq	src/tcp.h	/^typedef u_int32_t tcp_seq;$/;"	t
+tcphdr	src/tcp.h	/^struct tcphdr {$/;"	s
+th_ack	src/tcp.h	/^    tcp_seq th_ack;            \/* acknowledgement number *\/$/;"	m	struct:tcphdr
+th_dport	src/tcp.h	/^    u_int16_t th_dport;        \/* destination port *\/$/;"	m	struct:tcphdr
+th_flags	src/tcp.h	/^    u_int8_t th_flags;$/;"	m	struct:tcphdr
+th_offx2	src/tcp.h	/^    u_int8_t th_offx2;        \/* data offset, rsvd *\/$/;"	m	struct:tcphdr
+th_seq	src/tcp.h	/^    tcp_seq th_seq;            \/* sequence number *\/$/;"	m	struct:tcphdr
+th_sport	src/tcp.h	/^    u_int16_t th_sport;        \/* source port *\/$/;"	m	struct:tcphdr
+th_sum	src/tcp.h	/^    u_int16_t th_sum;            \/* checksum *\/$/;"	m	struct:tcphdr
+th_urp	src/tcp.h	/^    u_int16_t th_urp;            \/* urgent pointer *\/$/;"	m	struct:tcphdr
+th_win	src/tcp.h	/^    u_int16_t th_win;            \/* window *\/$/;"	m	struct:tcphdr
+tick	src/iftop.c	/^void tick(int print) {$/;"	f
+tick_mutex	src/iftop.c	/^pthread_mutex_t tick_mutex;$/;"	v
+timestamp	config/config.guess	/^timestamp='2019-03-04'$/;"	v
+timestamp	config/config.sub	/^timestamp='2002-07-03'$/;"	v
+tmp	config/config.guess	/^tmp=$/;"	v
+tmpdepfile	config/depcomp	/^      tmpdepfile="$tmpdepfile1"$/;"	v
+tmpdepfile	config/depcomp	/^      tmpdepfile="$tmpdepfile2"$/;"	v
+tmpdepfile	config/depcomp	/^  tmpdepfile="$stripped.u"$/;"	v
+tmpdepfile	config/depcomp	/^tmpdepfile=${tmpdepfile-`echo "$depfile" | sed 's\/\\.\\([^.]*\\)$\/.T\\1\/'`}$/;"	v
+tmpdepfile1	config/depcomp	/^      tmpdepfile1="$dir$base.o.d"$/;"	v
+tmpdepfile1	config/depcomp	/^      tmpdepfile1="$dir.libs\/$base.lo.d"$/;"	v
+tmpdepfile2	config/depcomp	/^      tmpdepfile2="$dir$base.d"$/;"	v
+tmpdepfile2	config/depcomp	/^      tmpdepfile2="$dir.libs\/$base.d"$/;"	v
+token_ac	src/token.h	/^    u_int8_t token_ac;$/;"	m	struct:token_header
+token_dhost	src/token.h	/^    u_int8_t token_dhost[TOKEN_RING_MAC_LEN];$/;"	m	struct:token_header
+token_fc	src/token.h	/^    u_int8_t token_fc;$/;"	m	struct:token_header
+token_header	src/token.h	/^struct token_header {$/;"	s
+token_rcf	src/token.h	/^    u_int16_t token_rcf;$/;"	m	struct:token_header
+token_rseg	src/token.h	/^    u_int16_t token_rseg[ROUTING_SEGMENT_MAX];$/;"	m	struct:token_header
+token_shost	src/token.h	/^    u_int8_t token_shost[TOKEN_RING_MAC_LEN];$/;"	m	struct:token_header
+total_recv	src/iftop.h	/^    double long total_recv;$/;"	m	struct:__anon6
+total_recv	src/ui.c	/^    double long total_recv;$/;"	m	struct:host_pair_line_tag	file:
+total_sent	src/iftop.h	/^    double long total_sent;$/;"	m	struct:__anon6
+total_sent	src/ui.c	/^    double long total_sent;$/;"	m	struct:host_pair_line_tag	file:
+totals	src/ui.c	/^host_pair_line totals;$/;"	v
+touch_files	config/missing	/^    touch_files=$/;"	v
+transform_arg	config/install-sh	/^transform_arg=""$/;"	v
+transformbasename	config/install-sh	/^transformbasename=""$/;"	v
+turnOffColor	src/ui.c	/^void turnOffColor(int color_ary[]) {$/;"	f
+turnOnColor	src/ui.c	/^void turnOnColor(int color_ary[]) {$/;"	f
+u_ctl	src/llc.h	/^        u_int8_t u_ctl;$/;"	m	union:llc::__anon3
+u_int16_t	src/integers.h	/^        typedef unsigned int u_int16_t;     \/* Not likely. *\/$/;"	t
+u_int16_t	src/integers.h	/^        typedef unsigned short int u_int16_t;$/;"	t
+u_int16_t	src/integers.h	/^typedef uint16_t u_int16_t;$/;"	t
+u_int32_t	src/integers.h	/^        typedef unsigned int u_int32_t;$/;"	t
+u_int32_t	src/integers.h	/^        typedef unsigned long int u_int32_t;$/;"	t
+u_int32_t	src/integers.h	/^typedef uint32_t u_int32_t;$/;"	t
+u_int8_t	src/integers.h	/^    typedef unsigned char u_int8_t;         \/* By definition. *\/$/;"	t
+u_int8_t	src/integers.h	/^typedef uint8_t u_int8_t;$/;"	t
+ui_curses_init	src/ui.c	/^void ui_curses_init() {$/;"	f
+ui_finish	src/ui.c	/^void ui_finish() {$/;"	f
+ui_init	src/ui.c	/^void ui_init() {$/;"	f
+ui_loop	src/ui.c	/^void ui_loop() {$/;"	f
+ui_print	src/ui.c	/^void ui_print() {$/;"	f
+ui_tick	src/ui.c	/^void ui_tick(int print) {$/;"	f
+unit_bits	src/ui.c	/^char *unit_bits[UNIT_DIVISIONS] = {"b", "kb", "Mb", "Gb"};$/;"	v
+unit_bytes	src/ui.c	/^char *unit_bytes[UNIT_DIVISIONS] = {"B", "kB", "MB", "GB"};$/;"	v
+usage	config/config.guess	/^usage="\\$/;"	v
+usage	config/config.sub	/^usage="\\$/;"	v
+usage	config/mkinstalldirs	/^usage="\\$/;"	v
+usage	src/options.c	/^static void usage(FILE *fp) {$/;"	f	file:
+v	src/vector.h	/^    void *v;$/;"	m	union:_item
+value	src/cfgfile.h	/^    int value;$/;"	m	struct:__anon2
+vector	src/vector.h	/^} *vector;$/;"	t	typeref:struct:_vector
+vector_back	src/vector.c	/^item vector_back(vector v) {$/;"	f
+vector_delete	src/vector.c	/^void vector_delete(vector v) {$/;"	f
+vector_delete_free	src/vector.c	/^void vector_delete_free(vector v) {$/;"	f
+vector_iterate	src/vector.h	/^#define vector_iterate(/;"	d
+vector_new	src/vector.c	/^vector vector_new(void) {$/;"	f
+vector_pop_back	src/vector.c	/^void vector_pop_back(vector v) {$/;"	f
+vector_push_back	src/vector.c	/^void vector_push_back(vector v, const item t) {$/;"	f
+vector_reallocate	src/vector.c	/^void vector_reallocate(vector v, const size_t n) {$/;"	f
+vector_remove	src/vector.c	/^item *vector_remove(vector v, item *t) {$/;"	f
+vendor	config/config.sub	/^				vendor=acorn$/;"	v
+vendor	config/config.sub	/^				vendor=apple$/;"	v
+vendor	config/config.sub	/^				vendor=atari$/;"	v
+vendor	config/config.sub	/^				vendor=be$/;"	v
+vendor	config/config.sub	/^				vendor=crds$/;"	v
+vendor	config/config.sub	/^				vendor=dg$/;"	v
+vendor	config/config.sub	/^				vendor=hitachi$/;"	v
+vendor	config/config.sub	/^				vendor=hp$/;"	v
+vendor	config/config.sub	/^				vendor=ibm$/;"	v
+vendor	config/config.sub	/^				vendor=ns$/;"	v
+vendor	config/config.sub	/^				vendor=omron$/;"	v
+vendor	config/config.sub	/^				vendor=sequent$/;"	v
+vendor	config/config.sub	/^				vendor=stratus$/;"	v
+vendor	config/config.sub	/^				vendor=sun$/;"	v
+vendor	config/config.sub	/^				vendor=wrs$/;"	v
+vendor	config/config.sub	/^vendor=unknown$/;"	v
+version	config/config.guess	/^  version=`(hostinfo | sed -n 's\/.*NeXT Mach \\([0-9]*\\).*\/\\1\/p') 2>\/dev\/null`;$/;"	v
+version	config/config.guess	/^version="\\$/;"	v
+version	config/config.sub	/^version="\\$/;"	v
+vlan_8021q_header	src/ether.h	/^struct vlan_8021q_header {$/;"	s
+volatile	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^# define volatile$/;"	d	file:
+wait	src/threadprof.c	/^    pthread_cond_t wait;$/;"	m	struct:wrapper_s	file:
+wantbiggerrate	src/ui.c	/^static int rateidx = 0, wantbiggerrate;$/;"	v	file:
+worker_thread	config/pthread.c	/^void *worker_thread(void *v) {$/;"	f
+wrapper_routine	src/threadprof.c	/^static void *wrapper_routine(void *data) {$/;"	f	file:
+wrapper_s	src/threadprof.c	/^typedef struct wrapper_s {$/;"	s	file:
+wrapper_t	src/threadprof.c	/^} wrapper_t;$/;"	t	typeref:struct:wrapper_s	file:
+xcalloc	src/util.c	/^void *xcalloc(size_t n, size_t m) {$/;"	f
+xfree	src/util.c	/^void xfree(void *v) {$/;"	f
+xmalloc	src/util.c	/^void *xmalloc(size_t n) {$/;"	f
+xrealloc	src/util.c	/^void *xrealloc(void *w, size_t n) {$/;"	f
+xstrdup	src/util.c	/^char *xstrdup(const char *s) {$/;"	f

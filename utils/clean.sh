@@ -13,7 +13,7 @@ rm -rf \
         aclocal.m4 \
         src/*.o \
         src/iftop \
-        src/iftop.spec \
+        iftop.spec \
         src/.deps \
         .deps \
         src/Makefile \
