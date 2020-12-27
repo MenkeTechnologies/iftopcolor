@@ -14,4 +14,6 @@ add_executable(iftop ${SRC_FILES})
 
 target_link_libraries(iftop ${CL})
 
+install(TARGETS iftop DESTINATION sbin)
+
 
