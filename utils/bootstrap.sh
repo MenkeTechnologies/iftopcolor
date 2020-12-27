@@ -17,5 +17,6 @@ fi
 set -x
 aclocal -I config
 autoheader
+autoreconf --install
 autoconf
-automake
+automake --add-missing

@@ -11,11 +11,19 @@ fi
 set -x
 rm -rf \
         aclocal.m4 \
+        src/*.o \
+        src/.deps \
+        .deps \
+        src/Makefile \
+        src/Makefile.in \
         src/autoscan.log \
         src/configure.scan \
         autoscan.log \
         configure.scan \
         config.h.in \
+        compile \
+        missing \
+        install-sh \
         stamp-* \
         config.h \
         config.log \
