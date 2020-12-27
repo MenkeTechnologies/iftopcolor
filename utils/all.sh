@@ -8,5 +8,5 @@ if [[ ! -f "Makefile.am" ]]; then
     fi
 fi
 
-./utils/autogen.sh
-sudo -E ./src/iftop $@
+./utils/autogen.sh && sudo -E ./src/iftop $@
+./utils/clean.sh
