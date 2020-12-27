@@ -18,5 +18,6 @@ rm -rf \
         Makefile \
         configure \
         configure.scan \
+        configure.ac \
         Makefile.in \
         autom4te.cache \

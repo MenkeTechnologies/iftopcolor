@@ -43,6 +43,7 @@ config.guess
 config.h.in
 config.sub
 configure.scan
+configure.ac
 
 # https://www.gnu.org/software/libtool/
 
