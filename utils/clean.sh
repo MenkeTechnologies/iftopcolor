@@ -11,7 +11,9 @@ fi
 set -x
 rm -rf \
         aclocal.m4 \
+        autoscan.log \
         config.h.in \
         configure \
+        configure.scan \
         Makefile.in \
         autom4te.cache \

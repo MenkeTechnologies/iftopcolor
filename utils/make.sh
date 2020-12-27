@@ -14,10 +14,6 @@ if [[ ! -f "Makefile.am" ]]; then
     fi
 fi
 
-set -x
-autoscan
-aclocal -I config
-# libtoolize --force --copy
-autoheader
-automake --foreign --add-missing --copy
-autoconf
+./utils/bootstrap.sh
+./configure
+make
