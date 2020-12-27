@@ -13,11 +13,10 @@ rm -rf \
         aclocal.m4 \
         src/autoscan.log \
         src/configure.scan \
-        src/configure.ac \
         autoscan.log \
         configure.scan \
-        configure.ac \
         config.h.in \
+        stamp-* \
         config.h \
         config.log \
         config.status \
