@@ -14,6 +14,7 @@
 PREFIX = /usr/local
 # BINDIR is where the binary lives relative to PREFIX (no leading /).
 BINDIR = sbin
+MANDIR = share/man
 
 AUTOMAKE_OPTIONS = gnu
 
