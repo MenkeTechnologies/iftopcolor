@@ -33,7 +33,7 @@ noinst_HEADERS = addr_hash.h ether.h ethertype.h extract.h hash.h iftop.h \
                  threadprof.h token.h ui.h dlcommon.h stringmap.h \
 		 vector.h cfgfile.h ppp.h
 
-man_MANS = iftop.8
+man_MANS = man/iftop.8
 
 SUBDIRS = config
 

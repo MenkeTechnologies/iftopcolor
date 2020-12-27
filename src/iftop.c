@@ -27,7 +27,7 @@
 #include <locale.h>
 
 #include "iftop.h"
-#include "addr_hash.h"
+#include "src/addr_hash.h"
 #include "resolver.h"
 #include "ui.h"
 #include "options.h"

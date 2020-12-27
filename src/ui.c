@@ -18,7 +18,7 @@
 #include <pwd.h>
 
 
-#include "addr_hash.h"
+#include "src/addr_hash.h"
 #include "serv_hash.h"
 #include "iftop.h"
 #include "resolver.h"
