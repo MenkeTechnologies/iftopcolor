@@ -5,6 +5,8 @@
 #include "hash.h"
 #include "iftop.h"
 
+int MAX_SIZE = 1024;
+
 hash_status_enum hash_insert(hash_type *hash_table, void *key, void *rec) {
     hash_node_type *p, *p0;
     int bucket;
@@ -22,6 +24,7 @@ hash_status_enum hash_insert(hash_type *hash_table, void *key, void *rec) {
     p->next = p0;
     p->key = hash_table->copy_key(key);
     p->rec = rec;
+    hash_table->numItems++;
     return HASH_STATUS_OK;
 }
 
@@ -99,15 +102,24 @@ hash_status_enum hash_next_item(hash_type *hash_table, hash_node_type **ppnode) 
 void hash_delete_all(hash_type *hash_table) {
     int i;
     hash_node_type *n, *nn;
+    if (DEBUG) {
+        sprintf(DEBUG_BUF, "BEFORE delete all hash size %d vs numItems %ld\n",  hash_table->size, hash_table->numItems);
+        debugLog(DEBUG_BUF);
+    }
     for (i = 0; i < hash_table->size; i++) {
         n = hash_table->table[i];
         while (n != NULL) {
             nn = n->next;
             hash_table->delete_key(n->key);
             free(n);
+            hash_table->numItems--;
             n = nn;
         }
         hash_table->table[i] = NULL;
+    }
+    if (DEBUG) {
+        sprintf(DEBUG_BUF, "AFTER delete all hash size %d vs numItems %ld\n",  hash_table->size, hash_table->numItems);
+        debugLog(DEBUG_BUF);
     }
 }
 

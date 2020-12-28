@@ -93,6 +93,7 @@ hash_type *addr_hash_create() {
     hash_table->hash = &hash;
     hash_table->delete_key = &delete_key;
     hash_table->copy_key = &copy_key;
+    hash_table->numItems - 0;
     hash_initialise(hash_table);
     return hash_table;
 }

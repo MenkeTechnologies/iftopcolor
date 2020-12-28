@@ -19,6 +19,6 @@ typedef struct {
 
 hash_type *serv_hash_create(void);
 
-void serv_hash_initialise(hash_type *sh);
+void serv_hash_initialise(hash_type *serviceHash);
 
 #endif /* __SERV_HASH_H_ */

@@ -1081,6 +1081,10 @@ void analyse_data() {
 
         if (hash_find(screen_hash, &ap, u_screen_line.void_pp) == HASH_STATUS_KEY_NOT_FOUND) {
             screen_line = xcalloc(1, sizeof *screen_line);
+            if (DEBUG) {
+                sprintf(DEBUG_BUF, "line insert at size %ld\n", screen_hash->numItems);
+                debugLog(DEBUG_BUF);
+            }
             hash_insert(screen_hash, &ap, screen_line);
             screen_line->ap = ap;
         }

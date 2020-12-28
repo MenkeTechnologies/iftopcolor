@@ -30,6 +30,7 @@ typedef struct {
 
     hash_node_type **table;
     int size;
+    long numItems;
 } hash_type;
 
 

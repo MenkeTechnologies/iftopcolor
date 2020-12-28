@@ -26,6 +26,8 @@
 #include <string.h>
 #include <locale.h>
 
+#include <pwd.h>
+
 #include "iftop.h"
 #include "addr_hash.h"
 #include "resolver.h"
@@ -49,6 +51,7 @@
 #include "ppp.h"
 
 #include <netinet/ip6.h>
+#include <unistd.h>
 
 /* ethernet address of interface. */
 int have_hw_addr = 0;
@@ -98,6 +101,30 @@ history_type *history_create() {
     history_type *h;
     h = xcalloc(1, sizeof *h);
     return h;
+}
+
+void debugLog(const char * msg) {
+
+    FILE *f;
+
+    const char *homedir = getenv("HOME");
+    if ( homedir == NULL ) {
+        homedir = getpwuid(getuid())->pw_dir;
+    }
+    char absolutePath[200] = "";
+    strcat(absolutePath, homedir);
+    strcat(absolutePath, LOG_FILE);
+
+    f = fopen(absolutePath, "a+");
+    if (f == NULL) {
+        printf("Could not open %s.\n", absolutePath);
+        exit(1);
+
+    } else {
+        fprintf(f, msg);
+    }
+    fclose(f);
+
 }
 
 void history_rotate() {
@@ -380,6 +407,10 @@ static void handle_ip_packet(struct ip *iptr, int hw_dir) {
 
     if (hash_find(history, &ap, u_ht.void_pp) == HASH_STATUS_KEY_NOT_FOUND) {
         ht = history_create();
+        if (DEBUG) {
+            sprintf(DEBUG_BUF, "history insert %d to %d at size %ld\n", ap.src.s_addr, ap.dst.s_addr, history->numItems);
+            debugLog(DEBUG_BUF);
+        }
         hash_insert(history, &ap, ht);
     }
 

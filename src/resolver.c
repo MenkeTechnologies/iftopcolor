@@ -488,6 +488,10 @@ void resolve(int af, void *addr, char *result, int buflen) {
             hostname = xmalloc(INET6_ADDRSTRLEN);
             inet_ntop(af, &raddr->addr, hostname, INET6_ADDRSTRLEN);
 
+            if (DEBUG) {
+                sprintf(DEBUG_BUF, "nshash insert host %s size %ld\n", hostname, ns_hash->numItems);
+                debugLog(DEBUG_BUF);
+            }
             hash_insert(ns_hash, raddr, hostname);
 
             if (((head + 1) % RESOLVE_QUEUE_LENGTH) == tail) {

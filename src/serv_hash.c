@@ -43,11 +43,12 @@ hash_type *serv_hash_create() {
     hash_table->hash = &serv_hash_hash;
     hash_table->delete_key = &serv_hash_delete_key;
     hash_table->copy_key = &serv_hash_copy_key;
+    hash_table->numItems = 0;
     hash_initialise(hash_table);
     return hash_table;
 }
 
-void serv_hash_initialise(hash_type *sh) {
+void serv_hash_initialise(hash_type *serviceHash) {
     struct servent *ent;
     struct protoent *pent;
     ip_service *service;
@@ -58,7 +59,12 @@ void serv_hash_initialise(hash_type *sh) {
             service = xmalloc(sizeof(ip_service));
             service->port = ntohs(ent->s_port);
             service->protocol = pent->p_proto;
-            hash_insert(sh, service, xstrdup(ent->s_name));
+            if (DEBUG) {
+                char buf[1024];
+                sprintf(buf, "%s %s port: %d at size %ld\n", pent->p_name, ent->s_name, service->port, serviceHash->numItems);
+                debugLog(buf);
+            }
+            hash_insert(serviceHash, service, xstrdup(ent->s_name));
         }
     }
     endprotoent();

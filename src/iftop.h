@@ -21,6 +21,10 @@ typedef struct {
     int last_write;
 } history_type;
 
+static char *const LOG_FILE = "/.iftop.log";
+static int DEBUG = 1;
+char DEBUG_BUF[1024];
+
 void tick(int print);
 
 void *xmalloc(size_t n);
@@ -32,6 +36,8 @@ void *xrealloc(void *w, size_t n);
 char *xstrdup(const char *s);
 
 void xfree(void *v);
+
+void debugLog(const char *);
 
 /* options.c */
 void options_read(int argc, char **argv);

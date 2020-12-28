@@ -58,6 +58,7 @@ hash_type *ns_hash_create() {
     hash_table->hash = &ns_hash_hash;
     hash_table->delete_key = &ns_hash_delete_key;
     hash_table->copy_key = &ns_hash_copy_key;
+    hash_table->numItems = 0;
     hash_initialise(hash_table);
     return hash_table;
 }
