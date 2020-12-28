@@ -23,7 +23,7 @@ typedef struct {
 
 static char *const LOG_FILE = "/.iftop.log";
 static int DEBUG = 1;
-char DEBUG_BUF[1024];
+static char DEBUG_BUF[1024];
 
 void tick(int print);
 
