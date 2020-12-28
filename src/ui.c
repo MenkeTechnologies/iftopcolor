@@ -20,13 +20,12 @@
 #include "addr_hash.h"
 #include "serv_hash.h"
 #include "iftop.h"
+#include "ui.h"
 #include "resolver.h"
 #include "sorted_list.h"
 #include "options.h"
 #include "screenfilter.h"
 
-
-#define HOSTNAME_LENGTH 256
 
 #define HISTORY_DIVISIONS   3
 
@@ -515,6 +514,50 @@ void getColors() {
 //int RATES_5_TRANSFER_COLUMN_COLOR []= TEN_SECOND_TRANSFER_COLUMN_COLOR;
 //int RATES_40_TRANSFER_COLUMN_COLOR [] = FOURTY_SECOND_TRANSFER_COLUMN_COLOR;
 
+void sprint_host(char *line, int af, struct in6_addr *addr, unsigned int port, unsigned int protocol, int buflen) {
+    char hostname[HOSTNAME_LENGTH];
+    char service[HOSTNAME_LENGTH];
+    char *s_name;
+    union {
+        char **ch_pp;
+        void **void_pp;
+    } u_s_name = {&s_name};
+
+    ip_service skey;
+    int left;
+
+    if (IN6_IS_ADDR_UNSPECIFIED(addr)) {
+        sprintf(hostname, " * ");
+    } else {
+        if (options.dnsresolution)
+            resolve(af, addr, hostname, buflen);
+        else
+            inet_ntop(af, addr, hostname, sizeof(hostname));
+    }
+    left = strlen(hostname);
+
+    if (port != 0) {
+        skey.port = port;
+        skey.protocol = protocol;
+        if (options.portresolution && hash_find(service_hash, &skey, u_s_name.void_pp) == HASH_STATUS_OK) {
+            snprintf(service, HOSTNAME_LENGTH, ":%s", s_name);
+        } else {
+            snprintf(service, HOSTNAME_LENGTH, ":%d", port);
+        }
+    } else {
+        service[0] = '\0';
+    }
+
+
+    sprintf(line, "%-*s", buflen, hostname);
+    if (left > (buflen - strlen(service))) {
+        left = buflen - strlen(service);
+        if (left < 0) {
+            left = 0;
+        }
+    }
+    sprintf(line + left, "%-*s", buflen - left, service);
+}
 void ui_curses_init() {
 
     (void) initscr();      /* initialize the curses library */
@@ -1113,50 +1156,6 @@ void analyse_data() {
 
 }
 
-void sprint_host(char *line, int af, struct in6_addr *addr, unsigned int port, unsigned int protocol, int L) {
-    char hostname[HOSTNAME_LENGTH];
-    char service[HOSTNAME_LENGTH];
-    char *s_name;
-    union {
-        char **ch_pp;
-        void **void_pp;
-    } u_s_name = {&s_name};
-
-    ip_service skey;
-    int left;
-
-    if (IN6_IS_ADDR_UNSPECIFIED(addr)) {
-        sprintf(hostname, " * ");
-    } else {
-        if (options.dnsresolution)
-            resolve(af, addr, hostname, L);
-        else
-            inet_ntop(af, addr, hostname, sizeof(hostname));
-    }
-    left = strlen(hostname);
-
-    if (port != 0) {
-        skey.port = port;
-        skey.protocol = protocol;
-        if (options.portresolution && hash_find(service_hash, &skey, u_s_name.void_pp) == HASH_STATUS_OK) {
-            snprintf(service, HOSTNAME_LENGTH, ":%s", s_name);
-        } else {
-            snprintf(service, HOSTNAME_LENGTH, ":%d", port);
-        }
-    } else {
-        service[0] = '\0';
-    }
-
-
-    sprintf(line, "%-*s", L, hostname);
-    if (left > (L - strlen(service))) {
-        left = L - strlen(service);
-        if (left < 0) {
-            left = 0;
-        }
-    }
-    sprintf(line + left, "%-*s", L - left, service);
-}
 
 
 void ui_print() {
@@ -1201,28 +1200,28 @@ void ui_print() {
         if (i == 0 || nn != NULL) {
             while ((y < LINES - 5) && ((nn = sorted_list_next_item(&screen_list, nn)) != NULL)) {
 
-                int x = 0, L;
+                int x = 0, buflen;
 
 
                 host_pair_line *screen_line = (host_pair_line *) nn->data;
 
                 if (y < LINES - 5) {
-                    L = (COLS - 8 * HISTORY_DIVISIONS - 4) / 2;
+                    buflen = (COLS - 8 * HISTORY_DIVISIONS - 4) / 2;
                     if (options.show_totals) {
-                        L -= 4;
+                        buflen -= 4;
                     }
-                    if (L > HOSTNAME_LENGTH) {
-                        L = HOSTNAME_LENGTH;
+                    if (buflen > HOSTNAME_LENGTH) {
+                        buflen = HOSTNAME_LENGTH;
                     }
 
                     sprint_host(host1, screen_line->ap.af,
                                 &(screen_line->ap.src6),
                                 screen_line->ap.src_port,
-                                screen_line->ap.protocol, L);
+                                screen_line->ap.protocol, buflen);
                     sprint_host(host2, screen_line->ap.af,
                                 &(screen_line->ap.dst6),
                                 screen_line->ap.dst_port,
-                                screen_line->ap.protocol, L);
+                                screen_line->ap.protocol, buflen);
 
                     if (!screen_filter_match(host1) && !screen_filter_match(host2)) {
                         continue;
@@ -1230,17 +1229,17 @@ void ui_print() {
                     int x = 0;
                     turnOnColor(HOST1_COLOR);
 
-                    if (L < 1) {
+                    if (buflen < 1) {
                         x = 1;
                     }
 
                     mvaddstr(y, x, host1);
                     turnOffColor(HOST1_COLOR);
 
-                    if (L < 1 && x == 1) {
+                    if (buflen < 1 && x == 1) {
                     }
 
-                    x += L;
+                    x += buflen;
 
 
                     turnOnColor(DL_UL_INDICATOR_COLOR);
@@ -1721,4 +1720,5 @@ void eraseAndLoop() {
 
     ui_loop();
 }
+
 

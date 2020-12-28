@@ -5,12 +5,34 @@
 #include <stdlib.h>
 #include "addr_hash.h"
 #include "iftop.h"
+#include "ui.h"
 
 #define hash_table_size 256
 
-int compare(void *a, void *b) {
+int compare(hash_type * map, void *a, void *b) {
     addr_pair *aa = (addr_pair *) a;
     addr_pair *bb = (addr_pair *) b;
+
+    char host1[HOSTNAME_LENGTH+1], host2[HOSTNAME_LENGTH+1];
+
+    if (DEBUG) {
+        sprint_host(host1,
+                    aa->af,
+                    &aa->src6,
+                    aa->src_port,
+                    aa->protocol,
+                    HOSTNAME_LENGTH);
+        sprintf(DEBUG_BUF, "host1 %s size %ld\n", host1, map->numItems);
+        debugLog(DEBUG_BUF);
+        sprint_host(host2,
+                    bb->af,
+                    &bb->src6,
+                    bb->src_port,
+                    bb->protocol,
+                    HOSTNAME_LENGTH);
+        sprintf(DEBUG_BUF, "host2 %s size %ld\n", host2, map->numItems);
+        debugLog(DEBUG_BUF);
+    }
 
     if (aa->af != bb->af)
         return 0;
@@ -38,7 +60,7 @@ static int __inline__ hash_uint32(uint32_t n) {
             + ((n & 0xFF000000) >> 24));
 }
 
-int hash(void *key) {
+int hash(hash_type * map, void *key) {
     int hash;
     addr_pair *ap = (addr_pair *) key;
 
@@ -71,14 +93,15 @@ int hash(void *key) {
     return hash;
 }
 
-void *copy_key(void *orig) {
+void *copy_key(hash_type * map, void *orig) {
     addr_pair *copy;
     copy = xmalloc(sizeof *copy);
     *copy = *(addr_pair *) orig;
     return copy;
 }
 
-void delete_key(void *key) {
+void delete_key(hash_type * map, void *key) {
+    map->logAll(map);
     free(key);
 }
 
@@ -88,12 +111,14 @@ void delete_key(void *key) {
 hash_type *addr_hash_create() {
     hash_type *hash_table;
     hash_table = xcalloc(hash_table_size, sizeof *hash_table);
+    hash_table->logAll = &debugLogAll;
     hash_table->size = hash_table_size;
     hash_table->compare = &compare;
     hash_table->hash = &hash;
     hash_table->delete_key = &delete_key;
     hash_table->copy_key = &copy_key;
     hash_table->numItems - 0;
+    hash_table->type = "address";
     hash_initialise(hash_table);
     return hash_table;
 }

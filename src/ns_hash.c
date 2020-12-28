@@ -9,7 +9,7 @@
 
 #define hash_table_size 256
 
-int ns_hash_compare(void *a, void *b) {
+int ns_hash_compare(hash_type * map, void *a, void *b) {
     struct in6_addr *aa = (struct in6_addr *) a;
     struct in6_addr *bb = (struct in6_addr *) b;
     return IN6_ARE_ADDR_EQUAL(aa, bb);
@@ -22,7 +22,7 @@ static int __inline__ hash_uint32(uint32_t n) {
             + ((n & 0xFF000000) >> 24));
 }
 
-int ns_hash_hash(void *key) {
+int ns_hash_hash(hash_type * map, void *key) {
     int hash;
     uint32_t *addr6 = (uint32_t *) ((struct in6_addr *) key)->s6_addr;
 
@@ -34,7 +34,7 @@ int ns_hash_hash(void *key) {
     return hash;
 }
 
-void *ns_hash_copy_key(void *orig) {
+void *ns_hash_copy_key(hash_type * map, void *orig) {
     struct in6_addr *copy;
 
     copy = xmalloc(sizeof *copy);
@@ -43,7 +43,8 @@ void *ns_hash_copy_key(void *orig) {
     return copy;
 }
 
-void ns_hash_delete_key(void *key) {
+void ns_hash_delete_key(hash_type * map, void *key) {
+    map->logAll(map);
     free(key);
 }
 
@@ -53,12 +54,14 @@ void ns_hash_delete_key(void *key) {
 hash_type *ns_hash_create() {
     hash_type *hash_table;
     hash_table = xcalloc(hash_table_size, sizeof *hash_table);
+    hash_table->logAll = &debugLogAll;
     hash_table->size = hash_table_size;
     hash_table->compare = &ns_hash_compare;
     hash_table->hash = &ns_hash_hash;
     hash_table->delete_key = &ns_hash_delete_key;
     hash_table->copy_key = &ns_hash_copy_key;
     hash_table->numItems = 0;
+    hash_table->type = "nameserver";
     hash_initialise(hash_table);
     return hash_table;
 }

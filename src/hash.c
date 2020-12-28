@@ -17,15 +17,24 @@ hash_status_enum hash_insert(hash_type *hash_table, void *key, void *rec) {
 
 
     /* insert node at beginning of list */
-    bucket = hash_table->hash(key);
+    bucket = hash_table->hash(hash_table, key);
     p = xmalloc(sizeof *p);
     p0 = hash_table->table[bucket];
     hash_table->table[bucket] = p;
     p->next = p0;
-    p->key = hash_table->copy_key(key);
+    p->key = hash_table->copy_key(hash_table, key);
     p->rec = rec;
     hash_table->numItems++;
     return HASH_STATUS_OK;
+}
+
+void debugLogAll(hash_type *mapy) {
+    mapy->numItems--;
+    if (DEBUG) {
+        sprintf(DEBUG_BUF, "%s map got delete size %ld\n", mapy->type, mapy->numItems);
+        debugLog(DEBUG_BUF);
+    }
+
 }
 
 hash_status_enum hash_delete(hash_type *hash_table, void *key) {
@@ -38,9 +47,9 @@ hash_status_enum hash_delete(hash_type *hash_table, void *key) {
 
     /* find node */
     p0 = 0;
-    bucket = hash_table->hash(key);
+    bucket = hash_table->hash(hash_table, key);
     p = hash_table->table[bucket];
-    while (p && !hash_table->compare(p->key, key)) {
+    while (p && !hash_table->compare(hash_table, p->key, key)) {
         p0 = p;
         p = p->next;
     }
@@ -55,7 +64,7 @@ hash_status_enum hash_delete(hash_type *hash_table, void *key) {
         hash_table->table[bucket] = p->next;
     }
 
-    hash_table->delete_key(p->key);
+    hash_table->delete_key(hash_table, p->key);
     free(p);
     return HASH_STATUS_OK;
 }
@@ -66,9 +75,9 @@ hash_status_enum hash_find(hash_type *hash_table, void *key, void **rec) {
     /*******************************
      *  find node containing data  *
      *******************************/
-    p = hash_table->table[hash_table->hash(key)];
+    p = hash_table->table[hash_table->hash(hash_table, key)];
 
-    while (p && !hash_table->compare(p->key, key)) {
+    while (p && !hash_table->compare(hash_table, p->key, key)) {
         p = p->next;
     }
     if (!p) return HASH_STATUS_KEY_NOT_FOUND;
@@ -83,7 +92,7 @@ hash_status_enum hash_next_item(hash_type *hash_table, hash_node_type **ppnode) 
             *ppnode = (*ppnode)->next;
             return HASH_STATUS_OK;
         }
-        i = hash_table->hash((*ppnode)->key) + 1;
+        i = hash_table->hash(hash_table, (*ppnode)->key) + 1;
     } else {
         /* first node */
         i = 0;
@@ -103,14 +112,14 @@ void hash_delete_all(hash_type *hash_table) {
     int i;
     hash_node_type *n, *nn;
     if (DEBUG) {
-        sprintf(DEBUG_BUF, "BEFORE delete all hash size %d vs numItems %ld\n",  hash_table->size, hash_table->numItems);
+        sprintf(DEBUG_BUF, "BEFORE delete all hash size %d vs numItems %ld\n", hash_table->size, hash_table->numItems);
         debugLog(DEBUG_BUF);
     }
     for (i = 0; i < hash_table->size; i++) {
         n = hash_table->table[i];
         while (n != NULL) {
             nn = n->next;
-            hash_table->delete_key(n->key);
+            hash_table->delete_key(hash_table, n->key);
             free(n);
             hash_table->numItems--;
             n = nn;
@@ -118,7 +127,7 @@ void hash_delete_all(hash_type *hash_table) {
         hash_table->table[i] = NULL;
     }
     if (DEBUG) {
-        sprintf(DEBUG_BUF, "AFTER delete all hash size %d vs numItems %ld\n",  hash_table->size, hash_table->numItems);
+        sprintf(DEBUG_BUF, "AFTER delete all hash size %d vs numItems %ld\n", hash_table->size, hash_table->numItems);
         debugLog(DEBUG_BUF);
     }
 }

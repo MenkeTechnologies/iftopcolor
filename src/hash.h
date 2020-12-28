@@ -19,20 +19,25 @@ typedef struct node_tag {
     void *rec;                /* user data */
 } hash_node_type;
 
-typedef struct {
-    int (*compare)(void *, void *);
+typedef struct mapy {
+    int (*compare)(struct mapy*, void *, void *);
 
-    int (*hash)(void *);
+    int (*hash)(struct mapy*, void *);
 
-    void *(*copy_key)(void *);
+    void *(*copy_key)(struct mapy*, void *);
 
-    void (*delete_key)(void *);
+    void (*delete_key)(struct mapy*, void *);
+
+    void (*logAll)(struct mapy*);
 
     hash_node_type **table;
     int size;
     long numItems;
+    char * type;
 } hash_type;
 
+
+void debugLogAll(hash_type * mapy);
 
 hash_status_enum hash_initialise(hash_type *);
 
