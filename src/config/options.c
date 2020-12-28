@@ -4,7 +4,7 @@
  *
  */
 
-#include "../include/config.h"
+#include "../include/conf.h"
 
 #include <sys/types.h>
 

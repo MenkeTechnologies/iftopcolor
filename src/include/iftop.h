@@ -6,7 +6,7 @@
 #ifndef __IFTOP_H_ /* include guard */
 #define __IFTOP_H_
 
-#include "config.h"
+#include "conf.h"
 
 /* 40 / 2  */
 #define HISTORY_LENGTH  20

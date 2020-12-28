@@ -13,7 +13,7 @@
 #define __INTEGERS_H_
 
 #include <sys/types.h>
-#include "config.h"
+#include "conf.h"
 
 #if SIZEOF_U_INT8_T != 1 || SIZEOF_U_INT16_T != 2 || SIZEOF_U_INT32_T != 4
 

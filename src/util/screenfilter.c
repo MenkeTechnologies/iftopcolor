@@ -6,7 +6,7 @@
  *
  */
 
-#include "../include/config.h"
+#include "../include/conf.h"
 
 #ifdef HAVE_REGCOMP
 

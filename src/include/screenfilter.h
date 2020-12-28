@@ -10,7 +10,7 @@
 #ifndef __SCREENFILTER_H_ /* include guard */
 #define __SCREENFILTER_H_
 
-#include "config.h"
+#include "conf.h"
 
 #ifdef HAVE_REGCOMP
 
