@@ -1,9 +1,9 @@
 #!/usr/bin/env sh
 
-if [[ ! -f "Makefile.am" ]]; then
+if [[ ! -f "CMakeLists.txt" ]]; then
     cd ..
-    if [[ ! -f "Makefile.am" ]]; then
-        "$PWD does not contain 'Makefile.am'"
+    if [[ ! -f "CMakeLists.txt" ]]; then
+        "$PWD does not contain 'CMakeLists.txt'"
         exit 1
     fi
 fi
