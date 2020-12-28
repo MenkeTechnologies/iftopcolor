@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <netdb.h>
 #include "serv_hash.h"
-#include "iftop.h"
+#include "../../entry/iftop.h"
 
 // Deliberately not a power of 2 or 10
 #define hash_table_size 123

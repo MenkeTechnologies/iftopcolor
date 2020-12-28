@@ -5,7 +5,7 @@
 
 #include <stdlib.h>
 #include "sorted_list.h"
-#include "iftop.h"
+#include "../entry/iftop.h"
 
 
 void sorted_list_insert(sorted_list_type *list, void *item) {

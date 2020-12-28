@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "addr_hash.h"
-#include "iftop.h"
+#include "../../entry/iftop.h"
 
 #define hash_table_size 256
 

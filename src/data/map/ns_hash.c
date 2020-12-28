@@ -5,7 +5,7 @@
 #include <string.h>
 #include <netinet/in.h>
 #include "ns_hash.h"
-#include "iftop.h"
+#include "../../entry/iftop.h"
 
 #define hash_table_size 256
 

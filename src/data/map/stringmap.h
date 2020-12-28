@@ -11,7 +11,7 @@
 #ifndef __STRINGMAP_H_ /* include guard */
 #define __STRINGMAP_H_
 
-#include "vector.h"
+#include "../vector.h"
 
 typedef struct _stringmap {
     char *key;

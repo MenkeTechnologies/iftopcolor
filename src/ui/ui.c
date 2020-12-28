@@ -17,13 +17,13 @@
 
 #include <pwd.h>
 
-#include "addr_hash.h"
-#include "serv_hash.h"
-#include "iftop.h"
-#include "resolver.h"
-#include "sorted_list.h"
-#include "options.h"
-#include "screenfilter.h"
+#include "../data/map/addr_hash.h"
+#include "../data/map/serv_hash.h"
+#include "../entry/iftop.h"
+#include "../util/resolver.h"
+#include "../data/sorted_list.h"
+#include "../config/options.h"
+#include "../util/screenfilter.h"
 
 
 #define HOSTNAME_LENGTH 256

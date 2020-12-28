@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "hash.h"
-#include "iftop.h"
+#include "../../entry/iftop.h"
 
 hash_status_enum hash_insert(hash_type *hash_table, void *key, void *rec) {
     hash_node_type *p, *p0;

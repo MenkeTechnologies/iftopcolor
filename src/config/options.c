@@ -19,10 +19,10 @@
 #include <arpa/inet.h>
 #include <net/if.h>
 
-#include "iftop.h"
+#include "../entry/iftop.h"
 #include "options.h"
 #include "cfgfile.h"
-#include "integers.h"
+#include "../util/integers.h"
 
 #if !defined(HAVE_INET_ATON) && defined(HAVE_INET_PTON)
 #   define inet_aton(a, b)  inet_pton(AF_INET, (a), (b))

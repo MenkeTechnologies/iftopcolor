@@ -10,8 +10,8 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#include "stringmap.h"
-#include "iftop.h"
+#include "../data/map/stringmap.h"
+#include "../entry/iftop.h"
 #include "options.h"
 #include "cfgfile.h"
 

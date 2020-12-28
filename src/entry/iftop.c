@@ -3,7 +3,7 @@
  *
  */
 
-#include "integers.h"
+#include "../util/integers.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,26 +27,26 @@
 #include <locale.h>
 
 #include "iftop.h"
-#include "addr_hash.h"
-#include "resolver.h"
-#include "ui.h"
-#include "options.h"
+#include "../data/map/addr_hash.h"
+#include "../util/resolver.h"
+#include "../ui/ui.h"
+#include "../config/options.h"
 
 #ifdef DLT_LINUX_SLL
 
-#include "sll.h"
+#include "../util/sll.h"
 
 #endif /* DLT_LINUX_SLL */
 
-#include "ether.h"
-#include "ip.h"
-#include "tcp.h"
-#include "token.h"
-#include "llc.h"
-#include "extract.h"
-#include "ethertype.h"
-#include "cfgfile.h"
-#include "ppp.h"
+#include "../util/ether.h"
+#include "../util/ip.h"
+#include "../util/tcp.h"
+#include "../util/token.h"
+#include "../util/llc.h"
+#include "../util/extract.h"
+#include "../util/ethertype.h"
+#include "../config/cfgfile.h"
+#include "../util/ppp.h"
 
 #include <netinet/ip6.h>
 
