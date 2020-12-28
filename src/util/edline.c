@@ -10,7 +10,7 @@ static const char rcsid[] = "$Id: edline.c,v 1.2 2002/11/04 12:27:35 chris Exp $
 #include <curses.h>
 #include <string.h>
 
-#include "../entry/iftop.h"
+#include "../include/iftop.h"
 
 static int min(const int a, const int b) {
     return a < b ? a : b;

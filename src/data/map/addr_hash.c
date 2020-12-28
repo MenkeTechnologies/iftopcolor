@@ -3,8 +3,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "addr_hash.h"
-#include "../../entry/iftop.h"
+#include "../../include/addr_hash.h"
+#include "../../include/iftop.h"
 
 #define hash_table_size 256
 

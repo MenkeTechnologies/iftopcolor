@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <netinet/in.h>
-#include "ns_hash.h"
-#include "../../entry/iftop.h"
+#include "../../include/ns_hash.h"
+#include "../../include/iftop.h"
 
 #define hash_table_size 256
 

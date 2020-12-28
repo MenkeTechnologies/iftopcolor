@@ -10,10 +10,10 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#include "../data/map/stringmap.h"
-#include "../entry/iftop.h"
-#include "options.h"
-#include "cfgfile.h"
+#include "../include/stringmap.h"
+#include "../include/iftop.h"
+#include "../include/options.h"
+#include "../include/cfgfile.h"
 
 #define CONFIG_TYPE_STRING 0
 #define CONFIG_TYPE_BOOL   1

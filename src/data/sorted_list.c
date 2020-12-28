@@ -4,8 +4,8 @@
  */
 
 #include <stdlib.h>
-#include "sorted_list.h"
-#include "../entry/iftop.h"
+#include "../include/sorted_list.h"
+#include "../include/iftop.h"
 
 
 void sorted_list_insert(sorted_list_type *list, void *item) {

@@ -15,8 +15,8 @@ static const char rcsid[] = "$Id: vector.c,v 1.3 2003/11/07 02:16:41 pdw Exp $";
 #include <stdlib.h>
 #include <string.h>
 
-#include "vector.h"
-#include "../entry/iftop.h"
+#include "../include/vector.h"
+#include "../include/iftop.h"
 
 vector vector_new(void) {
     vector v;

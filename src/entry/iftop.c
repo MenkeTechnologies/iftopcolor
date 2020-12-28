@@ -3,7 +3,7 @@
  *
  */
 
-#include "../util/integers.h"
+#include "../include/integers.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,27 +26,27 @@
 #include <string.h>
 #include <locale.h>
 
-#include "iftop.h"
-#include "../data/map/addr_hash.h"
-#include "../util/resolver.h"
-#include "../ui/ui.h"
-#include "../config/options.h"
+#include "../include/iftop.h"
+#include "../include/addr_hash.h"
+#include "../include/resolver.h"
+#include "../include/ui.h"
+#include "../include/options.h"
 
 #ifdef DLT_LINUX_SLL
 
-#include "../util/sll.h"
+#include "../include/sll.h"
 
 #endif /* DLT_LINUX_SLL */
 
-#include "../util/ether.h"
-#include "../util/ip.h"
-#include "../util/tcp.h"
-#include "../util/token.h"
-#include "../util/llc.h"
-#include "../util/extract.h"
-#include "../util/ethertype.h"
-#include "../config/cfgfile.h"
-#include "../util/ppp.h"
+#include "../include/ether.h"
+#include "../include/ip.h"
+#include "../include/tcp.h"
+#include "../include/token.h"
+#include "../include/llc.h"
+#include "../include/extract.h"
+#include "../include/ethertype.h"
+#include "../include/cfgfile.h"
+#include "../include/ppp.h"
 
 #include <netinet/ip6.h>
 

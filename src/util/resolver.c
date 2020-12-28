@@ -14,10 +14,10 @@
 #include <string.h>
 #include <errno.h>
 
-#include "../data/map/ns_hash.h"
-#include "../entry/iftop.h"
+#include "../include/ns_hash.h"
+#include "../include/iftop.h"
 
-#include "../config/options.h"
+#include "../include/options.h"
 
 
 #define RESOLVE_QUEUE_LENGTH 20
