@@ -535,12 +535,7 @@ void ui_curses_init() {
 
         getColors();
 
-        if (signal(SIGQUIT, eraseAndLoop) == SIGQUIT) {
-
-        } else {
-
-        }
-
+        signal(SIGQUIT, eraseAndLoop);
 
     }
     keypad(stdscr, TRUE);  /* enable keyboard mapping */
@@ -1711,7 +1706,7 @@ void ui_finish() {
     endwin();
 }
 
-void eraseAndLoop() {
+void eraseAndLoop(int signum) {
     getColors();
     erase();
 
