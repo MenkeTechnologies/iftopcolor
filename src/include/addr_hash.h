@@ -30,6 +30,12 @@ typedef addr_pair key_type;      /* index into hash table */
 
 hash_type *addr_hash_create(void);
 
+/* Specialized fast-path operations (bypass function pointer indirection) */
+hash_status_enum addr_hash_find(hash_type *hash_table, addr_pair *key, void **rec);
+hash_status_enum addr_hash_insert(hash_type *hash_table, addr_pair *key, void *rec);
+void addr_hash_delete_node(hash_type *hash_table, hash_node_type *node);
+void addr_hash_delete_all_free(hash_type *hash_table);
+
 int
 get_addrs_dlpi(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr);
 

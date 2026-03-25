@@ -442,7 +442,6 @@ void resolver_worker(void *ptr) {
 }
 
 void resolver_initialise() {
-    int *n;
     int i;
     pthread_t thread;
     head = tail = 0;
@@ -453,9 +452,7 @@ void resolver_initialise() {
     pthread_cond_init(&resolver_queue_cond, NULL);
 
     for (i = 0; i < 2; i++) {
-        n = (int *) xmalloc(sizeof *n);
-        *n = i;
-        pthread_create(&thread, NULL, (void *) &resolver_worker, (void *) n);
+        pthread_create(&thread, NULL, (void *) &resolver_worker, NULL);
     }
 
 }

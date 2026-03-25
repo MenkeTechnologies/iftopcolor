@@ -121,12 +121,17 @@ int read_config_file(const char *f, int whinge) {
                 /* Check that this is a valid key. */
                 if (!is_cfgdirective_valid(key))
                     fprintf(stderr, "%s:%d: warning: unknown directive \"%s\"\n", f, i, key);
-                else if ((I = stringmap_insert(config, key, item_ptr(xstrdup(value)))))
-                    /* Don't warn of repeated directives, because they
-                     * may have been specified via the command line
-                     * Previous option takes precedence.
-                     */
-                    fprintf(stderr, "%s:%d: warning: repeated directive \"%s\"\n", f, i, key);
+                else {
+                    char *dup = xstrdup(value);
+                    if ((I = stringmap_insert(config, key, item_ptr(dup)))) {
+                        /* Don't warn of repeated directives, because they
+                         * may have been specified via the command line
+                         * Previous option takes precedence.
+                         */
+                        xfree(dup);
+                        fprintf(stderr, "%s:%d: warning: repeated directive \"%s\"\n", f, i, key);
+                    }
+                }
             }
         }
 

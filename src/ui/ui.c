@@ -1030,7 +1030,7 @@ void analyse_data() {
         screen_hash_clear();
     } else {
         screen_list_clear();
-        hash_delete_all_free(screen_hash);
+        addr_hash_delete_all_free(screen_hash);
     }
 
     /* Cache aggregation options outside the loop */
@@ -1069,9 +1069,9 @@ void analyse_data() {
         }
 
 
-        if (hash_find(screen_hash, &ap, u_screen_line.void_pp) == HASH_STATUS_KEY_NOT_FOUND) {
+        if (addr_hash_find(screen_hash, &ap, u_screen_line.void_pp) == HASH_STATUS_KEY_NOT_FOUND) {
             screen_line = xcalloc(1, sizeof *screen_line);
-            hash_insert(screen_hash, &ap, screen_line);
+            addr_hash_insert(screen_hash, &ap, screen_line);
             screen_line->ap = ap;
         }
 

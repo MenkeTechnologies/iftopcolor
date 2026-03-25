@@ -94,10 +94,44 @@ void init_history() {
     memset(&history_totals, 0, sizeof history_totals);
 }
 
+/* Pool allocator for history_type */
+#define HISTORY_POOL_BLOCK 256
+
+typedef struct history_pool_block_tag {
+    struct history_pool_block_tag *next;
+    history_type items[HISTORY_POOL_BLOCK];
+} history_pool_block;
+
+static history_pool_block *hist_pool_blocks = NULL;
+static history_type *hist_free_list = NULL;
+
 history_type *history_create() {
     history_type *h;
-    h = xcalloc(1, sizeof *h);
-    return h;
+    if (__builtin_expect(hist_free_list != NULL, 1)) {
+        h = hist_free_list;
+        hist_free_list = *(history_type **) h;
+        memset(h, 0, sizeof *h);
+        return h;
+    }
+    /* Allocate new block */
+    history_pool_block *block = malloc(sizeof(history_pool_block));
+    if (!block) abort();
+    block->next = hist_pool_blocks;
+    hist_pool_blocks = block;
+    /* Chain items 1..N-1 onto free list */
+    for (int i = 1; i < HISTORY_POOL_BLOCK - 1; i++) {
+        *(history_type **) &block->items[i] = &block->items[i + 1];
+    }
+    *(history_type **) &block->items[HISTORY_POOL_BLOCK - 1] = NULL;
+    hist_free_list = &block->items[1];
+    /* Return first item, zeroed */
+    memset(&block->items[0], 0, sizeof(history_type));
+    return &block->items[0];
+}
+
+static inline void history_free(history_type *h) {
+    *(history_type **) h = hist_free_list;
+    hist_free_list = h;
 }
 
 void history_rotate() {
@@ -110,8 +144,8 @@ void history_rotate() {
         hash_next_item(history, &next);
 
         if (d->last_write == history_pos) {
-            hash_delete_node(history, n);
-            free(d);
+            addr_hash_delete_node(history, n);
+            history_free(d);
         } else {
             d->recv[history_pos] = 0;
             d->sent[history_pos] = 0;
@@ -164,7 +198,7 @@ static inline int ip6_addr_match(struct in6_addr *addr) {
  * Creates an addr_pair from an ip (and tcp/udp) header, swapping src and dst
  * if required
  */
-void assign_addr_pair(addr_pair *ap, struct ip *iptr, int flip) {
+static inline void assign_addr_pair(addr_pair *ap, struct ip *iptr, int flip) {
     unsigned short int src_port = 0;
     unsigned short int dst_port = 0;
 
@@ -237,7 +271,9 @@ static void __attribute__((hot)) handle_ip_packet(struct ip *iptr, int hw_dir) {
     struct ip6_hdr *ip6tr = (struct ip6_hdr *) iptr;
     const int ip_ver = IP_V(iptr);
 
-    /* ap is zeroed inside assign_addr_pair, no need to memset here */
+    /* Must zero ap in case no branch calls assign_addr_pair (e.g. IPv6
+     * packets whose direction cannot be determined). */
+    memset(&ap, '\0', sizeof(ap));
 
     if ((ip_ver == 4 && options.netfilter == 0)
         || (ip_ver == 6 && options.netfilter6 == 0)) {
@@ -353,46 +389,36 @@ static void __attribute__((hot)) handle_ip_packet(struct ip *iptr, int hw_dir) {
         return;
 #endif
 
-    /* Do address resolving. */
-    switch (ip_ver) {
-        case 4:
-            ap.protocol = iptr->ip_p;
-            /* Add the addresses to be resolved */
-            /* The IPv4 address is embedded in a in6_addr structure,
-             * so it need be copied, and delivered to resolve(). */
+    /* Set protocol and optionally queue address resolution */
+    if (ip_ver == 4) {
+        ap.protocol = iptr->ip_p;
+        if (__builtin_expect(options.dnsresolution, 0)) {
             memset(&scribdst, '\0', sizeof(scribdst));
             memcpy(&scribdst, &iptr->ip_dst, sizeof(struct in_addr));
             resolve(ap.af, &scribdst, NULL, 0);
             memset(&scribsrc, '\0', sizeof(scribsrc));
             memcpy(&scribsrc, &iptr->ip_src, sizeof(struct in_addr));
             resolve(ap.af, &scribsrc, NULL, 0);
-            break;
-        case 6:
-            ap.protocol = ip6tr->ip6_nxt;
-            /* Add the addresses to be resolved */
+        }
+    } else if (ip_ver == 6) {
+        ap.protocol = ip6tr->ip6_nxt;
+        if (__builtin_expect(options.dnsresolution, 0)) {
             resolve(ap.af, &ip6tr->ip6_dst, NULL, 0);
             resolve(ap.af, &ip6tr->ip6_src, NULL, 0);
-            break;
-        default:
-            break;
+        }
     }
 
 
-    if (hash_find(history, &ap, u_ht.void_pp) == HASH_STATUS_KEY_NOT_FOUND) {
+    /* Compute packet length early */
+    if (ip_ver == 4) {
+        len = ntohs(iptr->ip_len);
+    } else {
+        len = ntohs(ip6tr->ip6_plen) + 40;
+    }
+
+    if (addr_hash_find(history, &ap, u_ht.void_pp) == HASH_STATUS_KEY_NOT_FOUND) {
         ht = history_create();
-        hash_insert(history, &ap, ht);
-    }
-
-    /* Do accounting. */
-    switch (ip_ver) {
-        case 4:
-            len = ntohs(iptr->ip_len);
-            break;
-        case 6:
-            len = ntohs(ip6tr->ip6_plen) + 40;
-            break;
-        default:
-            break;
+        addr_hash_insert(history, &ap, ht);
     }
 
     /* Update record */
@@ -406,13 +432,16 @@ static void __attribute__((hot)) handle_ip_packet(struct ip *iptr, int hw_dir) {
         ht->total_recv += len;
     }
 
-    if (direction == 0) {
-        /* incoming */
-        history_totals.recv[history_pos] += len;
-        history_totals.total_recv += len;
-    } else {
-        history_totals.sent[history_pos] += len;
-        history_totals.total_sent += len;
+    /* Update totals — use pointer arithmetic to avoid branch */
+    {
+        const int hp = history_pos;
+        long *hist_arr = direction ? history_totals.sent : history_totals.recv;
+        hist_arr[hp] += len;
+        if (direction) {
+            history_totals.total_sent += len;
+        } else {
+            history_totals.total_recv += len;
+        }
     }
 
 }
