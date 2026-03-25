@@ -85,7 +85,7 @@ add_custom_target(bench
     COMMAND $<TARGET_FILE:benchmark_stringmap>
     COMMAND $<TARGET_FILE:benchmark_ns_hash>
     COMMAND $<TARGET_FILE:benchmark_serv_hash>
-    COMMAND $<TARGET_FILE:benchmark_cfgfile>
+    COMMAND sh -c "$<TARGET_FILE:benchmark_cfgfile> 2>/dev/null"
     COMMAND ${PROJECT_SOURCE_DIR}/bench/banner.sh end
 )
 
