@@ -125,11 +125,10 @@ int read_config_file(const char *filepath, int whinge) {
                     char *dup = xstrdup(value);
                     if ((existing = stringmap_insert(config, key, item_ptr(dup)))) {
                         /* Don't warn of repeated directives, because they
-                         * may have been specified via the command line
+                         * may have been specified via the command line.
                          * Previous option takes precedence.
                          */
                         xfree(dup);
-                        fprintf(stderr, "%s:%d: warning: repeated directive \"%s\"\n", filepath, line_num, key);
                     }
                 }
             }
