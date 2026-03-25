@@ -217,9 +217,20 @@ make check_hash
  │ check_sorted_list     │ Single insert, batch insert, descending order, destroy      │    46 │
  │ check_stringmap       │ Binary tree insert, find, special chars, deep chains        │    46 │
  │ check_cfgfile         │ Config parsing: string, bool, int, float, enum, file IO     │    77 │
+ │ check_leaks           │ Full lifecycle leak tests for all data structures (macOS)   │    30 │
  └───────────────────────┴──────────────────────────────────────────────────────────────┴───────┘
-                                                                                TOTAL:    447
+                                                                                TOTAL:    477
 ```
+
+### Memory leak analysis
+
+Leak detection uses macOS `leaks --atExit` to verify zero unreachable allocations after full create/populate/destroy lifecycles for every data structure.
+
+```sh
+make leakcheck
+```
+
+Covers: vector, generic hash, address hash (pool allocator), ns_hash, serv_hash, sorted list (single and batch), stringmap, and config file subsystems.
 
 ---
 

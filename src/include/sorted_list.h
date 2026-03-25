@@ -13,6 +13,7 @@ typedef struct sorted_list_node_tag {
 
 typedef struct {
     sorted_list_node root;
+    int batch_allocated;
 
     int (*compare)(void *, void *);
 } sorted_list_type;

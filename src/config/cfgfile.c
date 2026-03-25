@@ -55,6 +55,7 @@ int is_cfgdirective_valid(const char *directive) {
 }
 
 int config_init() {
+    if (config) stringmap_delete_free(config);
     config = stringmap_new();
     return config != NULL;
 }

@@ -104,7 +104,7 @@ set(TEST_COMMON_SRCS
     ${PROJECT_SOURCE_DIR}/src/util/util.c
 )
 
-set(TEST_NAMES vector hash addr_hash sorted_list stringmap ns_hash serv_hash cfgfile util)
+set(TEST_NAMES vector hash addr_hash sorted_list stringmap ns_hash serv_hash cfgfile util leaks)
 
 foreach(t IN LISTS TEST_NAMES)
     add_executable(check_${t} EXCLUDE_FROM_ALL test/test_${t}.c ${TEST_COMMON_SRCS})
@@ -126,6 +126,15 @@ add_custom_target(check
     COMMAND $<TARGET_FILE:check_stringmap>
     COMMAND $<TARGET_FILE:check_cfgfile>
     COMMAND ${PROJECT_SOURCE_DIR}/test/banner.sh end
+)
+
+# "make leakcheck" runs leak tests under macOS `leaks` tool
+add_custom_target(leakcheck
+    DEPENDS check_leaks
+    COMMAND ${CMAKE_COMMAND} -E echo ""
+    COMMAND ${CMAKE_COMMAND} -E echo "  Running memory leak analysis..."
+    COMMAND ${CMAKE_COMMAND} -E echo ""
+    COMMAND leaks --atExit -q -- $<TARGET_FILE:check_leaks>
 )
 
 

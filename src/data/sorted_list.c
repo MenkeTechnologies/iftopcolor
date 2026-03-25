@@ -56,6 +56,7 @@ void sorted_list_insert_batch(sorted_list_type *list, void **items, int count) {
         prev->next = &nodes[i];
         prev = &nodes[i];
     }
+    list->batch_allocated = 1;
 }
 
 
@@ -68,15 +69,27 @@ sorted_list_node *sorted_list_next_item(sorted_list_type *list, sorted_list_node
 }
 
 void sorted_list_destroy(sorted_list_type *list) {
-    /* Batch-allocated nodes: the first node is the base of the contiguous block */
-    if (list->root.next != NULL) {
+    if (list->root.next == NULL) return;
+
+    if (list->batch_allocated) {
+        /* Batch-allocated: first node is the base of the contiguous block */
         free(list->root.next);
+    } else {
+        /* Individually allocated: walk the chain and free each node */
+        sorted_list_node *node = list->root.next;
+        while (node) {
+            sorted_list_node *next = node->next;
+            free(node);
+            node = next;
+        }
     }
     list->root.next = NULL;
+    list->batch_allocated = 0;
 }
 
 void sorted_list_initialise(sorted_list_type *list) {
     list->root.next = NULL;
+    list->batch_allocated = 0;
 }
 
 
