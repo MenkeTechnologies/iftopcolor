@@ -12,7 +12,7 @@ BUILD_DIR="$PROJECT_DIR/build"
 # Build
 echo "Building benchmarks..."
 cmake -S "$PROJECT_DIR" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=Release > /dev/null 2>&1
-cmake --build "$BUILD_DIR" --target bench_hash bench_sorted_list bench_vector bench_pool -j$(sysctl -n hw.ncpu 2>/dev/null || nproc) 2>&1 | tail -1
+cmake --build "$BUILD_DIR" --target benchmark_hash benchmark_sorted_list benchmark_vector benchmark_pool -j$(sysctl -n hw.ncpu 2>/dev/null || nproc) 2>&1 | tail -1
 
 echo ""
 echo "System: $(uname -ms)"
@@ -21,7 +21,7 @@ echo "Date: $(date '+%Y-%m-%d %H:%M:%S')"
 echo ""
 
 FILTER="${1:-}"
-BENCHMARKS="bench_hash bench_sorted_list bench_vector bench_pool"
+BENCHMARKS="benchmark_hash benchmark_sorted_list benchmark_vector benchmark_pool"
 
 for bench in $BENCHMARKS; do
     if [ -n "$FILTER" ] && [[ "$bench" != *"$FILTER"* ]]; then

@@ -32,27 +32,26 @@ set(BENCH_COMMON_SRCS
     ${PROJECT_SOURCE_DIR}/src/util/util.c
 )
 
-set(BENCH_TARGETS bench_hash bench_sorted_list bench_vector bench_pool bench_stringmap)
+set(BENCH_NAMES hash sorted_list vector pool stringmap)
 
-foreach(bench IN LISTS BENCH_TARGETS)
-    add_executable(${bench} EXCLUDE_FROM_ALL bench/${bench}.c ${BENCH_COMMON_SRCS})
-    target_compile_options(${bench} PRIVATE -O3 -DNDEBUG -march=native -flto -funroll-loops -fomit-frame-pointer)
-    set_target_properties(${bench} PROPERTIES LINK_FLAGS "-flto")
-    target_link_libraries(${bench} -lm)
-    set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_CLEAN_FILES $<TARGET_FILE:${bench}>)
+foreach(b IN LISTS BENCH_NAMES)
+    add_executable(benchmark_${b} EXCLUDE_FROM_ALL bench/bench_${b}.c ${BENCH_COMMON_SRCS})
+    target_compile_options(benchmark_${b} PRIVATE -O3 -DNDEBUG -march=native -flto -funroll-loops -fomit-frame-pointer)
+    set_target_properties(benchmark_${b} PROPERTIES LINK_FLAGS "-flto")
+    target_link_libraries(benchmark_${b} -lm)
 endforeach()
 
 # "make bench" builds all benchmarks, then runs them
 add_custom_target(bench
-    DEPENDS ${BENCH_TARGETS}
+    DEPENDS benchmark_hash benchmark_sorted_list benchmark_vector benchmark_pool benchmark_stringmap
     COMMAND ${CMAKE_COMMAND} -E echo ""
     COMMAND ${CMAKE_COMMAND} -E echo "=== Running benchmarks ==="
     COMMAND ${CMAKE_COMMAND} -E echo ""
-    COMMAND $<TARGET_FILE:bench_hash>
-    COMMAND $<TARGET_FILE:bench_sorted_list>
-    COMMAND $<TARGET_FILE:bench_vector>
-    COMMAND $<TARGET_FILE:bench_pool>
-    COMMAND $<TARGET_FILE:bench_stringmap>
+    COMMAND $<TARGET_FILE:benchmark_hash>
+    COMMAND $<TARGET_FILE:benchmark_sorted_list>
+    COMMAND $<TARGET_FILE:benchmark_vector>
+    COMMAND $<TARGET_FILE:benchmark_pool>
+    COMMAND $<TARGET_FILE:benchmark_stringmap>
 )
 
 # --- Tests ---
@@ -68,32 +67,29 @@ set(TEST_COMMON_SRCS
     ${PROJECT_SOURCE_DIR}/src/util/util.c
 )
 
-set(TEST_TARGETS
-    test_vector test_hash test_addr_hash test_sorted_list
-    test_stringmap test_ns_hash test_serv_hash test_cfgfile test_util
-)
+set(TEST_NAMES vector hash addr_hash sorted_list stringmap ns_hash serv_hash cfgfile util)
 
-foreach(t IN LISTS TEST_TARGETS)
-    add_executable(${t} EXCLUDE_FROM_ALL test/${t}.c ${TEST_COMMON_SRCS})
-    target_compile_options(${t} PRIVATE -Wall -Wextra -Wno-unused-parameter)
-    set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_CLEAN_FILES $<TARGET_FILE:${t}>)
+foreach(t IN LISTS TEST_NAMES)
+    add_executable(check_${t} EXCLUDE_FROM_ALL test/test_${t}.c ${TEST_COMMON_SRCS})
+    target_compile_options(check_${t} PRIVATE -Wall -Wextra -Wno-unused-parameter)
 endforeach()
 
 # "make check" builds and runs all tests
 add_custom_target(check
-    DEPENDS ${TEST_TARGETS}
+    DEPENDS check_vector check_hash check_addr_hash check_sorted_list
+            check_stringmap check_ns_hash check_serv_hash check_cfgfile check_util
     COMMAND ${CMAKE_COMMAND} -E echo ""
     COMMAND ${CMAKE_COMMAND} -E echo "=== Running tests ==="
     COMMAND ${CMAKE_COMMAND} -E echo ""
-    COMMAND $<TARGET_FILE:test_util>
-    COMMAND $<TARGET_FILE:test_vector>
-    COMMAND $<TARGET_FILE:test_hash>
-    COMMAND $<TARGET_FILE:test_addr_hash>
-    COMMAND $<TARGET_FILE:test_ns_hash>
-    COMMAND $<TARGET_FILE:test_serv_hash>
-    COMMAND $<TARGET_FILE:test_sorted_list>
-    COMMAND $<TARGET_FILE:test_stringmap>
-    COMMAND $<TARGET_FILE:test_cfgfile>
+    COMMAND $<TARGET_FILE:check_util>
+    COMMAND $<TARGET_FILE:check_vector>
+    COMMAND $<TARGET_FILE:check_hash>
+    COMMAND $<TARGET_FILE:check_addr_hash>
+    COMMAND $<TARGET_FILE:check_ns_hash>
+    COMMAND $<TARGET_FILE:check_serv_hash>
+    COMMAND $<TARGET_FILE:check_sorted_list>
+    COMMAND $<TARGET_FILE:check_stringmap>
+    COMMAND $<TARGET_FILE:check_cfgfile>
     COMMAND ${CMAKE_COMMAND} -E echo ""
     COMMAND ${CMAKE_COMMAND} -E echo "=== All tests passed ==="
 )

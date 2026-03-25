@@ -156,23 +156,23 @@ make check
 Run a single test:
 
 ```sh
-make test_hash
-./test_hash
+make check_hash
+./check_hash
 ```
 
 ### Test suites
 
 | Suite | Covers |
 |---|---|
-| `test_util` | Utility functions |
-| `test_vector` | Dynamic vector operations |
-| `test_hash` | Core hash table |
-| `test_addr_hash` | Address-keyed hash |
-| `test_ns_hash` | Namespace hash |
-| `test_serv_hash` | Service hash |
-| `test_sorted_list` | Sorted list insertion and iteration |
-| `test_stringmap` | String map lookups |
-| `test_cfgfile` | Configuration file parsing |
+| `check_util` | Utility functions |
+| `check_vector` | Dynamic vector operations |
+| `check_hash` | Core hash table |
+| `check_addr_hash` | Address-keyed hash |
+| `check_ns_hash` | Namespace hash |
+| `check_serv_hash` | Service hash |
+| `check_sorted_list` | Sorted list insertion and iteration |
+| `check_stringmap` | String map lookups |
+| `check_cfgfile` | Configuration file parsing |
 
 ---
 
@@ -198,10 +198,10 @@ make bench
 
 | Suite | Measures |
 |---|---|
-| `bench_hash` | Hash distribution, insert, find (hit/miss), find scaling, delete, iteration, mixed workload |
-| `bench_sorted_list` | Single insert O(n^2) vs batch insert O(n log n), iteration |
-| `bench_vector` | Push back, push/pop, remove, iteration at various sizes |
-| `bench_pool` | Pool allocator vs malloc/free for insert/delete and churn workloads |
+| `benchmark_hash` | Hash distribution, insert, find (hit/miss), find scaling, delete, iteration, mixed workload |
+| `benchmark_sorted_list` | Single insert O(n^2) vs batch insert O(n log n), iteration |
+| `benchmark_vector` | Push back, push/pop, remove, iteration at various sizes |
+| `benchmark_pool` | Pool allocator vs malloc/free for insert/delete and churn workloads |
 
 ---
 
