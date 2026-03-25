@@ -33,6 +33,22 @@ case "$1" in
         printf "  ${M}╚══════════════════════════════════════════════════════════════════════╝${R}\n"
         printf '\n'
         ;;
+    install-start)
+        printf '\n'
+        printf "  ${M}╔══════════════════════════════════════════════════════════════════════╗${R}\n"
+        printf "  ${M}║${R}  ${C}▓▓ DEPLOYING BINARY TO TARGET SYSTEM // iftop ${B}v2.0${R}                 ${M}║${R}\n"
+        printf "  ${M}║${R}  ${Y}>> INITIATING NEURAL IMPLANT SEQUENCE ...${R}                             ${M}║${R}\n"
+        printf "  ${M}╚══════════════════════════════════════════════════════════════════════╝${R}\n"
+        printf '\n'
+        ;;
+    install-end)
+        printf '\n'
+        printf "  ${M}╔══════════════════════════════════════════════════════════════════════╗${R}\n"
+        printf "  ${M}║${R}  ${G}▓▓ IMPLANT SUCCESSFUL // BINARY DEPLOYED TO GRID${R}                    ${M}║${R}\n"
+        printf "  ${M}║${R}  ${C}>> iftop IS NOW JACKED INTO THE SYSTEM${R}                                ${M}║${R}\n"
+        printf "  ${M}╚══════════════════════════════════════════════════════════════════════╝${R}\n"
+        printf '\n'
+        ;;
     clean-end)
         printf '\n'
         printf "  ${M}╔══════════════════════════════════════════════════════════════════════╗${R}\n"

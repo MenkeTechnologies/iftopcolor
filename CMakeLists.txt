@@ -19,7 +19,9 @@ add_executable(iftop ${SRC_FILES})
 
 target_link_libraries(iftop ${CL})
 
+install(CODE "execute_process(COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh install-start)")
 install(TARGETS iftop DESTINATION sbin)
+install(CODE "execute_process(COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh install-end)")
 
 # --- Cyberpunk build banners ---
 add_custom_target(build-banner
