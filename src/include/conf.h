@@ -86,7 +86,7 @@
 #define HAVE_UNISTD_H 1
 
 /* The iftop version number */
-#define IFTOP_VERSION "1.0pre2"
+#define IFTOP_VERSION "1.1"
 
 /* Enable default promiscuous mode to capture outgoing packets */
 /* #undef NEED_PROMISCUOUS_FOR_OUTGOING */
@@ -152,7 +152,7 @@
 /* #undef USE_GETNAMEINFO */
 
 /* Version number of package */
-#define VERSION "1.0pre2"
+#define VERSION "1.1"
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */
