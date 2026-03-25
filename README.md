@@ -53,11 +53,11 @@ git clone https://github.com/MenkeTechnologies/iftopcolor.git
 cd iftopcolor
 
 # --- COMPILE THE ICE ---
-cmake -B build
-make -C build
+mkdir build && cd build && cmake ..
+make
 
 # --- DEPLOY TO /usr/local/sbin ---
-sudo make -C build install
+sudo make install
 ```
 
 > Make sure `/usr/local/sbin` is in your `PATH` or you'll be flatlined at the prompt.
@@ -149,15 +149,15 @@ A test suite covers core data structures and utilities: hash tables, address/nam
 ### Running tests
 
 ```sh
-cmake -B build
-make -C build check
+mkdir build && cd build && cmake ..
+make check
 ```
 
 Run a single test:
 
 ```sh
-make -C build test_hash
-./build/test_hash
+make test_hash
+./test_hash
 ```
 
 ### Test suites
@@ -184,8 +184,8 @@ A benchmark suite measures the performance of core data structures: hash tables,
 
 ```sh
 # Build and run all benchmarks
-cmake -B build -DCMAKE_BUILD_TYPE=Release
-make -C build bench
+mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
+make bench
 
 # Run a specific benchmark suite
 ./bench/run_benchmarks.sh hash
