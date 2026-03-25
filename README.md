@@ -101,6 +101,66 @@ RECEIVE_BAR_COLOR yellow nonbold
 SENT_BAR_COLOR yellow nonbold
 ```
 
+## Tests
+
+A test suite covers core data structures and utilities: hash tables, address/namespace/service hashes, sorted lists, vectors, string maps, config file parsing, and utility functions.
+
+### Running tests
+
+```sh
+cmake -B build
+cmake --build build --target test
+```
+
+This builds and runs all test binaries. You can also run a single test:
+
+```sh
+cmake --build build --target test_hash
+./build/test_hash
+```
+
+### Test suites
+
+| Suite | What it covers |
+|---|---|
+| `test_util` | Utility functions |
+| `test_vector` | Dynamic vector operations |
+| `test_hash` | Core hash table |
+| `test_addr_hash` | Address-keyed hash |
+| `test_ns_hash` | Namespace hash |
+| `test_serv_hash` | Service hash |
+| `test_sorted_list` | Sorted list insertion and iteration |
+| `test_stringmap` | String map lookups |
+| `test_cfgfile` | Configuration file parsing |
+
+## Benchmarks
+
+A benchmark suite is included to measure the performance of core data structures: hash tables, sorted lists, vectors, and the pool allocator.
+
+### Running benchmarks
+
+```sh
+# Build and run all benchmarks
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --target bench_hash bench_sorted_list bench_vector bench_pool
+./bench/run_benchmarks.sh
+
+# Run a specific benchmark suite
+./bench/run_benchmarks.sh hash
+./bench/run_benchmarks.sh vector
+```
+
+Benchmarks are compiled with aggressive optimizations (`-O3`, `-march=native`, `-flto`, `-funroll-loops`).
+
+### What is benchmarked
+
+| Suite | What it measures |
+|---|---|
+| `bench_hash` | Hash distribution, insert, find (hit/miss), find scaling, delete, iteration, mixed workload |
+| `bench_sorted_list` | Single insert O(n^2) vs batch insert O(n log n), iteration |
+| `bench_vector` | Push back, push/pop, remove, iteration at various sizes |
+| `bench_pool` | Pool allocator vs malloc/free for insert/delete and churn workloads |
+
 ## Known issues
 
 **RedHat 7.2** -- A bug in the bundled ncurses can cause a segfault. Update ncurses from Rawhide.
