@@ -16,61 +16,61 @@ vector vector_new(void) {
     v = xcalloc(1, sizeof *v);
     if (!v) return NULL;
 
-    v->ary = xcalloc(16, sizeof *v->ary);
-    v->n = 16;
+    v->items = xcalloc(16, sizeof *v->items);
+    v->capacity = 16;
     v->n_used = 0;
     return v;
 }
 
 void vector_delete(vector v) {
-    xfree(v->ary);
+    xfree(v->items);
     xfree(v);
 }
 
 void vector_delete_free(vector v) {
     item *i;
     vector_iterate(v, i) {
-        xfree(i->v);
+        xfree(i->ptr);
     }
-    xfree(v->ary);
+    xfree(v->items);
     xfree(v);
 }
 
 void vector_push_back(vector v, const item t) {
-    if (v->n_used == v->n) vector_reallocate(v, v->n * 2);
-    v->ary[v->n_used++] = t;
+    if (v->n_used == v->capacity) vector_reallocate(v, v->capacity * 2);
+    v->items[v->n_used++] = t;
 }
 
 void vector_pop_back(vector v) {
     if (v->n_used > 0) {
         --v->n_used;
-        if (v->n_used < v->n / 2) vector_reallocate(v, v->n / 2);
+        if (v->n_used < v->capacity / 2) vector_reallocate(v, v->capacity / 2);
     }
 }
 
 item vector_back(vector v) {
-    return v->ary[v->n_used - 1];
+    return v->items[v->n_used - 1];
 }
 
 item *vector_remove(vector v, item *t) {
-    if (t >= v->ary + v->n_used) return NULL;
-    if (t < v->ary + v->n_used - 1)
-        memmove(t, t + 1, (v->n_used - (t - v->ary)) * sizeof(item));
-    memset(v->ary + v->n_used--, 0, sizeof(item));
-    if (v->n_used < v->n / 2 && v->n > 16) {
-        size_t i = t - v->ary;
-        vector_reallocate(v, v->n / 2);
-        t = v->ary + i;
+    if (t >= v->items + v->n_used) return NULL;
+    if (t < v->items + v->n_used - 1)
+        memmove(t, t + 1, (v->n_used - (t - v->items)) * sizeof(item));
+    memset(v->items + v->n_used--, 0, sizeof(item));
+    if (v->n_used < v->capacity / 2 && v->capacity > 16) {
+        size_t i = t - v->items;
+        vector_reallocate(v, v->capacity / 2);
+        t = v->items + i;
     }
     return t;
 }
 
-void vector_reallocate(vector v, const size_t n) {
+void vector_reallocate(vector v, const size_t capacity) {
     size_t clear_count;
-    if (n < v->n_used || n <= 0) return;
-    v->ary = xrealloc(v->ary, n * sizeof(item));
-    clear_count = n - v->n_used;
+    if (capacity < v->n_used || capacity <= 0) return;
+    v->items = xrealloc(v->items, capacity * sizeof(item));
+    clear_count = capacity - v->n_used;
     if (clear_count > 0)
-        memset(v->ary + v->n_used, 0, clear_count * sizeof(item));
-    v->n = n;
+        memset(v->items + v->n_used, 0, clear_count * sizeof(item));
+    v->capacity = capacity;
 }

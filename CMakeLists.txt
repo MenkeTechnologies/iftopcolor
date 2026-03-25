@@ -37,7 +37,7 @@ set(BENCH_TARGETS bench_hash bench_sorted_list bench_vector bench_pool bench_str
 foreach(bench IN LISTS BENCH_TARGETS)
     add_executable(${bench} EXCLUDE_FROM_ALL bench/${bench}.c ${BENCH_COMMON_SRCS})
     target_compile_options(${bench} PRIVATE -O3 -DNDEBUG -march=native -flto -funroll-loops -fomit-frame-pointer)
-    target_link_options(${bench} PRIVATE -flto)
+    set_target_properties(${bench} PROPERTIES LINK_FLAGS "-flto")
     target_link_libraries(${bench} -lm)
     set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_CLEAN_FILES $<TARGET_FILE:${bench}>)
 endforeach()

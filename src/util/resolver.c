@@ -23,8 +23,8 @@
 #define RESOLVE_QUEUE_LENGTH 20
 
 struct addr_storage {
-    int af;                     /* AF_INET or AF_INET6 */
-    int len;                    /* sizeof(struct in_addr or in6_addr) */
+    int address_family;         /* AF_INET or AF_INET6 */
+    int addr_len;               /* sizeof(struct in_addr or in6_addr) */
     union {
         struct in_addr addr4;
         struct in6_addr addr6;
@@ -69,19 +69,19 @@ char *do_resolve(struct addr_storage *addr) {
     char buf[NI_MAXHOST]; /* 1025 */
     int ret;
 
-    switch (addr->af) {
+    switch (addr->address_family) {
         case AF_INET:
-            sin.sin_family = addr->af;
+            sin.sin_family = addr->address_family;
             sin.sin_port = 0;
-            memcpy(&sin.sin_addr, &addr->as_addr4, addr->len);
+            memcpy(&sin.sin_addr, &addr->as_addr4, addr->addr_len);
 
             ret = getnameinfo((struct sockaddr*)&sin, sizeof sin,
                               buf, sizeof buf, NULL, 0, NI_NAMEREQD);
             break;
         case AF_INET6:
-            sin6.sin6_family = addr->af;
+            sin6.sin6_family = addr->address_family;
             sin6.sin6_port = 0;
-            memcpy(&sin6.sin6_addr, &addr->as_addr6, addr->len);
+            memcpy(&sin6.sin6_addr, &addr->as_addr6, addr->addr_len);
 
             ret = getnameinfo((struct sockaddr*)&sin6, sizeof sin6,
                               buf, sizeof buf, NULL, 0, NI_NAMEREQD);
@@ -117,12 +117,12 @@ char* do_resolve(struct addr_storage *addr) {
     /* Some machines have gethostbyaddr_r returning an integer error code; on
      * others, it returns a struct hostent*. */
 #ifdef GETHOSTBYADDR_R_RETURNS_INT
-    while ((res = gethostbyaddr_r((char*)&addr->addr, addr->len, addr->af,
+    while ((res = gethostbyaddr_r((char*)&addr->addr, addr->addr_len, addr->address_family,
                                   &hostbuf, tmphstbuf, hstbuflen,
                                   &hp, &herr)) == ERANGE)
 #else
     /* ... also assume one fewer argument.... */
-    while ((hp = gethostbyaddr_r((char*)&addr->addr, addr->len, addr->af,
+    while ((hp = gethostbyaddr_r((char*)&addr->addr, addr->addr_len, addr->address_family,
                                  &hostbuf, tmphstbuf, hstbuflen, &herr)) == NULL
             && errno == ERANGE)
 #endif
@@ -157,7 +157,7 @@ char *do_resolve(struct addr_storage *addr) {
     char *s = NULL;
     struct hostent *he;
     pthread_mutex_lock(&ghba_mtx);
-    he = gethostbyaddr((char *) &addr->addr, addr->len, addr->af);
+    he = gethostbyaddr((char *) &addr->addr, addr->addr_len, addr->address_family);
     if (he)
         s = xstrdup(he->h_name);
     pthread_mutex_unlock(&ghba_mtx);
@@ -181,7 +181,7 @@ char* do_resolve(struct addr_storage *addr) {
   unsigned char* a;
   char * ret = NULL;
 
-  if (addr->af != AF_INET)
+  if (addr->address_family != AF_INET)
     return NULL;
 
   a = (unsigned char*)&addr->addr;
@@ -251,7 +251,7 @@ char *do_resolve(struct addr_storage * addr) {
     static pthread_key_t ares_key;
     static int gotkey;
 
-    if (addr->af != AF_INET)
+    if (addr->address_family != AF_INET)
         return NULL;
 
     /* Make sure we have an ARES channel for this thread. */
@@ -317,7 +317,7 @@ int forking_resolver_worker(int fd) {
         if (read(fd, &a, sizeof a) != sizeof a)
             return -1;
 
-        he = gethostbyaddr((char*)&a.addr, a.len, a.af);
+        he = gethostbyaddr((char*)&a.addr, a.addr_len, a.address_family);
         if (he)
             strncpy(buf, he->h_name, NAMESIZE - 1);
 
@@ -470,10 +470,10 @@ void resolve(int af, void *addr, char *result, int buflen) {
     if (options.dnsresolution == 1) {
 
         memset(raddr, 0, sizeof *raddr);
-        raddr->af = af;
-        raddr->len = (af == AF_INET ? sizeof(struct in_addr)
+        raddr->address_family = af;
+        raddr->addr_len = (af == AF_INET ? sizeof(struct in_addr)
                                     : sizeof(struct in6_addr));
-        memcpy(&raddr->addr, addr, raddr->len);
+        memcpy(&raddr->addr, addr, raddr->addr_len);
 
         pthread_mutex_lock(&resolver_queue_mutex);
 

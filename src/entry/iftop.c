@@ -140,7 +140,7 @@ void history_rotate() {
     hash_next_item(history, &n);
     while (n != NULL) {
         hash_node_type *next = n;
-        history_type *d = (history_type *) n->rec;
+        history_type *d = (history_type *) n->record;
         hash_next_item(history, &next);
 
         if (d->last_write == history_pos) {
@@ -206,7 +206,7 @@ static inline void assign_addr_pair(addr_pair *ap, struct ip *iptr, int flip) {
     memset(ap, '\0', sizeof(*ap));
 
     if (IP_V(iptr) == 4) {
-        ap->af = AF_INET;
+        ap->address_family = AF_INET;
         /* Does this protocol use ports? */
         if (iptr->ip_p == IPPROTO_TCP || iptr->ip_p == IPPROTO_UDP) {
             /* We take a slight liberty here by treating UDP the same as TCP */
@@ -233,7 +233,7 @@ static inline void assign_addr_pair(addr_pair *ap, struct ip *iptr, int flip) {
         /* IPv6 packet seen. */
         struct ip6_hdr *ip6tr = (struct ip6_hdr *) iptr;
 
-        ap->af = AF_INET6;
+        ap->address_family = AF_INET6;
 
         if ((ip6tr->ip6_nxt == IPPROTO_TCP) || (ip6tr->ip6_nxt == IPPROTO_UDP)) {
             struct tcphdr *thdr = ((void *) ip6tr) + 40;
@@ -395,16 +395,16 @@ static void __attribute__((hot)) handle_ip_packet(struct ip *iptr, int hw_dir) {
         if (__builtin_expect(options.dnsresolution, 0)) {
             memset(&scribdst, '\0', sizeof(scribdst));
             memcpy(&scribdst, &iptr->ip_dst, sizeof(struct in_addr));
-            resolve(ap.af, &scribdst, NULL, 0);
+            resolve(ap.address_family, &scribdst, NULL, 0);
             memset(&scribsrc, '\0', sizeof(scribsrc));
             memcpy(&scribsrc, &iptr->ip_src, sizeof(struct in_addr));
-            resolve(ap.af, &scribsrc, NULL, 0);
+            resolve(ap.address_family, &scribsrc, NULL, 0);
         }
     } else if (ip_ver == 6) {
         ap.protocol = ip6tr->ip6_nxt;
         if (__builtin_expect(options.dnsresolution, 0)) {
-            resolve(ap.af, &ip6tr->ip6_dst, NULL, 0);
-            resolve(ap.af, &ip6tr->ip6_src, NULL, 0);
+            resolve(ap.address_family, &ip6tr->ip6_dst, NULL, 0);
+            resolve(ap.address_family, &ip6tr->ip6_src, NULL, 0);
         }
     }
 

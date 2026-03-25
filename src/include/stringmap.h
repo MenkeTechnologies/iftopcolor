@@ -11,8 +11,8 @@
 
 typedef struct _stringmap {
     char *key;
-    item d;
-    struct _stringmap *l, *g;
+    item data;
+    struct _stringmap *lesser, *greater;
 } *stringmap;
 
 stringmap stringmap_new(void);

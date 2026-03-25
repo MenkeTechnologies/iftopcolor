@@ -158,7 +158,7 @@ int config_get_int(const char *directive, int *value) {
     S = stringmap_find(config, directive);
     if (!S) return 0;
 
-    s = (char *) S->d.v;
+    s = (char *) S->data.ptr;
     if (!*s) return -1;
     errno = 0;
     *value = strtol(s, &t, 10);
@@ -179,7 +179,7 @@ int config_get_float(const char *directive, float *value) {
     if (!(S = stringmap_find(config, directive)))
         return 0;
 
-    s = (char *) S->d.v;
+    s = (char *) S->data.ptr;
     if (!*s) return -1;
     errno = 0;
     *value = strtod(s, &t);
@@ -195,7 +195,7 @@ char *config_get_string(const char *directive) {
     stringmap S;
 
     S = stringmap_find(config, directive);
-    if (S) return (char *) S->d.v;
+    if (S) return (char *) S->data.ptr;
     else return NULL;
 }
 
@@ -238,8 +238,8 @@ void config_set_string(const char *directive, const char *s) {
 
     S = stringmap_find(config, directive);
     if (S) {
-        xfree(S->d.v);
-        S->d = item_ptr(xstrdup(s));
+        xfree(S->data.ptr);
+        S->data = item_ptr(xstrdup(s));
     } else {
         stringmap_insert(config, directive, item_ptr(xstrdup(s)));
     }

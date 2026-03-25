@@ -22,7 +22,7 @@ hash_status_enum hash_insert(hash_type *hash_table, void *key, void *rec) {
     hash_table->table[bucket] = p;
     p->next = p0;
     p->key = hash_table->copy_key(key);
-    p->rec = rec;
+    p->record = rec;
     p->bucket = bucket;
     return HASH_STATUS_OK;
 }
@@ -70,7 +70,7 @@ hash_status_enum __attribute__((hot)) hash_find(hash_type *hash_table, void *key
         p = p->next;
     }
     if (__builtin_expect(!p, 0)) return HASH_STATUS_KEY_NOT_FOUND;
-    *rec = p->rec;
+    *rec = p->record;
     return HASH_STATUS_OK;
 }
 
@@ -138,7 +138,7 @@ void hash_delete_all(hash_type *hash_table) {
 }
 
 /*
- * Delete all nodes AND free their rec pointers.
+ * Delete all nodes AND free their record pointers.
  */
 void hash_delete_all_free(hash_type *hash_table) {
     int i;
@@ -148,7 +148,7 @@ void hash_delete_all_free(hash_type *hash_table) {
         while (n != NULL) {
             nn = n->next;
             hash_table->delete_key(n->key);
-            free(n->rec);
+            free(n->record);
             free(n);
             n = nn;
         }

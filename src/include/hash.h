@@ -16,7 +16,7 @@ typedef enum {
 typedef struct node_tag {
     struct node_tag *next;       /* next node */
     void *key;                /* key */
-    void *rec;                /* user data */
+    void *record;             /* user data */
     int bucket;               /* cached bucket index */
 } hash_node_type;
 

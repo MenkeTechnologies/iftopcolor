@@ -12,7 +12,7 @@
 #include "hash.h"
 
 typedef struct {
-    int af;
+    int address_family;
     unsigned short int protocol;
     unsigned short int src_port;
     union {

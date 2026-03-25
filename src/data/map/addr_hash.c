@@ -63,7 +63,7 @@ static inline uint32_t hash_mix(uint32_t h, uint32_t val) {
 static inline int addr_hash_bucket(const addr_pair *ap) {
     uint32_t h = 0;
 
-    if (ap->af == AF_INET6) {
+    if (ap->address_family == AF_INET6) {
         const uint32_t *addr6 = (const uint32_t *) ap->src6.s6_addr;
         h = hash_mix(h, addr6[0]);
         h = hash_mix(h, addr6[1]);
@@ -123,7 +123,7 @@ addr_hash_find(hash_type *hash_table, addr_pair *key, void **rec) {
 
     while (p) {
         if (addr_compare(p->key, key)) {
-            *rec = p->rec;
+            *rec = p->record;
             return HASH_STATUS_OK;
         }
         p = p->next;
@@ -140,7 +140,7 @@ addr_hash_insert(hash_type *hash_table, addr_pair *key, void *rec) {
 
     nkp->key = *key;
     p->key = &nkp->key;
-    p->rec = rec;
+    p->record = rec;
     p->next = p0;
     p->bucket = bucket;
     hash_table->table[bucket] = p;
@@ -175,7 +175,7 @@ void addr_hash_delete_all_free(hash_type *hash_table) {
         n = hash_table->table[i];
         while (n != NULL) {
             nn = n->next;
-            free(n->rec);
+            free(n->record);
             pool_free((node_key_pair *) n);
             n = nn;
         }

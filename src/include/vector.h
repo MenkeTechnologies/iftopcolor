@@ -8,27 +8,27 @@
 #define __VECTOR_H_
 
 typedef union _item {
-    void *v;
-    long l;
+    void *ptr;
+    long num;
 } item;
 
 #define _inline inline
 
-static _inline item item_long(const long l) {
+static _inline item item_long(const long num) {
     item u;
-    u.l = l;
+    u.num = num;
     return u;
 }
 
-static _inline item item_ptr(void *const v) {
+static _inline item item_ptr(void *const ptr) {
     item u;
-    u.v = v;
+    u.ptr = ptr;
     return u;
 }
 
 typedef struct _vector {
-    item *ary;
-    size_t n, n_used;
+    item *items;
+    size_t capacity, n_used;
 } *vector;
 
 vector vector_new(void);
@@ -45,9 +45,9 @@ item vector_back(const vector);
 
 item *vector_remove(vector, item *t);
 
-void vector_reallocate(vector, const size_t n);
+void vector_reallocate(vector, const size_t capacity);
 
 /* A macro to iterate over a vector */
-#define vector_iterate(_v, _t)  for ((_t) = (_v)->ary; (_t) < (_v)->ary + (_v)->n_used; ++(_t))
+#define vector_iterate(_v, _t)  for ((_t) = (_v)->items; (_t) < (_v)->items + (_v)->n_used; ++(_t))
 
 #endif /* __VECTOR_H_ */

@@ -573,11 +573,11 @@ int screen_line_host_compare(void *a, void *b, host_pair_line *aa, host_pair_lin
     /* This isn't overly efficient because we resolve again before 
        display. */
     if (options.dnsresolution) {
-        resolve(aa->ap.af, a, hosta, HOSTNAME_LENGTH);
-        resolve(bb->ap.af, b, hostb, HOSTNAME_LENGTH);
+        resolve(aa->ap.address_family, a, hosta, HOSTNAME_LENGTH);
+        resolve(bb->ap.address_family, b, hostb, HOSTNAME_LENGTH);
     } else {
-        inet_ntop(aa->ap.af, a, hosta, sizeof(hosta));
-        inet_ntop(bb->ap.af, b, hostb, sizeof(hostb));
+        inet_ntop(aa->ap.address_family, a, hosta, sizeof(hosta));
+        inet_ntop(bb->ap.address_family, b, hostb, sizeof(hostb));
     }
 
     r = strcmp(hosta, hostb);
@@ -975,7 +975,7 @@ void make_screen_list() {
     }
 
     while (hash_next_item(screen_hash, &n) == HASH_STATUS_OK) {
-        host_pair_line *line = (host_pair_line *) n->rec;
+        host_pair_line *line = (host_pair_line *) n->record;
         for (i = 0; i < HISTORY_DIVISIONS; i++) {
             line->recv[i] *= inv_hist_len[i];
             line->sent[i] *= inv_hist_len[i];
@@ -1002,7 +1002,7 @@ void make_screen_list() {
 void screen_hash_clear() {
     hash_node_type *n = NULL;
     while (hash_next_item(screen_hash, &n) == HASH_STATUS_OK) {
-        host_pair_line *hpl = (host_pair_line *) n->rec;
+        host_pair_line *hpl = (host_pair_line *) n->record;
         hpl->total_recv = hpl->total_sent = 0;
         memset(hpl->recv, 0, sizeof(hpl->recv));
         memset(hpl->sent, 0, sizeof(hpl->sent));
@@ -1039,7 +1039,7 @@ void analyse_data() {
     const int showports = options.showports;
 
     while (hash_next_item(history, &n) == HASH_STATUS_OK) {
-        history_type *d = (history_type *) n->rec;
+        history_type *d = (history_type *) n->record;
         host_pair_line *screen_line;
         union {
             host_pair_line **h_p_l_pp;
@@ -1217,11 +1217,11 @@ void ui_print() {
                         L = HOSTNAME_LENGTH;
                     }
 
-                    sprint_host(host1, screen_line->ap.af,
+                    sprint_host(host1, screen_line->ap.address_family,
                                 &(screen_line->ap.src6),
                                 screen_line->ap.src_port,
                                 screen_line->ap.protocol, L);
-                    sprint_host(host2, screen_line->ap.af,
+                    sprint_host(host2, screen_line->ap.address_family,
                                 &(screen_line->ap.dst6),
                                 screen_line->ap.dst_port,
                                 screen_line->ap.protocol, L);
