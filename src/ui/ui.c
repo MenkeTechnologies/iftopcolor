@@ -1203,7 +1203,7 @@ void ui_print() {
         if (i == 0 || nn != NULL) {
             while ((y < LINES - 5) && ((nn = sorted_list_next_item(&screen_list, nn)) != NULL)) {
 
-                int x = 0, L;
+                int L;
 
 
                 host_pair_line *screen_line = (host_pair_line *) nn->data;

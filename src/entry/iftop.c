@@ -656,7 +656,6 @@ char *set_filter_code(const char *filter) {
 void packet_init() {
     char errbuf[PCAP_ERRBUF_SIZE];
     char *m;
-    int s;
     int i;
     int dlt;
     int result;
