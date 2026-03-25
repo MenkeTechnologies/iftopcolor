@@ -26,12 +26,13 @@ install(TARGETS iftop DESTINATION sbin)
 set(BENCH_COMMON_SRCS
     ${PROJECT_SOURCE_DIR}/src/data/map/addr_hash.c
     ${PROJECT_SOURCE_DIR}/src/data/map/hash.c
+    ${PROJECT_SOURCE_DIR}/src/data/map/stringmap.c
     ${PROJECT_SOURCE_DIR}/src/data/sorted_list.c
     ${PROJECT_SOURCE_DIR}/src/data/vector.c
     ${PROJECT_SOURCE_DIR}/src/util/util.c
 )
 
-set(BENCH_TARGETS bench_hash bench_sorted_list bench_vector bench_pool)
+set(BENCH_TARGETS bench_hash bench_sorted_list bench_vector bench_pool bench_stringmap)
 
 foreach(bench IN LISTS BENCH_TARGETS)
     add_executable(${bench} EXCLUDE_FROM_ALL bench/${bench}.c ${BENCH_COMMON_SRCS})
@@ -51,6 +52,7 @@ add_custom_target(bench
     COMMAND $<TARGET_FILE:bench_sorted_list>
     COMMAND $<TARGET_FILE:bench_vector>
     COMMAND $<TARGET_FILE:bench_pool>
+    COMMAND $<TARGET_FILE:bench_stringmap>
 )
 
 # --- Tests ---
