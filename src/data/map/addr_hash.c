@@ -31,44 +31,39 @@ int compare(void *a, void *b) {
             && aa->protocol == bb->protocol);
 }
 
-static int __inline__ hash_uint32(uint32_t n) {
-    return ((n & 0x000000FF)
-            + ((n & 0x0000FF00) >> 8)
-            + ((n & 0x00FF0000) >> 16)
-            + ((n & 0xFF000000) >> 24));
+static uint32_t __inline__ hash_mix(uint32_t h, uint32_t val) {
+    h ^= val;
+    h = (h << 5) | (h >> 27);
+    h *= 0x9e3779b9;
+    return h;
 }
 
 int hash(void *key) {
-    int hash;
+    uint32_t h = 0;
     addr_pair *ap = (addr_pair *) key;
 
     if (ap->af == AF_INET6) {
         uint32_t *addr6 = (uint32_t *) ap->src6.s6_addr;
-
-        hash = (hash_uint32(addr6[0])
-                + hash_uint32(addr6[1])
-                + hash_uint32(addr6[2])
-                + hash_uint32(addr6[3])
-                + ap->src_port) % 0xFF;
+        h = hash_mix(h, addr6[0]);
+        h = hash_mix(h, addr6[1]);
+        h = hash_mix(h, addr6[2]);
+        h = hash_mix(h, addr6[3]);
+        h = hash_mix(h, ap->src_port);
 
         addr6 = (uint32_t *) ap->dst6.s6_addr;
-        hash = (hash + hash_uint32(addr6[0])
-                + hash_uint32(addr6[1])
-                + hash_uint32(addr6[2])
-                + hash_uint32(addr6[3])
-                + ap->dst_port) % 0xFF;
+        h = hash_mix(h, addr6[0]);
+        h = hash_mix(h, addr6[1]);
+        h = hash_mix(h, addr6[2]);
+        h = hash_mix(h, addr6[3]);
+        h = hash_mix(h, ap->dst_port);
     } else {
-        in_addr_t addr = ap->src.s_addr;
-
-        hash = (hash_uint32(addr)
-                + ap->src_port) % 0xFF;
-
-        addr = ap->dst.s_addr;
-        hash = (hash + hash_uint32(addr)
-                + ap->dst_port) % 0xFF;
+        h = hash_mix(h, ap->src.s_addr);
+        h = hash_mix(h, ap->src_port);
+        h = hash_mix(h, ap->dst.s_addr);
+        h = hash_mix(h, ap->dst_port);
     }
 
-    return hash;
+    return h % hash_table_size;
 }
 
 void *copy_key(void *orig) {
@@ -87,7 +82,7 @@ void delete_key(void *key) {
  */
 hash_type *addr_hash_create() {
     hash_type *hash_table;
-    hash_table = xcalloc(hash_table_size, sizeof *hash_table);
+    hash_table = xcalloc(1, sizeof *hash_table);
     hash_table->size = hash_table_size;
     hash_table->compare = &compare;
     hash_table->hash = &hash;

@@ -1089,10 +1089,10 @@ void analyse_data() {
             int ii = (HISTORY_LENGTH + history_pos - i) % HISTORY_LENGTH;
 
             for (j = 0; j < HISTORY_DIVISIONS; j++) {
-                if (i < history_divs[j]) {
-                    screen_line->recv[j] += d->recv[ii];
-                    screen_line->sent[j] += d->sent[ii];
-                }
+                if (i >= history_divs[j])
+                    continue;
+                screen_line->recv[j] += d->recv[ii];
+                screen_line->sent[j] += d->sent[ii];
             }
         }
 

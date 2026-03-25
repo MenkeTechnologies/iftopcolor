@@ -373,6 +373,7 @@ static void handle_ip_packet(struct ip *iptr, int hw_dir) {
             /* Add the addresses to be resolved */
             resolve(ap.af, &ip6tr->ip6_dst, NULL, 0);
             resolve(ap.af, &ip6tr->ip6_src, NULL, 0);
+            break;
         default:
             break;
     }
@@ -390,6 +391,7 @@ static void handle_ip_packet(struct ip *iptr, int hw_dir) {
             break;
         case 6:
             len = ntohs(ip6tr->ip6_plen) + 40;
+            break;
         default:
             break;
     }
@@ -668,7 +670,6 @@ void packet_init() {
     resolver_initialise();
 
     pd = pcap_open_live(options.interface, CAPTURE_LENGTH, options.promiscuous, 1000, errbuf);
-    // DEBUG: pd = pcap_open_offline("tcpdump.out", errbuf);
     if (pd == NULL) {
         fprintf(stderr, "pcap_open_live(%s): %s\n", options.interface, errbuf);
         exit(1);

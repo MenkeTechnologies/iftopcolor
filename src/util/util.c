@@ -7,8 +7,6 @@
  *
  */
 
-static const char rcsid[] = "$Id: util.c,v 1.1 2002/03/24 17:27:12 chris Exp $";
-
 #include <sys/types.h>
 
 #include <stdlib.h>

@@ -6,12 +6,6 @@
  *
  */
 
-static const char rcsid[] = "$Id: vector.c,v 1.3 2003/11/07 02:16:41 pdw Exp $";
-
-#ifdef HAVE_CONFIG_H
-/*include "configuration.h"*/
-#endif /* HAVE_CONFIG_H */
-
 #include <stdlib.h>
 #include <string.h>
 
@@ -74,8 +68,11 @@ item *vector_remove(vector v, item *t) {
 }
 
 void vector_reallocate(vector v, const size_t n) {
+    size_t clear_count;
     if (n < v->n_used || n <= 0) return;
     v->ary = xrealloc(v->ary, n * sizeof(item));
-    memset(v->ary + v->n_used, 0, (v->n - v->n_used) * sizeof(item));
+    clear_count = n - v->n_used;
+    if (clear_count > 0)
+        memset(v->ary + v->n_used, 0, clear_count * sizeof(item));
     v->n = n;
 }
