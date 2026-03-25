@@ -342,6 +342,138 @@ TEST(ns_hash_different_subnets) {
     free(h);
 }
 
+/* === Overwrite === */
+
+TEST(ns_hash_overwrite_value) {
+    hash_type *h = ns_hash_create();
+    struct in6_addr addr = make_addr6("2001:db8::1");
+    hash_insert(h, &addr, xstrdup("old_name"));
+    hash_delete(h, &addr);
+    hash_insert(h, &addr, xstrdup("new_name"));
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &addr, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "new_name");
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === Adjacent addresses === */
+
+TEST(ns_hash_adjacent_addresses) {
+    hash_type *h = ns_hash_create();
+    struct in6_addr a1 = make_addr6("2001:db8::1");
+    struct in6_addr a2 = make_addr6("2001:db8::2");
+    struct in6_addr a3 = make_addr6("2001:db8::3");
+    hash_insert(h, &a1, xstrdup("first"));
+    hash_insert(h, &a2, xstrdup("second"));
+    hash_insert(h, &a3, xstrdup("third"));
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &a1, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "first");
+    ASSERT_EQ(hash_find(h, &a2, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "second");
+    ASSERT_EQ(hash_find(h, &a3, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "third");
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === Delete preserves others === */
+
+TEST(ns_hash_delete_preserves_others) {
+    hash_type *h = ns_hash_create();
+    struct in6_addr a1 = make_addr6("::1");
+    struct in6_addr a2 = make_addr6("::2");
+    struct in6_addr a3 = make_addr6("::3");
+    hash_insert(h, &a1, xstrdup("one"));
+    hash_insert(h, &a2, xstrdup("two"));
+    hash_insert(h, &a3, xstrdup("three"));
+    hash_delete(h, &a2);
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &a1, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "one");
+    ASSERT_EQ(hash_find(h, &a2, &rec), HASH_STATUS_KEY_NOT_FOUND);
+    ASSERT_EQ(hash_find(h, &a3, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "three");
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === Iteration count === */
+
+TEST(ns_hash_iterate_count_matches) {
+    hash_type *h = ns_hash_create();
+    for (int i = 0; i < 30; i++) {
+        char addr_str[64];
+        snprintf(addr_str, sizeof(addr_str), "2001:db8::%d", i + 1);
+        struct in6_addr addr = make_addr6(addr_str);
+        hash_insert(h, &addr, xstrdup("name"));
+    }
+    ASSERT_EQ(ns_hash_count(h), 30);
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === Long hostname values === */
+
+TEST(ns_hash_long_hostname) {
+    hash_type *h = ns_hash_create();
+    struct in6_addr addr = make_addr6("2001:db8::1");
+    char long_name[256];
+    memset(long_name, 'x', 255);
+    long_name[255] = '\0';
+    hash_insert(h, &addr, xstrdup(long_name));
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &addr, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, long_name);
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === Empty string value === */
+
+TEST(ns_hash_empty_name) {
+    hash_type *h = ns_hash_create();
+    struct in6_addr addr = make_addr6("::1");
+    hash_insert(h, &addr, xstrdup(""));
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &addr, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "");
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === 500 entries === */
+
+TEST(ns_hash_500_entries) {
+    hash_type *h = ns_hash_create();
+    struct in6_addr addrs[500];
+    for (int i = 0; i < 500; i++) {
+        char addr_str[64];
+        snprintf(addr_str, sizeof(addr_str), "2001:db8:%x::%x",
+                 i / 256, i % 256 + 1);
+        addrs[i] = make_addr6(addr_str);
+        char name[64];
+        snprintf(name, sizeof(name), "host-%d.test.com", i);
+        hash_insert(h, &addrs[i], xstrdup(name));
+    }
+    ASSERT_EQ(ns_hash_count(h), 500);
+    /* Spot check every 50th */
+    for (int i = 0; i < 500; i += 50) {
+        void *rec = NULL;
+        ASSERT_EQ(hash_find(h, &addrs[i], &rec), HASH_STATUS_OK);
+    }
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
 /* === Delete all then reuse === */
 
 TEST(ns_hash_reuse_after_clear) {
@@ -387,6 +519,13 @@ int main(void) {
     RUN(ns_hash_key_is_copied);
     RUN(ns_hash_200_entries);
     RUN(ns_hash_different_subnets);
+    RUN(ns_hash_overwrite_value);
+    RUN(ns_hash_adjacent_addresses);
+    RUN(ns_hash_delete_preserves_others);
+    RUN(ns_hash_iterate_count_matches);
+    RUN(ns_hash_long_hostname);
+    RUN(ns_hash_empty_name);
+    RUN(ns_hash_500_entries);
     RUN(ns_hash_reuse_after_clear);
 
     TEST_REPORT();

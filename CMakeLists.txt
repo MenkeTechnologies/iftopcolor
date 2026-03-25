@@ -41,9 +41,29 @@ foreach(b IN LISTS BENCH_NAMES)
     target_link_libraries(benchmark_${b} -lm)
 endforeach()
 
+# Benchmarks that need additional sources beyond BENCH_COMMON_SRCS
+add_executable(benchmark_ns_hash EXCLUDE_FROM_ALL bench/bench_ns_hash.c ${BENCH_COMMON_SRCS}
+    ${PROJECT_SOURCE_DIR}/src/data/map/ns_hash.c)
+target_compile_options(benchmark_ns_hash PRIVATE -O3 -DNDEBUG -march=native -flto -funroll-loops -fomit-frame-pointer)
+set_target_properties(benchmark_ns_hash PROPERTIES LINK_FLAGS "-flto")
+target_link_libraries(benchmark_ns_hash -lm)
+
+add_executable(benchmark_serv_hash EXCLUDE_FROM_ALL bench/bench_serv_hash.c ${BENCH_COMMON_SRCS}
+    ${PROJECT_SOURCE_DIR}/src/data/map/serv_hash.c)
+target_compile_options(benchmark_serv_hash PRIVATE -O3 -DNDEBUG -march=native -flto -funroll-loops -fomit-frame-pointer)
+set_target_properties(benchmark_serv_hash PROPERTIES LINK_FLAGS "-flto")
+target_link_libraries(benchmark_serv_hash -lm)
+
+add_executable(benchmark_cfgfile EXCLUDE_FROM_ALL bench/bench_cfgfile.c ${BENCH_COMMON_SRCS}
+    ${PROJECT_SOURCE_DIR}/src/config/cfgfile.c)
+target_compile_options(benchmark_cfgfile PRIVATE -O3 -DNDEBUG -march=native -flto -funroll-loops -fomit-frame-pointer)
+set_target_properties(benchmark_cfgfile PROPERTIES LINK_FLAGS "-flto")
+target_link_libraries(benchmark_cfgfile -lm)
+
 # "make bench" builds all benchmarks, then runs them
 add_custom_target(bench
     DEPENDS benchmark_hash benchmark_sorted_list benchmark_vector benchmark_pool benchmark_stringmap
+            benchmark_ns_hash benchmark_serv_hash benchmark_cfgfile
     COMMAND ${CMAKE_COMMAND} -E echo ""
     COMMAND ${CMAKE_COMMAND} -E echo "=== Running benchmarks ==="
     COMMAND ${CMAKE_COMMAND} -E echo ""
@@ -52,6 +72,9 @@ add_custom_target(bench
     COMMAND $<TARGET_FILE:benchmark_vector>
     COMMAND $<TARGET_FILE:benchmark_pool>
     COMMAND $<TARGET_FILE:benchmark_stringmap>
+    COMMAND $<TARGET_FILE:benchmark_ns_hash>
+    COMMAND $<TARGET_FILE:benchmark_serv_hash>
+    COMMAND $<TARGET_FILE:benchmark_cfgfile>
 )
 
 # --- Tests ---

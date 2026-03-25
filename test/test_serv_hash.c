@@ -320,6 +320,126 @@ TEST(serv_hash_protocol_zero) {
     free(h);
 }
 
+/* === Adjacent ports === */
+
+TEST(serv_hash_adjacent_ports) {
+    hash_type *h = serv_hash_create();
+    for (int i = 0; i < 10; i++) {
+        ip_service svc = {(unsigned short)(8080 + i), 6};
+        char name[16];
+        snprintf(name, sizeof(name), "port_%d", 8080 + i);
+        hash_insert(h, &svc, xstrdup(name));
+    }
+    for (int i = 0; i < 10; i++) {
+        ip_service lookup = {(unsigned short)(8080 + i), 6};
+        void *rec = NULL;
+        ASSERT_EQ(hash_find(h, &lookup, &rec), HASH_STATUS_OK);
+        char expected[16];
+        snprintf(expected, sizeof(expected), "port_%d", 8080 + i);
+        ASSERT_STR_EQ((char *)rec, expected);
+    }
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === Delete multiple preserves remainder === */
+
+TEST(serv_hash_delete_multiple_preserves) {
+    hash_type *h = serv_hash_create();
+    ip_service svcs[5];
+    for (int i = 0; i < 5; i++) {
+        svcs[i] = (ip_service){(unsigned short)(5000 + i), 6};
+        char name[16];
+        snprintf(name, sizeof(name), "svc_%d", i);
+        hash_insert(h, &svcs[i], xstrdup(name));
+    }
+    /* Delete first and last */
+    hash_delete(h, &svcs[0]);
+    hash_delete(h, &svcs[4]);
+    ASSERT_EQ(serv_hash_count(h), 3);
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &svcs[0], &rec), HASH_STATUS_KEY_NOT_FOUND);
+    ASSERT_EQ(hash_find(h, &svcs[2], &rec), HASH_STATUS_OK);
+    ASSERT_EQ(hash_find(h, &svcs[4], &rec), HASH_STATUS_KEY_NOT_FOUND);
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === Long service name === */
+
+TEST(serv_hash_long_service_name) {
+    hash_type *h = serv_hash_create();
+    ip_service svc = {8888, 6};
+    char long_name[256];
+    memset(long_name, 'z', 255);
+    long_name[255] = '\0';
+    hash_insert(h, &svc, xstrdup(long_name));
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &svc, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, long_name);
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === 100 entries === */
+
+TEST(serv_hash_100_entries) {
+    hash_type *h = serv_hash_create();
+    for (int i = 0; i < 100; i++) {
+        ip_service svc = {(unsigned short)(4000 + i), (i % 2 == 0) ? 6 : 17};
+        char name[32];
+        snprintf(name, sizeof(name), "service_%d_%s", i, (i % 2 == 0) ? "tcp" : "udp");
+        hash_insert(h, &svc, xstrdup(name));
+    }
+    ASSERT_EQ(serv_hash_count(h), 100);
+    /* Spot check */
+    ip_service lookup = {4050, 6};
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &lookup, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "service_50_tcp");
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === Empty name === */
+
+TEST(serv_hash_empty_name) {
+    hash_type *h = serv_hash_create();
+    ip_service svc = {7777, 6};
+    hash_insert(h, &svc, xstrdup(""));
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &svc, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "");
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === Delete then iterate === */
+
+TEST(serv_hash_delete_then_iterate) {
+    hash_type *h = serv_hash_create();
+    for (int i = 0; i < 10; i++) {
+        ip_service svc = {(unsigned short)(6000 + i), 6};
+        char name[16];
+        snprintf(name, sizeof(name), "s%d", i);
+        hash_insert(h, &svc, xstrdup(name));
+    }
+    /* Delete half */
+    for (int i = 0; i < 10; i += 2) {
+        ip_service svc = {(unsigned short)(6000 + i), 6};
+        hash_delete(h, &svc);
+    }
+    ASSERT_EQ(serv_hash_count(h), 5);
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
 /* === Many protocols same port === */
 
 TEST(serv_hash_many_protocols_same_port) {
@@ -371,6 +491,12 @@ int main(void) {
     RUN(serv_hash_50_entries);
     RUN(serv_hash_reuse_after_clear);
     RUN(serv_hash_protocol_zero);
+    RUN(serv_hash_adjacent_ports);
+    RUN(serv_hash_delete_multiple_preserves);
+    RUN(serv_hash_long_service_name);
+    RUN(serv_hash_100_entries);
+    RUN(serv_hash_empty_name);
+    RUN(serv_hash_delete_then_iterate);
     RUN(serv_hash_many_protocols_same_port);
 
     TEST_REPORT();

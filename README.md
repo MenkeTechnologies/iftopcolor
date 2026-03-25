@@ -162,17 +162,17 @@ make check_hash
 
 ### Test suites
 
-| Suite | Covers |
-|---|---|
-| `check_util` | Utility functions |
-| `check_vector` | Dynamic vector operations |
-| `check_hash` | Core hash table |
-| `check_addr_hash` | Address-keyed hash |
-| `check_ns_hash` | Namespace hash |
-| `check_serv_hash` | Service hash |
-| `check_sorted_list` | Sorted list insertion and iteration |
-| `check_stringmap` | String map lookups |
-| `check_cfgfile` | Configuration file parsing |
+| Suite | Covers | Tests |
+|---|---|---|
+| `check_util` | `xmalloc`, `xcalloc`, `xrealloc`, `xstrdup`, `xfree` | 33 |
+| `check_vector` | Push, pop, remove, resize, iteration, pointer storage | 60 |
+| `check_hash` | Generic hash: insert, find, delete, collision chains, iteration | 50 |
+| `check_addr_hash` | IPv4/IPv6 address pairs, pool allocator, fast-path ops | 42 |
+| `check_ns_hash` | IPv6 address to hostname cache | 31 |
+| `check_serv_hash` | Port+protocol to service name lookup | 30 |
+| `check_sorted_list` | Single insert, batch insert, ordering, iteration | 39 |
+| `check_stringmap` | Binary tree insert, find, duplicate handling, case sensitivity | 39 |
+| `check_cfgfile` | Config file parsing: string, bool, int, float, enum, file I/O | 62 |
 
 ---
 
@@ -199,9 +199,13 @@ make bench
 | Suite | Measures |
 |---|---|
 | `benchmark_hash` | Hash distribution, insert, find (hit/miss), find scaling, delete, iteration, mixed workload |
-| `benchmark_sorted_list` | Single insert O(n^2) vs batch insert O(n log n), iteration |
+| `benchmark_sorted_list` | Single insert O(n^2) vs batch insert O(n log n), iteration, speedup comparison |
 | `benchmark_vector` | Push back, push/pop, remove, iteration at various sizes |
 | `benchmark_pool` | Pool allocator vs malloc/free for insert/delete and churn workloads |
+| `benchmark_stringmap` | Sequential vs random key insert, find (hit/miss), find scaling, config-style workload |
+| `benchmark_ns_hash` | IPv6 address cache: insert, find (hit/miss), delete, iteration, churn cycles |
+| `benchmark_serv_hash` | Service cache: insert, find (hit/miss), delete, iteration, TCP/UDP differentiation |
+| `benchmark_cfgfile` | Config set/get, bool/int/float/enum parsing, file reading, realistic workload |
 
 ---
 
