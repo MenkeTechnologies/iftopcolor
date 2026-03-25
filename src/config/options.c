@@ -221,7 +221,7 @@ static void set_net_filter(char *arg) {
         } else {
             if (n == 32) {
                 /* This needs to be special cased, although I don't fully
-                 * understand why -pdw
+                 * understand why
                  */
                 options.netfiltermask.s_addr = htonl(0xffffffffl);
             } else {
@@ -266,7 +266,7 @@ static void usage(FILE *fp) {
             "   -c config file      specifies an alternative configuration file\n"
             "\n"
             "iftop, version " IFTOP_VERSION "\n"
-            "copyright (c) 2002 Paul Warren <pdw@ex-parrot.com> and contributors\n"
+            "copyright (c) 2002 Jacob Menke and contributors\n"
     );
 }
 
@@ -476,7 +476,7 @@ int options_config_get_net_filter() {
             } else {
                 if (n == 32) {
                     /* This needs to be special cased, although I don't fully
-                     * understand why -pdw
+                     * understand why
                      */
                     options.netfiltermask.s_addr = htonl(0xffffffffl);
                 } else {

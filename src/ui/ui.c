@@ -1178,7 +1178,7 @@ void ui_print() {
 
     /* 
      * erase() is faster than clear().  Dunno why we switched to 
-     * clear() -pdw 24/10/02
+     * clear()
      */
     erase();
 

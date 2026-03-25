@@ -1,8 +1,7 @@
 /*
  * screenfilter.c:
  *
- * Copyright (c) 2002 DecisionSoft Ltd.
- * Paul Warren (pdw) Fri Oct 25 10:21:00 2002
+ * Copyright (c) 2002 Jacob Menke
  *
  */
 

@@ -1,8 +1,7 @@
 /*
  * screenfilter.h:
  *
- * Copyright (c) 2002 DecisionSoft Ltd.
- * Paul Warren (pdw) Fri Oct 25 10:25:50 2002
+ * Copyright (c) 2002 Jacob Menke
  */
 
 #ifndef __SCREENFILTER_H_ /* include guard */

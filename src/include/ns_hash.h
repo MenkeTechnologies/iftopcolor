@@ -1,7 +1,7 @@
 /*
  * ns_hash.h:
  *
- * Copyright (c) 2002 DecisionSoft Ltd.
+ * Copyright (c) 2002 Jacob Menke
  *
  */
 

@@ -1,7 +1,7 @@
 /*
  * cfgfile.h:
  *
- * Copyright (c) 2003 DecisionSoft Ltd.
+ * Copyright (c) 2003 Jacob Menke
  *
  */
 
