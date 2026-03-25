@@ -4,8 +4,6 @@
  *
  * Copyright (c) 2001 Chris Lightfoot. All rights reserved.
  *
- * $Id: stringmap.h,v 1.1 2003/10/19 06:44:33 pdw Exp $
- *
  */
 
 #ifndef __STRINGMAP_H_ /* include guard */

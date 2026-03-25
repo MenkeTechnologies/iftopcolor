@@ -5,8 +5,6 @@
  * is an almighty pain in the arse, and is completely irrelevant on most
  * systems which already define this stuff.
  *
- * $Id: integers.h,v 1.1 2002/11/04 12:28:43 chris Exp $
- *
  */
 
 #ifndef __INTEGERS_H_ /* include guard */

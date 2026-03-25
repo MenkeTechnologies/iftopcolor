@@ -1,4 +1,3 @@
-/* @(#) $Header: /home/pdw/vcvs/repos/iftop/tcp.h,v 1.2 2003/06/06 22:42:35 pdw Exp $ (LBL) */
 /*
  * Copyright (c) 1982, 1986, 1993
  *	The Regents of the University of California.  All rights reserved.

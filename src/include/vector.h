@@ -4,8 +4,6 @@
  *
  * Copyright (c) 2001 Chris Lightfoot. All rights reserved.
  *
- * $Id: vector.h,v 1.1 2003/10/19 06:44:33 pdw Exp $
- *
  */
 
 #ifndef __VECTOR_H_ /* include guard */

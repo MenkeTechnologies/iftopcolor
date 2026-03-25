@@ -1,4 +1,3 @@
-/* @(#) $Header: /home/pdw/vcvs/repos/iftop/ppp.h,v 1.2 2005/12/25 20:42:45 pdw Exp $ (LBL) */
 /*
  * Point to Point Protocol (PPP) RFC1331
  *
