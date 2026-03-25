@@ -6,29 +6,13 @@
 #include "../../include/addr_hash.h"
 #include "../../include/iftop.h"
 
-#define hash_table_size 256
+#define hash_table_size 2048
 
-int compare(void *a, void *b) {
-    addr_pair *aa = (addr_pair *) a;
-    addr_pair *bb = (addr_pair *) b;
-
-    if (aa->af != bb->af)
-        return 0;
-
-    if (aa->af == AF_INET6) {
-        return (IN6_ARE_ADDR_EQUAL(&aa->src6, &bb->src6)
-                && aa->src_port == bb->src_port
-                && IN6_ARE_ADDR_EQUAL(&aa->dst6, &bb->dst6)
-                && aa->dst_port == bb->dst_port
-                && aa->protocol == bb->protocol);
-    }
-
-    /* AF_INET or unknown. */
-    return (aa->src.s_addr == bb->src.s_addr
-            && aa->src_port == bb->src_port
-            && aa->dst.s_addr == bb->dst.s_addr
-            && aa->dst_port == bb->dst_port
-            && aa->protocol == bb->protocol);
+int __attribute__((hot)) compare(void *a, void *b) {
+    /* addr_pair structs are always zeroed on creation, so memcmp is safe
+     * (no uninitialized padding bytes). This is faster than field-by-field
+     * comparison and works for both IPv4 and IPv6. */
+    return memcmp(a, b, sizeof(addr_pair)) == 0;
 }
 
 static uint32_t __inline__ hash_mix(uint32_t h, uint32_t val) {
@@ -38,7 +22,7 @@ static uint32_t __inline__ hash_mix(uint32_t h, uint32_t val) {
     return h;
 }
 
-int hash(void *key) {
+int __attribute__((hot)) hash(void *key) {
     uint32_t h = 0;
     addr_pair *ap = (addr_pair *) key;
 
@@ -63,7 +47,7 @@ int hash(void *key) {
         h = hash_mix(h, ap->dst_port);
     }
 
-    return h % hash_table_size;
+    return h & (hash_table_size - 1);
 }
 
 void *copy_key(void *orig) {

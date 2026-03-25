@@ -8,6 +8,9 @@ else()
     set(CL "-lpcap -lncursesw -lm -lpthread")
 endif (APPLE)
 
+set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG -march=native -flto -funroll-loops -fomit-frame-pointer")
+set(CMAKE_EXE_LINKER_FLAGS_RELEASE "-flto")
+
 include_directories(${PROJECT_SOURCE_DIR}/src/include)
 
 file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/src/*/*.c ${PROJECT_SOURCE_DIR}/src/data/*/*.c )

@@ -909,64 +909,90 @@ void screen_list_init() {
 }
 
 void screen_list_clear() {
-    sorted_list_node *nn = NULL;
     peaksent = peakrecv = peaktotal = 0;
-    while ((nn = sorted_list_next_item(&screen_list, nn)) != NULL) {
-        free(nn->data);
-    }
     sorted_list_destroy(&screen_list);
 }
 
-void calculate_totals() {
+void calculate_totals(const int hist_idx[]) {
     int i;
+    long r, s;
 
-    /**
-     * Calculate peaks and totals
-     */
+    /* Peaks: scan all history */
     for (i = 0; i < HISTORY_LENGTH; i++) {
-        int j;
-        int ii = (HISTORY_LENGTH + history_pos - i) % HISTORY_LENGTH;
-
-        for (j = 0; j < HISTORY_DIVISIONS; j++) {
-            if (i < history_divs[j]) {
-                totals.recv[j] += history_totals.recv[ii];
-                totals.sent[j] += history_totals.sent[ii];
-            }
-        }
-
-        if (history_totals.recv[i] > peakrecv) {
-            peakrecv = history_totals.recv[i];
-        }
-        if (history_totals.sent[i] > peaksent) {
-            peaksent = history_totals.sent[i];
-        }
-        if (history_totals.recv[i] + history_totals.sent[i] > peaktotal) {
-            peaktotal = history_totals.recv[i] + history_totals.sent[i];
-        }
+        r = history_totals.recv[i];
+        s = history_totals.sent[i];
+        if (r > peakrecv) peakrecv = r;
+        if (s > peaksent) peaksent = s;
+        if (r + s > peaktotal) peaktotal = r + s;
     }
+
+    /* Totals: unrolled, using precomputed index array */
+    r = history_totals.recv[hist_idx[0]];
+    s = history_totals.sent[hist_idx[0]];
+    totals.recv[0] += r;
+    totals.sent[0] += s;
+    totals.recv[1] += r;
+    totals.sent[1] += s;
+    totals.recv[2] += r;
+    totals.sent[2] += s;
+
+    for (i = 1; i < history_divs[1]; i++) {
+        r = history_totals.recv[hist_idx[i]];
+        s = history_totals.sent[hist_idx[i]];
+        totals.recv[1] += r;
+        totals.sent[1] += s;
+        totals.recv[2] += r;
+        totals.sent[2] += s;
+    }
+    for (; i < HISTORY_LENGTH; i++) {
+        totals.recv[2] += history_totals.recv[hist_idx[i]];
+        totals.sent[2] += history_totals.sent[hist_idx[i]];
+    }
+
+    /* Divide by time spans */
     for (i = 0; i < HISTORY_DIVISIONS; i++) {
-        int t = history_length(i);
-        totals.recv[i] /= t;
-        totals.sent[i] /= t;
+        int hl = history_length(i);
+        totals.recv[i] /= hl;
+        totals.sent[i] /= hl;
     }
 }
 
 void make_screen_list() {
     hash_node_type *n = NULL;
+    int i;
+    int count = 0;
+    int capacity = 256;
+    void **items = NULL;
+    double inv_hist_len[HISTORY_DIVISIONS];
+    const int freeze = options.freezeorder;
+
+    for (i = 0; i < HISTORY_DIVISIONS; i++) {
+        inv_hist_len[i] = 1.0 / history_length(i);
+    }
+
+    if (!freeze) {
+        items = xmalloc(capacity * sizeof(void *));
+    }
+
     while (hash_next_item(screen_hash, &n) == HASH_STATUS_OK) {
         host_pair_line *line = (host_pair_line *) n->rec;
-        int i;
         for (i = 0; i < HISTORY_DIVISIONS; i++) {
-            line->recv[i] /= history_length(i);
-            line->sent[i] /= history_length(i);
+            line->recv[i] *= inv_hist_len[i];
+            line->sent[i] *= inv_hist_len[i];
         }
 
-        /* Don't make a new, sorted screen list if order is frozen
-         */
-        if (!options.freezeorder) {
-            sorted_list_insert(&screen_list, line);
+        if (!freeze) {
+            if (count >= capacity) {
+                capacity *= 2;
+                items = realloc(items, capacity * sizeof(void *));
+            }
+            items[count++] = line;
         }
+    }
 
+    if (!freeze) {
+        sorted_list_insert_batch(&screen_list, items, count);
+        free(items);
     }
 }
 
@@ -985,9 +1011,16 @@ void screen_hash_clear() {
 
 void analyse_data() {
     hash_node_type *n = NULL;
+    int hist_idx[HISTORY_LENGTH];
+    int i;
 
     if (options.paused == 1) {
         return;
+    }
+
+    /* Precompute history index array once */
+    for (i = 0; i < HISTORY_LENGTH; i++) {
+        hist_idx[i] = (HISTORY_LENGTH + history_pos - i) % HISTORY_LENGTH;
     }
 
     // Zero totals
@@ -997,8 +1030,13 @@ void analyse_data() {
         screen_hash_clear();
     } else {
         screen_list_clear();
-        hash_delete_all(screen_hash);
+        hash_delete_all_free(screen_hash);
     }
+
+    /* Cache aggregation options outside the loop */
+    const int agg_src = options.aggregate_src;
+    const int agg_dst = options.aggregate_dest;
+    const int showports = options.showports;
 
     while (hash_next_item(history, &n) == HASH_STATUS_OK) {
         history_type *d = (history_type *) n->rec;
@@ -1008,29 +1046,25 @@ void analyse_data() {
             void **void_pp;
         } u_screen_line = {&screen_line};
         addr_pair ap;
-        int i;
-        int tsent, trecv;
-        tsent = trecv = 0;
-
 
         ap = *(addr_pair *) n->key;
 
         /* Aggregate hosts, if required */
-        if (options.aggregate_src) {
+        if (agg_src) {
             memset(&ap.src6, '\0', sizeof(ap.src6));
         }
-        if (options.aggregate_dest) {
+        if (agg_dst) {
             memset(&ap.dst6, '\0', sizeof(ap.dst6));
         }
 
         /* Aggregate ports, if required */
-        if (options.showports == OPTION_PORTS_DEST || options.showports == OPTION_PORTS_OFF) {
+        if (showports == OPTION_PORTS_DEST || showports == OPTION_PORTS_OFF) {
             ap.src_port = 0;
         }
-        if (options.showports == OPTION_PORTS_SRC || options.showports == OPTION_PORTS_OFF) {
+        if (showports == OPTION_PORTS_SRC || showports == OPTION_PORTS_OFF) {
             ap.dst_port = 0;
         }
-        if (options.showports == OPTION_PORTS_OFF) {
+        if (showports == OPTION_PORTS_OFF) {
             ap.protocol = 0;
         }
 
@@ -1044,15 +1078,31 @@ void analyse_data() {
         screen_line->total_sent += d->total_sent;
         screen_line->total_recv += d->total_recv;
 
-        for (i = 0; i < HISTORY_LENGTH; i++) {
-            int j;
-            int ii = (HISTORY_LENGTH + history_pos - i) % HISTORY_LENGTH;
-
-            for (j = 0; j < HISTORY_DIVISIONS; j++) {
-                if (i >= history_divs[j])
-                    continue;
-                screen_line->recv[j] += d->recv[ii];
-                screen_line->sent[j] += d->sent[ii];
+        /* Unrolled: history_divs = {1, 5, 20}. Use precomputed index array. */
+        {
+            long r, s;
+            /* i=0: contributes to div 0,1,2 */
+            r = d->recv[hist_idx[0]];
+            s = d->sent[hist_idx[0]];
+            screen_line->recv[0] += r;
+            screen_line->sent[0] += s;
+            screen_line->recv[1] += r;
+            screen_line->sent[1] += s;
+            screen_line->recv[2] += r;
+            screen_line->sent[2] += s;
+            /* i=1..4: contributes to div 1,2 */
+            for (i = 1; i < history_divs[1]; i++) {
+                r = d->recv[hist_idx[i]];
+                s = d->sent[hist_idx[i]];
+                screen_line->recv[1] += r;
+                screen_line->sent[1] += s;
+                screen_line->recv[2] += r;
+                screen_line->sent[2] += s;
+            }
+            /* i=5..19: contributes to div 2 only */
+            for (; i < HISTORY_LENGTH; i++) {
+                screen_line->recv[2] += d->recv[hist_idx[i]];
+                screen_line->sent[2] += d->sent[hist_idx[i]];
             }
         }
 
@@ -1061,7 +1111,7 @@ void analyse_data() {
     make_screen_list();
 
 
-    calculate_totals();
+    calculate_totals(hist_idx);
 
 }
 

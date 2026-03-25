@@ -110,8 +110,7 @@ void history_rotate() {
         hash_next_item(history, &next);
 
         if (d->last_write == history_pos) {
-            addr_pair key = *(addr_pair *) (n->key);
-            hash_delete(history, &key);
+            hash_delete_node(history, n);
             free(d);
         } else {
             d->recv[history_pos] = 0;
@@ -223,7 +222,7 @@ void assign_addr_pair(addr_pair *ap, struct ip *iptr, int flip) {
     }
 }
 
-static void handle_ip_packet(struct ip *iptr, int hw_dir) {
+static void __attribute__((hot)) handle_ip_packet(struct ip *iptr, int hw_dir) {
     int direction = 0; /* incoming */
     history_type *ht;
     union {
@@ -236,11 +235,12 @@ static void handle_ip_packet(struct ip *iptr, int hw_dir) {
     struct in6_addr scribsrc;   /* Scratch pad. */
     /* Reinterpret packet type. */
     struct ip6_hdr *ip6tr = (struct ip6_hdr *) iptr;
+    const int ip_ver = IP_V(iptr);
 
-    memset(&ap, '\0', sizeof(ap));
+    /* ap is zeroed inside assign_addr_pair, no need to memset here */
 
-    if ((IP_V(iptr) == 4 && options.netfilter == 0)
-        || (IP_V(iptr) == 6 && options.netfilter6 == 0)) {
+    if ((ip_ver == 4 && options.netfilter == 0)
+        || (ip_ver == 6 && options.netfilter6 == 0)) {
         /*
          * Net filter is off, so assign direction based on MAC address
          */
@@ -256,19 +256,19 @@ static void handle_ip_packet(struct ip *iptr, int hw_dir) {
             /* Packet direction is not given away by h/ware layer.  Try IP
              * layer
              */
-        else if ((IP_V(iptr) == 4) && have_ip_addr && ip_addr_match(iptr->ip_src)) {
+        else if ((ip_ver == 4) && have_ip_addr && ip_addr_match(iptr->ip_src)) {
             /* outgoing */
             assign_addr_pair(&ap, iptr, 0);
             direction = 1;
-        } else if ((IP_V(iptr) == 4) && have_ip_addr && ip_addr_match(iptr->ip_dst)) {
+        } else if ((ip_ver == 4) && have_ip_addr && ip_addr_match(iptr->ip_dst)) {
             /* incoming */
             assign_addr_pair(&ap, iptr, 1);
             direction = 0;
-        } else if ((IP_V(iptr) == 6) && have_ip6_addr && ip6_addr_match(&ip6tr->ip6_src)) {
+        } else if ((ip_ver == 6) && have_ip6_addr && ip6_addr_match(&ip6tr->ip6_src)) {
             /* outgoing */
             assign_addr_pair(&ap, iptr, 0);
             direction = 1;
-        } else if ((IP_V(iptr) == 6) && have_ip6_addr && ip6_addr_match(&ip6tr->ip6_dst)) {
+        } else if ((ip_ver == 6) && have_ip6_addr && ip6_addr_match(&ip6tr->ip6_dst)) {
             /* incoming */
             assign_addr_pair(&ap, iptr, 1);
             direction = 0;
@@ -281,17 +281,17 @@ static void handle_ip_packet(struct ip *iptr, int hw_dir) {
              */
         else if (options.promiscuous_but_choosy) {
             return;        /* junk it */
-        } else if ((IP_V(iptr) == 4) && (iptr->ip_src.s_addr < iptr->ip_dst.s_addr)) {
+        } else if ((ip_ver == 4) && (iptr->ip_src.s_addr < iptr->ip_dst.s_addr)) {
             assign_addr_pair(&ap, iptr, 1);
             direction = 0;
-        } else if (IP_V(iptr) == 4) {
+        } else if (ip_ver == 4) {
             assign_addr_pair(&ap, iptr, 0);
             direction = 0;
         }
         /* Drop other uncertain packages. */
     }
 
-    if (IP_V(iptr) == 4 && options.netfilter != 0) {
+    if (ip_ver == 4 && options.netfilter != 0) {
         /* 
          * Net filter on, assign direction according to netmask 
          */
@@ -309,12 +309,12 @@ static void handle_ip_packet(struct ip *iptr, int hw_dir) {
         }
     }
 
-    if (IP_V(iptr) == 6 && options.netfilter6 != 0) {
+    if (ip_ver == 6 && options.netfilter6 != 0) {
         /*
          * Net filter IPv6 active.
          */
         int j;
-        //else if((IP_V(iptr) == 6) && have_ip6_addr && ip6_addr_match(&ip6tr->ip6_dst)) {
+        //else if((ip_ver == 6) && have_ip6_addr && ip6_addr_match(&ip6tr->ip6_dst)) {
         /* First reduce the participating addresses using the netfilter prefix.
          * We need scratch pads to do this.
          */
@@ -347,14 +347,14 @@ static void handle_ip_packet(struct ip *iptr, int hw_dir) {
 
 #if 1
     /* Test if link-local IPv6 packets should be dropped. */
-    if (IP_V(iptr) == 6 && !options.link_local
+    if (ip_ver == 6 && !options.link_local
         && (IN6_IS_ADDR_LINKLOCAL(&ip6tr->ip6_dst)
             || IN6_IS_ADDR_LINKLOCAL(&ip6tr->ip6_src)))
         return;
 #endif
 
     /* Do address resolving. */
-    switch (IP_V(iptr)) {
+    switch (ip_ver) {
         case 4:
             ap.protocol = iptr->ip_p;
             /* Add the addresses to be resolved */
@@ -384,7 +384,7 @@ static void handle_ip_packet(struct ip *iptr, int hw_dir) {
     }
 
     /* Do accounting. */
-    switch (IP_V(iptr)) {
+    switch (ip_ver) {
         case 4:
             len = ntohs(iptr->ip_len);
             break;
@@ -397,8 +397,8 @@ static void handle_ip_packet(struct ip *iptr, int hw_dir) {
 
     /* Update record */
     ht->last_write = history_pos;
-    if (((IP_V(iptr) == 4) && (iptr->ip_src.s_addr == ap.src.s_addr))
-        || ((IP_V(iptr) == 6) && !memcmp(&ip6tr->ip6_src, &ap.src6, sizeof(ap.src6)))) {
+    if (((ip_ver == 4) && (iptr->ip_src.s_addr == ap.src.s_addr))
+        || ((ip_ver == 6) && !memcmp(&ip6tr->ip6_src, &ap.src6, sizeof(ap.src6)))) {
         ht->sent[history_pos] += len;
         ht->total_sent += len;
     } else {

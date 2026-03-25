@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../../include/hash.h"
 #include "../../include/iftop.h"
 
@@ -22,6 +23,7 @@ hash_status_enum hash_insert(hash_type *hash_table, void *key, void *rec) {
     p->next = p0;
     p->key = hash_table->copy_key(key);
     p->rec = rec;
+    p->bucket = bucket;
     return HASH_STATUS_OK;
 }
 
@@ -57,18 +59,17 @@ hash_status_enum hash_delete(hash_type *hash_table, void *key) {
     return HASH_STATUS_OK;
 }
 
-hash_status_enum hash_find(hash_type *hash_table, void *key, void **rec) {
+hash_status_enum __attribute__((hot)) hash_find(hash_type *hash_table, void *key, void **rec) {
     hash_node_type *p;
+    int bucket;
 
-    /*******************************
-     *  find node containing data  *
-     *******************************/
-    p = hash_table->table[hash_table->hash(key)];
+    bucket = hash_table->hash(key);
+    p = hash_table->table[bucket];
 
     while (p && !hash_table->compare(p->key, key)) {
         p = p->next;
     }
-    if (!p) return HASH_STATUS_KEY_NOT_FOUND;
+    if (__builtin_expect(!p, 0)) return HASH_STATUS_KEY_NOT_FOUND;
     *rec = p->rec;
     return HASH_STATUS_OK;
 }
@@ -80,7 +81,7 @@ hash_status_enum hash_next_item(hash_type *hash_table, hash_node_type **ppnode) 
             *ppnode = (*ppnode)->next;
             return HASH_STATUS_OK;
         }
-        i = hash_table->hash((*ppnode)->key) + 1;
+        i = (*ppnode)->bucket + 1;
     } else {
         /* first node */
         i = 0;
@@ -96,6 +97,31 @@ hash_status_enum hash_next_item(hash_type *hash_table, hash_node_type **ppnode) 
     return HASH_STATUS_OK;
 }
 
+/*
+ * Delete a node by pointer (avoids re-hashing). Bucket index is cached in node.
+ */
+hash_status_enum hash_delete_node(hash_type *hash_table, hash_node_type *node) {
+    hash_node_type *p0, *p;
+    int bucket = node->bucket;
+
+    p0 = NULL;
+    p = hash_table->table[bucket];
+    while (p && p != node) {
+        p0 = p;
+        p = p->next;
+    }
+    if (!p) return HASH_STATUS_KEY_NOT_FOUND;
+
+    if (p0)
+        p0->next = p->next;
+    else
+        hash_table->table[bucket] = p->next;
+
+    hash_table->delete_key(p->key);
+    free(p);
+    return HASH_STATUS_OK;
+}
+
 void hash_delete_all(hash_type *hash_table) {
     int i;
     hash_node_type *n, *nn;
@@ -107,8 +133,27 @@ void hash_delete_all(hash_type *hash_table) {
             free(n);
             n = nn;
         }
-        hash_table->table[i] = NULL;
     }
+    memset(hash_table->table, 0, hash_table->size * sizeof *hash_table->table);
+}
+
+/*
+ * Delete all nodes AND free their rec pointers.
+ */
+void hash_delete_all_free(hash_type *hash_table) {
+    int i;
+    hash_node_type *n, *nn;
+    for (i = 0; i < hash_table->size; i++) {
+        n = hash_table->table[i];
+        while (n != NULL) {
+            nn = n->next;
+            hash_table->delete_key(n->key);
+            free(n->rec);
+            free(n);
+            n = nn;
+        }
+    }
+    memset(hash_table->table, 0, hash_table->size * sizeof *hash_table->table);
 }
 
 

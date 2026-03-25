@@ -17,6 +17,7 @@ typedef struct node_tag {
     struct node_tag *next;       /* next node */
     void *key;                /* key */
     void *rec;                /* user data */
+    int bucket;               /* cached bucket index */
 } hash_node_type;
 
 typedef struct {
@@ -45,6 +46,10 @@ hash_status_enum hash_find(hash_type *hash_table, void *key, void **rec);
 
 hash_status_enum hash_next_item(hash_type *hash_table, hash_node_type **ppnode);
 
+hash_status_enum hash_delete_node(hash_type *hash_table, hash_node_type *node);
+
 void hash_delete_all(hash_type *hash_table);
+
+void hash_delete_all_free(hash_type *hash_table);
 
 #endif /* __HASH_H_ */

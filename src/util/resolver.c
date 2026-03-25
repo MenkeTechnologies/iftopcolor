@@ -467,11 +467,11 @@ void resolve(int af, void *addr, char *result, int buflen) {
         void **void_pp;
     } u_hostname = {&hostname};
     int added = 0;
-    struct addr_storage *raddr;
+    struct addr_storage raddr_stack;
+    struct addr_storage *raddr = &raddr_stack;
 
     if (options.dnsresolution == 1) {
 
-        raddr = malloc(sizeof *raddr);
         memset(raddr, 0, sizeof *raddr);
         raddr->af = af;
         raddr->len = (af == AF_INET ? sizeof(struct in_addr)
@@ -481,9 +481,7 @@ void resolve(int af, void *addr, char *result, int buflen) {
         pthread_mutex_lock(&resolver_queue_mutex);
 
         if (hash_find(ns_hash, raddr, u_hostname.void_pp) == HASH_STATUS_OK) {
-            /* Found => already resolved, or on the queue, no need to keep
-	     * it around */
-            free(raddr);
+            /* Found => already resolved, or on the queue */
         } else {
             hostname = xmalloc(INET6_ADDRSTRLEN);
             inet_ntop(af, &raddr->addr, hostname, INET6_ADDRSTRLEN);
