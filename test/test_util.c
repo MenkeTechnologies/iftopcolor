@@ -285,6 +285,98 @@ TEST(xfree_after_xstrdup) {
     xfree(p);
 }
 
+/* === xmalloc + xrealloc chain === */
+
+TEST(xmalloc_realloc_chain) {
+    char *p = xmalloc(4);
+    memcpy(p, "abc", 4);
+    p = xrealloc(p, 16);
+    ASSERT_STR_EQ(p, "abc");
+    p = xrealloc(p, 64);
+    ASSERT_STR_EQ(p, "abc");
+    p = xrealloc(p, 8);
+    ASSERT_STR_EQ(p, "abc");
+    free(p);
+}
+
+/* === xcalloc large zeroed === */
+
+TEST(xcalloc_large_zeroed) {
+    size_t n = 4096;
+    char *p = xcalloc(n, 1);
+    for (size_t i = 0; i < n; i++)
+        ASSERT_EQ(p[i], 0);
+    free(p);
+}
+
+/* === xstrdup multiple independent copies === */
+
+TEST(xstrdup_multiple_independent) {
+    char *a = xstrdup("shared");
+    char *b = xstrdup("shared");
+    ASSERT(a != b);
+    ASSERT_STR_EQ(a, b);
+    a[0] = 'X';
+    ASSERT_STR_EQ(b, "shared");
+    free(a);
+    free(b);
+}
+
+/* === xmalloc write then realloc preserves === */
+
+TEST(xmalloc_write_pattern) {
+    unsigned char *p = xmalloc(256);
+    for (int i = 0; i < 256; i++)
+        p[i] = (unsigned char)i;
+    p = xrealloc(p, 512);
+    for (int i = 0; i < 256; i++)
+        ASSERT_EQ(p[i], (unsigned char)i);
+    free(p);
+}
+
+/* === xcalloc array of pointers === */
+
+TEST(xcalloc_pointer_array) {
+    void **ptrs = xcalloc(100, sizeof(void *));
+    for (int i = 0; i < 100; i++)
+        ASSERT_NULL(ptrs[i]);
+    free(ptrs);
+}
+
+/* === xfree multiple nulls === */
+
+TEST(xfree_multiple_nulls) {
+    for (int i = 0; i < 100; i++)
+        xfree(NULL);
+}
+
+/* === xstrdup very long === */
+
+TEST(xstrdup_4k_string) {
+    char *buf = xmalloc(4097);
+    memset(buf, 'A', 4096);
+    buf[4096] = '\0';
+    char *copy = xstrdup(buf);
+    ASSERT_EQ(strlen(copy), 4096);
+    ASSERT_EQ(copy[0], 'A');
+    ASSERT_EQ(copy[4095], 'A');
+    free(buf);
+    free(copy);
+}
+
+/* === xrealloc multiple shrinks === */
+
+TEST(xrealloc_multiple_shrinks) {
+    char *p = xmalloc(1024);
+    memset(p, 'Z', 1024);
+    for (int size = 512; size >= 1; size /= 2) {
+        p = xrealloc(p, size);
+        ASSERT_NOT_NULL(p);
+        ASSERT_EQ(p[0], 'Z');
+    }
+    free(p);
+}
+
 int main(void) {
     TEST_SUITE("Util Tests");
 
@@ -321,6 +413,14 @@ int main(void) {
     RUN(xfree_after_xmalloc);
     RUN(xfree_after_xcalloc);
     RUN(xfree_after_xstrdup);
+    RUN(xmalloc_realloc_chain);
+    RUN(xcalloc_large_zeroed);
+    RUN(xstrdup_multiple_independent);
+    RUN(xmalloc_write_pattern);
+    RUN(xcalloc_pointer_array);
+    RUN(xfree_multiple_nulls);
+    RUN(xstrdup_4k_string);
+    RUN(xrealloc_multiple_shrinks);
 
     TEST_REPORT();
 }

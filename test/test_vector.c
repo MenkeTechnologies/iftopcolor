@@ -629,6 +629,129 @@ TEST(vector_remove_and_push_mix) {
     vector_delete(v);
 }
 
+/* === Capacity behavior after shrink === */
+
+TEST(vector_capacity_after_full_pop) {
+    vector v = vector_new();
+    for (int i = 0; i < 100; i++)
+        vector_push_back(v, item_long(i));
+    while (v->n_used > 0)
+        vector_pop_back(v);
+    /* After popping all, capacity should be > 0 and >= n_used */
+    ASSERT(v->capacity > 0);
+    ASSERT(v->capacity >= v->n_used);
+    vector_delete(v);
+}
+
+TEST(vector_usable_after_shrink) {
+    vector v = vector_new();
+    for (int i = 0; i < 32; i++)
+        vector_push_back(v, item_long(i));
+    while (v->n_used > 0)
+        vector_pop_back(v);
+    /* Should be able to push again after full shrink */
+    vector_push_back(v, item_long(999));
+    ASSERT_EQ(v->n_used, 1);
+    ASSERT_EQ(vector_back(v).num, 999);
+    vector_delete(v);
+}
+
+/* === Remove during pointer iteration === */
+
+TEST(vector_remove_odd_pointers) {
+    vector v = vector_new();
+    for (int i = 0; i < 10; i++)
+        vector_push_back(v, item_ptr(xstrdup(i % 2 == 0 ? "even" : "odd")));
+    item *t = v->items;
+    while (t < v->items + v->n_used) {
+        if (strcmp((char *)t->ptr, "odd") == 0) {
+            free(t->ptr);
+            t = vector_remove(v, t);
+        } else {
+            t++;
+        }
+    }
+    ASSERT_EQ(v->n_used, 5);
+    for (size_t i = 0; i < v->n_used; i++)
+        ASSERT_STR_EQ((char *)v->items[i].ptr, "even");
+    vector_delete_free(v);
+}
+
+/* === Back after remove === */
+
+TEST(vector_back_after_remove_last) {
+    vector v = vector_new();
+    vector_push_back(v, item_long(10));
+    vector_push_back(v, item_long(20));
+    vector_push_back(v, item_long(30));
+    vector_remove(v, &v->items[2]);
+    ASSERT_EQ(vector_back(v).num, 20);
+    vector_delete(v);
+}
+
+/* === Multiple resizes down and up === */
+
+TEST(vector_resize_up_down_up) {
+    vector v = vector_new();
+    /* Push to 64 capacity */
+    for (int i = 0; i < 40; i++)
+        vector_push_back(v, item_long(i));
+    ASSERT(v->capacity >= 40);
+    /* Pop down to trigger shrinks */
+    while (v->n_used > 2)
+        vector_pop_back(v);
+    size_t small_cap = v->capacity;
+    /* Grow again */
+    for (int i = 0; i < 100; i++)
+        vector_push_back(v, item_long(i));
+    ASSERT(v->capacity > small_cap);
+    ASSERT_EQ(v->items[0].num, 0); /* original first two preserved */
+    ASSERT_EQ(v->items[1].num, 1);
+    vector_delete(v);
+}
+
+/* === Reallocate to same size === */
+
+TEST(vector_reallocate_same_size) {
+    vector v = vector_new();
+    for (int i = 0; i < 10; i++)
+        vector_push_back(v, item_long(i * 5));
+    vector_reallocate(v, 16); /* same as initial capacity */
+    ASSERT_EQ(v->capacity, 16);
+    for (int i = 0; i < 10; i++)
+        ASSERT_EQ(v->items[i].num, i * 5);
+    vector_delete(v);
+}
+
+/* === Push back returns correct back value === */
+
+TEST(vector_push_back_then_back) {
+    vector v = vector_new();
+    for (int i = 0; i < 100; i++) {
+        vector_push_back(v, item_long(i * 3));
+        ASSERT_EQ(vector_back(v).num, i * 3);
+    }
+    vector_delete(v);
+}
+
+/* === Large pointer storage === */
+
+TEST(vector_store_100_strings) {
+    vector v = vector_new();
+    for (int i = 0; i < 100; i++) {
+        char buf[64];
+        snprintf(buf, sizeof(buf), "item_number_%d_with_padding", i);
+        vector_push_back(v, item_ptr(xstrdup(buf)));
+    }
+    ASSERT_EQ(v->n_used, 100);
+    for (int i = 0; i < 100; i++) {
+        char buf[64];
+        snprintf(buf, sizeof(buf), "item_number_%d_with_padding", i);
+        ASSERT_STR_EQ((char *)v->items[i].ptr, buf);
+    }
+    vector_delete_free(v);
+}
+
 int main(void) {
     TEST_SUITE("Vector Tests");
 
@@ -692,6 +815,14 @@ int main(void) {
     RUN(vector_capacity_always_ge_used);
     RUN(vector_capacity_power_of_two);
     RUN(vector_remove_and_push_mix);
+    RUN(vector_capacity_after_full_pop);
+    RUN(vector_usable_after_shrink);
+    RUN(vector_remove_odd_pointers);
+    RUN(vector_back_after_remove_last);
+    RUN(vector_resize_up_down_up);
+    RUN(vector_reallocate_same_size);
+    RUN(vector_push_back_then_back);
+    RUN(vector_store_100_strings);
 
     TEST_REPORT();
 }

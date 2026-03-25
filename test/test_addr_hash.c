@@ -694,6 +694,179 @@ TEST(addr_hash_ipv6_100_entries) {
     addr_hash_teardown(h);
 }
 
+/* === UDP protocol === */
+
+TEST(addr_hash_udp_flow) {
+    hash_type *h = addr_hash_create();
+    addr_pair ap = make_ipv4_pair("8.8.8.8", 53, "192.168.1.1", 5000, 17);
+    int val = 100;
+    addr_hash_insert(h, &ap, &val);
+    void *rec = NULL;
+    ASSERT_EQ(addr_hash_find(h, &ap, &rec), HASH_STATUS_OK);
+    ASSERT_EQ(*(int *)rec, 100);
+    addr_hash_teardown(h);
+}
+
+/* === Same addresses different protocols are distinct === */
+
+TEST(addr_hash_tcp_udp_distinct) {
+    hash_type *h = addr_hash_create();
+    addr_pair tcp = make_ipv4_pair("10.0.0.1", 80, "10.0.0.2", 443, 6);
+    addr_pair udp = make_ipv4_pair("10.0.0.1", 80, "10.0.0.2", 443, 17);
+    int v_tcp = 1, v_udp = 2;
+    addr_hash_insert(h, &tcp, &v_tcp);
+    addr_hash_insert(h, &udp, &v_udp);
+    ASSERT_EQ(addr_hash_count(h), 2);
+    void *rec = NULL;
+    ASSERT_EQ(addr_hash_find(h, &tcp, &rec), HASH_STATUS_OK);
+    ASSERT_EQ(*(int *)rec, 1);
+    ASSERT_EQ(addr_hash_find(h, &udp, &rec), HASH_STATUS_OK);
+    ASSERT_EQ(*(int *)rec, 2);
+    addr_hash_teardown(h);
+}
+
+/* === Pool reuse after clear === */
+
+TEST(addr_hash_pool_reuse_after_clear) {
+    hash_type *h = addr_hash_create();
+    /* Fill then clear, then fill again - pool should reuse freed nodes */
+    for (int round = 0; round < 5; round++) {
+        int vals[100];
+        for (int i = 0; i < 100; i++) {
+            addr_pair ap;
+            memset(&ap, 0, sizeof(ap));
+            ap.address_family = AF_INET;
+            ap.src.s_addr = htonl(i);
+            ap.dst.s_addr = htonl(i + 1000);
+            ap.src_port = i;
+            ap.dst_port = 80;
+            ap.protocol = 6;
+            vals[i] = round * 100 + i;
+            addr_hash_insert(h, &ap, &vals[i]);
+        }
+        ASSERT_EQ(addr_hash_count(h), 100);
+        addr_hash_clear(h);
+        ASSERT_EQ(addr_hash_count(h), 0);
+    }
+    hash_destroy(h);
+    free(h);
+}
+
+/* === 2000 entries stress === */
+
+TEST(addr_hash_2000_entries) {
+    hash_type *h = addr_hash_create();
+    int vals[2000];
+    for (int i = 0; i < 2000; i++) {
+        addr_pair ap;
+        memset(&ap, 0, sizeof(ap));
+        ap.address_family = AF_INET;
+        ap.src.s_addr = htonl(0x0a000000 + i);
+        ap.dst.s_addr = htonl(0xc0a80001 + (i % 256));
+        ap.src_port = 1024 + (i % 60000);
+        ap.dst_port = 80 + (i % 10);
+        ap.protocol = 6;
+        vals[i] = i;
+        addr_hash_insert(h, &ap, &vals[i]);
+    }
+    ASSERT_EQ(addr_hash_count(h), 2000);
+    /* Spot check */
+    for (int i = 0; i < 2000; i += 200) {
+        addr_pair ap;
+        memset(&ap, 0, sizeof(ap));
+        ap.address_family = AF_INET;
+        ap.src.s_addr = htonl(0x0a000000 + i);
+        ap.dst.s_addr = htonl(0xc0a80001 + (i % 256));
+        ap.src_port = 1024 + (i % 60000);
+        ap.dst_port = 80 + (i % 10);
+        ap.protocol = 6;
+        void *rec = NULL;
+        ASSERT_EQ(addr_hash_find(h, &ap, &rec), HASH_STATUS_OK);
+        ASSERT_EQ(*(int *)rec, i);
+    }
+    addr_hash_teardown(h);
+}
+
+/* === addr_hash_delete_all_free === */
+
+TEST(addr_hash_delete_all_free_with_malloc_recs) {
+    hash_type *h = addr_hash_create();
+    for (int i = 0; i < 20; i++) {
+        addr_pair ap;
+        memset(&ap, 0, sizeof(ap));
+        ap.address_family = AF_INET;
+        ap.src.s_addr = htonl(i);
+        ap.protocol = 6;
+        int *val = malloc(sizeof(int));
+        *val = i;
+        addr_hash_insert(h, &ap, val);
+    }
+    addr_hash_delete_all_free(h);
+    ASSERT_EQ(addr_hash_count(h), 0);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === IPv6 multiple subnets === */
+
+TEST(addr_hash_ipv6_multiple_subnets) {
+    hash_type *h = addr_hash_create();
+    int vals[30];
+    char *subnets[] = {"2001:db8:1::", "2001:db8:2::", "2001:db8:3::"};
+    for (int s = 0; s < 3; s++) {
+        for (int i = 0; i < 10; i++) {
+            char src[64], dst[64];
+            snprintf(src, sizeof(src), "%s%d", subnets[s], i + 1);
+            snprintf(dst, sizeof(dst), "%s%d", subnets[s], i + 100);
+            addr_pair ap = make_ipv6_pair(src, 1000 + i, dst, 443, 6);
+            vals[s * 10 + i] = s * 10 + i;
+            addr_hash_insert(h, &ap, &vals[s * 10 + i]);
+        }
+    }
+    ASSERT_EQ(addr_hash_count(h), 30);
+    addr_hash_teardown(h);
+}
+
+/* === Delete half then verify remainder === */
+
+TEST(addr_hash_delete_half) {
+    hash_type *h = addr_hash_create();
+    int vals[20];
+    addr_pair pairs[20];
+    for (int i = 0; i < 20; i++) {
+        memset(&pairs[i], 0, sizeof(addr_pair));
+        pairs[i].address_family = AF_INET;
+        pairs[i].src.s_addr = htonl(i);
+        pairs[i].dst.s_addr = htonl(i + 100);
+        pairs[i].src_port = i;
+        pairs[i].dst_port = 80;
+        pairs[i].protocol = 6;
+        vals[i] = i;
+        addr_hash_insert(h, &pairs[i], &vals[i]);
+    }
+    /* Delete even entries via iteration */
+    for (int i = 0; i < 20; i += 2) {
+        void *rec = NULL;
+        if (addr_hash_find(h, &pairs[i], &rec) == HASH_STATUS_OK) {
+            hash_node_type *node = NULL;
+            while (hash_next_item(h, &node) == HASH_STATUS_OK) {
+                if (node->record == &vals[i]) {
+                    addr_hash_delete_node(h, node);
+                    break;
+                }
+            }
+        }
+    }
+    ASSERT_EQ(addr_hash_count(h), 10);
+    /* Verify odd entries remain */
+    for (int i = 1; i < 20; i += 2) {
+        void *rec = NULL;
+        ASSERT_EQ(addr_hash_find(h, &pairs[i], &rec), HASH_STATUS_OK);
+        ASSERT_EQ(*(int *)rec, i);
+    }
+    addr_hash_teardown(h);
+}
+
 int main(void) {
     TEST_SUITE("Addr Hash Tests");
 
@@ -739,6 +912,13 @@ int main(void) {
     RUN(addr_hash_delete_reinsert_cycle);
     RUN(addr_hash_pool_multi_block);
     RUN(addr_hash_ipv6_100_entries);
+    RUN(addr_hash_udp_flow);
+    RUN(addr_hash_tcp_udp_distinct);
+    RUN(addr_hash_pool_reuse_after_clear);
+    RUN(addr_hash_2000_entries);
+    RUN(addr_hash_delete_all_free_with_malloc_recs);
+    RUN(addr_hash_ipv6_multiple_subnets);
+    RUN(addr_hash_delete_half);
 
     TEST_REPORT();
 }

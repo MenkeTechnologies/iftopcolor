@@ -850,6 +850,209 @@ TEST(hash_5000_entries) {
     destroy_str_hash(h);
 }
 
+/* === Int-keyed hash tests === */
+
+TEST(hash_int_key_multiple) {
+    hash_type *h = create_int_hash();
+    int keys[20], vals[20];
+    for (int i = 0; i < 20; i++) {
+        keys[i] = i * 100;
+        vals[i] = i;
+        hash_insert(h, &keys[i], &vals[i]);
+    }
+    for (int i = 0; i < 20; i++) {
+        void *rec = NULL;
+        ASSERT_EQ(hash_find(h, &keys[i], &rec), HASH_STATUS_OK);
+        ASSERT_EQ(*(int *)rec, i);
+    }
+    hash_delete_all(h);
+    hash_destroy(h);
+    free(h);
+}
+
+TEST(hash_int_key_delete) {
+    hash_type *h = create_int_hash();
+    int key = 42, val = 99;
+    hash_insert(h, &key, &val);
+    ASSERT_EQ(hash_delete(h, &key), HASH_STATUS_OK);
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &key, &rec), HASH_STATUS_KEY_NOT_FOUND);
+    hash_destroy(h);
+    free(h);
+}
+
+TEST(hash_int_key_collision) {
+    /* Keys that hash to the same bucket (mod 32) */
+    hash_type *h = create_int_hash();
+    int k1 = 5, k2 = 37, k3 = 69; /* all hash to 5 */
+    int v1 = 10, v2 = 20, v3 = 30;
+    hash_insert(h, &k1, &v1);
+    hash_insert(h, &k2, &v2);
+    hash_insert(h, &k3, &v3);
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &k1, &rec), HASH_STATUS_OK);
+    ASSERT_EQ(*(int *)rec, 10);
+    ASSERT_EQ(hash_find(h, &k2, &rec), HASH_STATUS_OK);
+    ASSERT_EQ(*(int *)rec, 20);
+    ASSERT_EQ(hash_find(h, &k3, &rec), HASH_STATUS_OK);
+    ASSERT_EQ(*(int *)rec, 30);
+    hash_delete_all(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === High load factor === */
+
+static int str_hash_small(void *key) {
+    char *s = (char *)key;
+    unsigned int h = 0;
+    while (*s) h = h * 31 + (unsigned char)*s++;
+    return h % 4;
+}
+
+TEST(hash_high_load_factor) {
+    /* 200 entries in 4-bucket table */
+    hash_type *h = xcalloc(1, sizeof(hash_type));
+    h->size = 4;
+    h->compare = str_compare;
+    h->hash = str_hash_small;
+    h->copy_key = str_copy_key;
+    h->delete_key = str_delete_key;
+    hash_initialise(h);
+    int vals[200];
+    for (int i = 0; i < 200; i++) {
+        vals[i] = i;
+        char key[32];
+        snprintf(key, sizeof(key), "load_%d", i);
+        hash_insert(h, key, &vals[i]);
+    }
+    /* All should still be findable */
+    for (int i = 0; i < 200; i++) {
+        char key[32];
+        snprintf(key, sizeof(key), "load_%d", i);
+        void *rec = NULL;
+        ASSERT_EQ(hash_find(h, key, &rec), HASH_STATUS_OK);
+        ASSERT_EQ(*(int *)rec, i);
+    }
+    hash_delete_all(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === Small table stress === */
+
+TEST(hash_single_bucket_stress) {
+    hash_type *h = xcalloc(1, sizeof(hash_type));
+    h->size = 4;
+    h->compare = str_compare;
+    h->hash = always_zero_hash;
+    h->copy_key = str_copy_key;
+    h->delete_key = str_delete_key;
+    hash_initialise(h);
+    int vals[50];
+    for (int i = 0; i < 50; i++) {
+        vals[i] = i;
+        char key[16];
+        snprintf(key, sizeof(key), "s%d", i);
+        hash_insert(h, key, &vals[i]);
+    }
+    ASSERT_NOT_NULL(h->table[0]);
+    int count = 0;
+    hash_node_type *node = NULL;
+    while (hash_next_item(h, &node) == HASH_STATUS_OK)
+        count++;
+    ASSERT_EQ(count, 50);
+    /* Delete every other entry */
+    for (int i = 0; i < 50; i += 2) {
+        char key[16];
+        snprintf(key, sizeof(key), "s%d", i);
+        hash_delete(h, key);
+    }
+    count = 0;
+    node = NULL;
+    while (hash_next_item(h, &node) == HASH_STATUS_OK)
+        count++;
+    ASSERT_EQ(count, 25);
+    hash_delete_all(h);
+    hash_destroy(h);
+    free(h);
+}
+
+/* === Delete node during iteration === */
+
+TEST(hash_delete_node_during_iteration) {
+    hash_type *h = create_str_hash();
+    int vals[10];
+    for (int i = 0; i < 10; i++) {
+        vals[i] = i;
+        char key[8];
+        snprintf(key, sizeof(key), "d%d", i);
+        hash_insert(h, key, &vals[i]);
+    }
+    /* Delete all nodes via repeated iteration from start */
+    int deleted = 0;
+    hash_node_type *node = NULL;
+    while (hash_next_item(h, &node) == HASH_STATUS_OK) {
+        hash_delete_node(h, node);
+        deleted++;
+        node = NULL; /* restart iteration */
+    }
+    ASSERT_EQ(deleted, 10);
+    /* Table should be empty now */
+    node = NULL;
+    ASSERT_EQ(hash_next_item(h, &node), HASH_STATUS_KEY_NOT_FOUND);
+    destroy_str_hash(h);
+}
+
+/* === Iteration sum === */
+
+TEST(hash_iterate_sum_records) {
+    hash_type *h = create_str_hash();
+    int vals[10];
+    for (int i = 0; i < 10; i++) {
+        vals[i] = i + 1;
+        char key[8];
+        snprintf(key, sizeof(key), "v%d", i);
+        hash_insert(h, key, &vals[i]);
+    }
+    int sum = 0;
+    hash_node_type *node = NULL;
+    while (hash_next_item(h, &node) == HASH_STATUS_OK)
+        sum += *(int *)node->record;
+    ASSERT_EQ(sum, 55); /* 1+2+...+10 */
+    destroy_str_hash(h);
+}
+
+/* === Re-destroy is safe === */
+
+TEST(hash_double_destroy) {
+    hash_type h;
+    h.size = 8;
+    hash_initialise(&h);
+    hash_destroy(&h);
+    /* table is NULL after destroy, second destroy should handle it */
+}
+
+/* === Delete non-existent from collision chain === */
+
+TEST(hash_delete_missing_from_chain) {
+    hash_type *h = xcalloc(1, sizeof(hash_type));
+    h->size = 4;
+    h->compare = str_compare;
+    h->hash = always_zero_hash;
+    h->copy_key = str_copy_key;
+    h->delete_key = str_delete_key;
+    hash_initialise(h);
+    int v = 1;
+    hash_insert(h, "exists", &v);
+    ASSERT_EQ(hash_delete(h, "nope"), HASH_STATUS_KEY_NOT_FOUND);
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, "exists", &rec), HASH_STATUS_OK);
+    hash_delete_all(h);
+    hash_destroy(h);
+    free(h);
+}
+
 int main(void) {
     TEST_SUITE("Generic Hash Table Tests");
 
@@ -903,6 +1106,15 @@ int main(void) {
     RUN(hash_alternating_insert_delete);
     RUN(hash_collision_iterate_count);
     RUN(hash_5000_entries);
+    RUN(hash_int_key_multiple);
+    RUN(hash_int_key_delete);
+    RUN(hash_int_key_collision);
+    RUN(hash_high_load_factor);
+    RUN(hash_single_bucket_stress);
+    RUN(hash_delete_node_during_iteration);
+    RUN(hash_iterate_sum_records);
+    RUN(hash_double_destroy);
+    RUN(hash_delete_missing_from_chain);
 
     TEST_REPORT();
 }

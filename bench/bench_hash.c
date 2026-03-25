@@ -289,8 +289,7 @@ static void bench_mixed_workload(void) {
 }
 
 int main(void) {
-    printf("iftopcolor hash benchmark suite\n");
-    printf("================================\n");
+    BENCH_HEADER("HASH TABLE PERFORMANCE PROFILER");
 
     generate_flows();
 
@@ -302,6 +301,6 @@ int main(void) {
     bench_iteration();
     bench_mixed_workload();
 
-    printf("\nDone.\n");
+    BENCH_FOOTER();
     return 0;
 }

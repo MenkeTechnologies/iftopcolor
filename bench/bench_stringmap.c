@@ -166,8 +166,7 @@ static void bench_duplicate_insert(void) {
 }
 
 int main(void) {
-    printf("iftopcolor stringmap benchmark suite\n");
-    printf("=====================================\n");
+    BENCH_HEADER("STRINGMAP BINARY TREE PROFILER");
 
     generate_keys();
 
@@ -179,6 +178,6 @@ int main(void) {
     bench_insert_find_pattern();
     bench_duplicate_insert();
 
-    printf("\nDone.\n");
+    BENCH_FOOTER();
     return 0;
 }

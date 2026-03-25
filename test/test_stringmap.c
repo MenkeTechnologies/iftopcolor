@@ -449,6 +449,121 @@ TEST(stringmap_case_sensitive) {
     stringmap_delete(s);
 }
 
+/* === Special character keys === */
+
+TEST(stringmap_special_char_keys) {
+    stringmap s = stringmap_new();
+    stringmap_insert(s, "key-with-dashes", item_long(1));
+    stringmap_insert(s, "key.with.dots", item_long(2));
+    stringmap_insert(s, "key_with_underscores", item_long(3));
+    stringmap_insert(s, "key/with/slashes", item_long(4));
+    ASSERT_EQ(stringmap_find(s, "key-with-dashes")->data.num, 1);
+    ASSERT_EQ(stringmap_find(s, "key.with.dots")->data.num, 2);
+    ASSERT_EQ(stringmap_find(s, "key_with_underscores")->data.num, 3);
+    ASSERT_EQ(stringmap_find(s, "key/with/slashes")->data.num, 4);
+    stringmap_delete(s);
+}
+
+/* === Mixed pointer and long storage === */
+
+TEST(stringmap_mixed_ptr_long) {
+    stringmap s = stringmap_new();
+    stringmap_insert(s, "count", item_long(42));
+    stringmap_insert(s, "name", item_ptr(xstrdup("hello")));
+    ASSERT_EQ(stringmap_find(s, "count")->data.num, 42);
+    ASSERT_STR_EQ((char *)stringmap_find(s, "name")->data.ptr, "hello");
+    /* Free only the string value */
+    free(stringmap_find(s, "name")->data.ptr);
+    stringmap_delete(s);
+}
+
+/* === Deep left chain find === */
+
+TEST(stringmap_deep_left_chain) {
+    stringmap s = stringmap_new();
+    /* Insert in reverse order to create deep left chain */
+    for (int i = 99; i >= 0; i--) {
+        char key[16];
+        snprintf(key, sizeof(key), "k%03d", i);
+        stringmap_insert(s, key, item_long(i));
+    }
+    /* First key should be deep in left chain */
+    stringmap f = stringmap_find(s, "k000");
+    ASSERT_NOT_NULL(f);
+    ASSERT_EQ(f->data.num, 0);
+    /* Last inserted should be root */
+    f = stringmap_find(s, "k099");
+    ASSERT_NOT_NULL(f);
+    ASSERT_EQ(f->data.num, 99);
+    stringmap_delete(s);
+}
+
+/* === Delete and recreate === */
+
+TEST(stringmap_delete_then_recreate) {
+    stringmap s = stringmap_new();
+    stringmap_insert(s, "a", item_long(1));
+    stringmap_insert(s, "b", item_long(2));
+    stringmap_delete(s);
+    /* Create new one and ensure it works */
+    s = stringmap_new();
+    stringmap_insert(s, "x", item_long(10));
+    ASSERT_EQ(stringmap_find(s, "x")->data.num, 10);
+    ASSERT_NULL(stringmap_find(s, "a"));
+    stringmap_delete(s);
+}
+
+/* === 2000 entries stress === */
+
+TEST(stringmap_2000_entries) {
+    stringmap s = stringmap_new();
+    for (int i = 0; i < 2000; i++) {
+        char key[32];
+        snprintf(key, sizeof(key), "stress_%05d", i);
+        stringmap_insert(s, key, item_long(i));
+    }
+    /* Verify all findable */
+    for (int i = 0; i < 2000; i++) {
+        char key[32];
+        snprintf(key, sizeof(key), "stress_%05d", i);
+        stringmap f = stringmap_find(s, key);
+        ASSERT_NOT_NULL(f);
+        ASSERT_EQ(f->data.num, i);
+    }
+    /* Verify misses */
+    ASSERT_NULL(stringmap_find(s, "stress_02000"));
+    ASSERT_NULL(stringmap_find(s, "nope"));
+    stringmap_delete(s);
+}
+
+/* === Pointer values with delete_free === */
+
+TEST(stringmap_delete_free_100) {
+    stringmap s = stringmap_new();
+    for (int i = 0; i < 100; i++) {
+        char key[16];
+        snprintf(key, sizeof(key), "p%d", i);
+        char *val = xmalloc(16);
+        snprintf(val, 16, "val_%d", i);
+        stringmap_insert(s, key, item_ptr(val));
+    }
+    stringmap_delete_free(s);
+}
+
+/* === Whitespace in keys === */
+
+TEST(stringmap_whitespace_keys) {
+    stringmap s = stringmap_new();
+    stringmap_insert(s, "a b", item_long(1));
+    stringmap_insert(s, "a\tb", item_long(2));
+    stringmap_insert(s, " a", item_long(3));
+    ASSERT_EQ(stringmap_find(s, "a b")->data.num, 1);
+    ASSERT_EQ(stringmap_find(s, "a\tb")->data.num, 2);
+    ASSERT_EQ(stringmap_find(s, " a")->data.num, 3);
+    ASSERT_NULL(stringmap_find(s, "ab"));
+    stringmap_delete(s);
+}
+
 int main(void) {
     TEST_SUITE("Stringmap Tests");
 
@@ -491,6 +606,13 @@ int main(void) {
     RUN(stringmap_duplicate_update_all);
     RUN(stringmap_delete_free_many);
     RUN(stringmap_case_sensitive);
+    RUN(stringmap_special_char_keys);
+    RUN(stringmap_mixed_ptr_long);
+    RUN(stringmap_deep_left_chain);
+    RUN(stringmap_delete_then_recreate);
+    RUN(stringmap_2000_entries);
+    RUN(stringmap_delete_free_100);
+    RUN(stringmap_whitespace_keys);
 
     TEST_REPORT();
 }

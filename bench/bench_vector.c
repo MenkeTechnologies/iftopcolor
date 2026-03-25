@@ -96,15 +96,83 @@ static void bench_iterate(void) {
     vector_delete(v);
 }
 
+static void bench_remove_back(void) {
+    BENCH_SECTION("Vector - Remove (back, no memmove)");
+
+    int sizes[] = {100, 500, 1000};
+    int nsizes = sizeof(sizes) / sizeof(sizes[0]);
+
+    for (int s = 0; s < nsizes; s++) {
+        int n = sizes[s];
+        char label[64];
+        snprintf(label, sizeof(label), "remove from back (%d items)", n);
+        BENCH_RUN(label, 1000, {
+            vector v = vector_new();
+            for (int j = 0; j < n; j++)
+                vector_push_back(v, item_long(j));
+            while (v->n_used > 0)
+                vector_remove(v, &v->items[v->n_used - 1]);
+            vector_delete(v);
+        });
+    }
+}
+
+static void bench_reallocate(void) {
+    BENCH_SECTION("Vector - Reallocate");
+
+    BENCH_RUN("reallocate grow 16 -> 10000", 10000, {
+        vector v = vector_new();
+        vector_reallocate(v, 10000);
+        bench_use((int)v->capacity);
+        vector_delete(v);
+    });
+
+    BENCH_RUN("push 100 then reallocate to 10000", 10000, {
+        vector v = vector_new();
+        for (int j = 0; j < 100; j++)
+            vector_push_back(v, item_long(j));
+        vector_reallocate(v, 10000);
+        bench_use((int)v->items[99].num);
+        vector_delete(v);
+    });
+}
+
+static void bench_pointer_storage(void) {
+    BENCH_SECTION("Vector - Pointer Storage");
+
+    BENCH_RUN("push 1000 string pointers", 1000, {
+        vector v = vector_new();
+        for (int j = 0; j < 1000; j++)
+            vector_push_back(v, item_ptr(xstrdup("bench_string")));
+        vector_delete_free(v);
+    });
+}
+
+static void bench_remove_middle(void) {
+    BENCH_SECTION("Vector - Remove (middle, partial memmove)");
+
+    BENCH_RUN("remove from middle (1000 items)", 100, {
+        vector v = vector_new();
+        for (int j = 0; j < 1000; j++)
+            vector_push_back(v, item_long(j));
+        while (v->n_used > 0)
+            vector_remove(v, &v->items[v->n_used / 2]);
+        vector_delete(v);
+    });
+}
+
 int main(void) {
-    printf("iftopcolor vector benchmark suite\n");
-    printf("==================================\n");
+    BENCH_HEADER("VECTOR OPERATIONS PROFILER");
 
     bench_push_back();
     bench_push_pop();
     bench_remove();
+    bench_remove_back();
+    bench_remove_middle();
     bench_iterate();
+    bench_reallocate();
+    bench_pointer_storage();
 
-    printf("\nDone.\n");
+    BENCH_FOOTER();
     return 0;
 }

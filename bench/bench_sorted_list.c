@@ -131,17 +131,83 @@ static void bench_single_vs_batch(void) {
            (double)single_ns / (double)batch_ns);
 }
 
+static void bench_destroy(void) {
+    BENCH_SECTION("Sorted List - Destroy");
+
+    int sizes[] = {100, 500, 1000, 5000};
+    int nsizes = sizeof(sizes) / sizeof(sizes[0]);
+
+    for (int s = 0; s < nsizes; s++) {
+        int n = sizes[s];
+        char label[64];
+        snprintf(label, sizeof(label), "destroy %d items (after batch)", n);
+        BENCH_RUN(label, 1000, {
+            memcpy(items_batch, items, n * sizeof(void *));
+            sorted_list_type list;
+            list.compare = compare_long_desc;
+            sorted_list_initialise(&list);
+            sorted_list_insert_batch(&list, items_batch, n);
+            sorted_list_destroy(&list);
+        });
+    }
+}
+
+static void bench_insert_destroy_cycle(void) {
+    BENCH_SECTION("Sorted List - Insert/Destroy Cycles");
+
+    BENCH_RUN("batch insert 500 + destroy x 100 cycles", 100, {
+        for (int c = 0; c < 100; c++) {
+            memcpy(items_batch, items, 500 * sizeof(void *));
+            sorted_list_type list;
+            list.compare = compare_long_desc;
+            sorted_list_initialise(&list);
+            sorted_list_insert_batch(&list, items_batch, 500);
+            sorted_list_destroy(&list);
+        }
+    });
+}
+
+static void bench_iteration_scaling(void) {
+    BENCH_SECTION("Sorted List - Iteration Scaling");
+
+    int sizes[] = {100, 500, 1000, 5000};
+    int nsizes = sizeof(sizes) / sizeof(sizes[0]);
+
+    for (int s = 0; s < nsizes; s++) {
+        int n = sizes[s];
+        memcpy(items_batch, items, n * sizeof(void *));
+        sorted_list_type list;
+        list.compare = compare_long_desc;
+        sorted_list_initialise(&list);
+        sorted_list_insert_batch(&list, items_batch, n);
+
+        char label[64];
+        snprintf(label, sizeof(label), "iterate %d items", n);
+        BENCH_RUN(label, 10000, {
+            sorted_list_node *node = NULL;
+            int count = 0;
+            while ((node = sorted_list_next_item(&list, node)) != NULL)
+                count++;
+            bench_use(count);
+        });
+
+        sorted_list_destroy(&list);
+    }
+}
+
 int main(void) {
-    printf("iftopcolor sorted_list benchmark suite\n");
-    printf("=======================================\n");
+    BENCH_HEADER("SORTED LIST PERFORMANCE ANALYSIS");
 
     generate_items();
 
     bench_single_insert();
     bench_batch_insert();
     bench_iteration();
+    bench_iteration_scaling();
     bench_single_vs_batch();
+    bench_destroy();
+    bench_insert_destroy_cycle();
 
-    printf("\nDone.\n");
+    BENCH_FOOTER();
     return 0;
 }

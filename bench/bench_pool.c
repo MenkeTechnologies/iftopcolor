@@ -83,13 +83,79 @@ static void bench_alloc_patterns(void) {
     });
 }
 
+static void bench_multi_block(void) {
+    BENCH_SECTION("Multi-Block Pool Allocation (>256 items per block)");
+
+    BENCH_RUN("pool: insert 1000 (4 blocks)", 1000, {
+        hash_type *ht = addr_hash_create();
+        for (int j = 0; j < 1000; j++)
+            addr_hash_insert(ht, &flows[j % N_FLOWS], &dummy_recs[j % N_FLOWS]);
+        clear_addr_nodes(ht);
+        hash_destroy(ht);
+        free(ht);
+    });
+
+    BENCH_RUN("malloc: insert 1000", 1000, {
+        hash_type *ht = addr_hash_create();
+        for (int j = 0; j < 1000; j++)
+            hash_insert(ht, &flows[j % N_FLOWS], &dummy_recs[j % N_FLOWS]);
+        hash_delete_all(ht);
+        hash_destroy(ht);
+        free(ht);
+    });
+}
+
+static void bench_pool_reuse(void) {
+    BENCH_SECTION("Pool Reuse (fill-clear-refill)");
+
+    BENCH_RUN("pool: insert 500, clear, refill x 20", 100, {
+        hash_type *ht = addr_hash_create();
+        for (int r = 0; r < 20; r++) {
+            for (int j = 0; j < 500; j++)
+                addr_hash_insert(ht, &flows[j], &dummy_recs[j]);
+            clear_addr_nodes(ht);
+        }
+        hash_destroy(ht);
+        free(ht);
+    });
+}
+
+static void bench_find_after_churn(void) {
+    BENCH_SECTION("Find Performance After Churn");
+
+    BENCH_RUN("insert 1000, delete 500, find remaining 500", 100, {
+        hash_type *ht = addr_hash_create();
+        for (int j = 0; j < 1000; j++)
+            addr_hash_insert(ht, &flows[j], &dummy_recs[j]);
+        /* Delete first 500 */
+        for (int b = 0; b < ht->size; b++) {
+            while (ht->table[b] != NULL) {
+                hash_node_type *node = ht->table[b];
+                ht->table[b] = node->next;
+                addr_hash_delete_node(ht, node);
+                break;
+            }
+        }
+        /* Find remaining entries */
+        for (int j = 500; j < 1000; j++) {
+            void *rec;
+            addr_hash_find(ht, &flows[j], &rec);
+        }
+        clear_addr_nodes(ht);
+        hash_destroy(ht);
+        free(ht);
+    });
+}
+
 int main(void) {
-    printf("iftopcolor pool allocator benchmark\n");
-    printf("====================================\n");
+    BENCH_HEADER("POOL ALLOCATOR STRESS TEST");
 
     generate_flows();
     bench_alloc_patterns();
+    bench_multi_block();
+    bench_pool_reuse();
+    bench_find_after_churn();
 
-    printf("\nDone.\n");
+    BENCH_FOOTER();
     return 0;
 }

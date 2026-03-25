@@ -196,8 +196,7 @@ static void bench_config_workload(void) {
 }
 
 int main(void) {
-    printf("iftopcolor cfgfile benchmark suite\n");
-    printf("===================================\n");
+    BENCH_HEADER("CONFIG FILE PARSER PROFILER");
 
     bench_set_get_string();
     bench_get_bool();
@@ -207,6 +206,6 @@ int main(void) {
     bench_read_file();
     bench_config_workload();
 
-    printf("\nDone.\n");
+    BENCH_FOOTER();
     return 0;
 }

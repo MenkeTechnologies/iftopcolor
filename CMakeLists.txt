@@ -21,6 +21,19 @@ target_link_libraries(iftop ${CL})
 
 install(TARGETS iftop DESTINATION sbin)
 
+# --- Cyberpunk build banners ---
+add_custom_target(build-banner
+    COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh build-start)
+add_dependencies(iftop build-banner)
+add_custom_command(TARGET iftop POST_BUILD
+    COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh build-end)
+
+add_custom_target(cyberpunk-clean
+    COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh clean-start
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean
+    COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh clean-end
+)
+
 # --- Benchmarks ---
 # Shared sources needed by benchmarks (no UI, no pcap, no resolver)
 set(BENCH_COMMON_SRCS
@@ -64,9 +77,7 @@ target_link_libraries(benchmark_cfgfile -lm)
 add_custom_target(bench
     DEPENDS benchmark_hash benchmark_sorted_list benchmark_vector benchmark_pool benchmark_stringmap
             benchmark_ns_hash benchmark_serv_hash benchmark_cfgfile
-    COMMAND ${CMAKE_COMMAND} -E echo ""
-    COMMAND ${CMAKE_COMMAND} -E echo "=== Running benchmarks ==="
-    COMMAND ${CMAKE_COMMAND} -E echo ""
+    COMMAND ${PROJECT_SOURCE_DIR}/bench/banner.sh start
     COMMAND $<TARGET_FILE:benchmark_hash>
     COMMAND $<TARGET_FILE:benchmark_sorted_list>
     COMMAND $<TARGET_FILE:benchmark_vector>
@@ -75,6 +86,7 @@ add_custom_target(bench
     COMMAND $<TARGET_FILE:benchmark_ns_hash>
     COMMAND $<TARGET_FILE:benchmark_serv_hash>
     COMMAND $<TARGET_FILE:benchmark_cfgfile>
+    COMMAND ${PROJECT_SOURCE_DIR}/bench/banner.sh end
 )
 
 # --- Tests ---
@@ -101,9 +113,7 @@ endforeach()
 add_custom_target(check
     DEPENDS check_vector check_hash check_addr_hash check_sorted_list
             check_stringmap check_ns_hash check_serv_hash check_cfgfile check_util
-    COMMAND ${CMAKE_COMMAND} -E echo ""
-    COMMAND ${CMAKE_COMMAND} -E echo "=== Running tests ==="
-    COMMAND ${CMAKE_COMMAND} -E echo ""
+    COMMAND ${PROJECT_SOURCE_DIR}/test/banner.sh start
     COMMAND $<TARGET_FILE:check_util>
     COMMAND $<TARGET_FILE:check_vector>
     COMMAND $<TARGET_FILE:check_hash>
@@ -113,8 +123,7 @@ add_custom_target(check
     COMMAND $<TARGET_FILE:check_sorted_list>
     COMMAND $<TARGET_FILE:check_stringmap>
     COMMAND $<TARGET_FILE:check_cfgfile>
-    COMMAND ${CMAKE_COMMAND} -E echo ""
-    COMMAND ${CMAKE_COMMAND} -E echo "=== All tests passed ==="
+    COMMAND ${PROJECT_SOURCE_DIR}/test/banner.sh end
 )
 
 

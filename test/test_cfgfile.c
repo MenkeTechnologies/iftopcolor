@@ -558,6 +558,173 @@ TEST(config_set_all_types_then_read) {
     cleanup_tmp();
 }
 
+/* === Multi-line continuation === */
+
+TEST(config_read_file_multi_continuation) {
+    config_init();
+    write_tmp_config("filter-code: tcp port 80 or \\\ntcp port 443 or \\\ntcp port 8080\n");
+    ASSERT_EQ(read_config(tmpfile_path, 0), 1);
+    char *val = config_get_string("filter-code");
+    ASSERT_NOT_NULL(val);
+    cleanup_tmp();
+}
+
+/* === Line without colon === */
+
+TEST(config_read_file_no_colon) {
+    config_init();
+    write_tmp_config("this line has no colon\ninterface: eth0\n");
+    ASSERT_EQ(read_config(tmpfile_path, 0), 1);
+    ASSERT_STR_EQ(config_get_string("interface"), "eth0");
+    cleanup_tmp();
+}
+
+/* === Value containing hash character === */
+
+TEST(config_read_file_value_with_hash) {
+    config_init();
+    write_tmp_config("filter-code: host 10.0.0.1\n");
+    ASSERT_EQ(read_config(tmpfile_path, 0), 1);
+    char *val = config_get_string("filter-code");
+    ASSERT_NOT_NULL(val);
+    ASSERT_STR_EQ(val, "host 10.0.0.1");
+    cleanup_tmp();
+}
+
+/* === Bool edge cases === */
+
+TEST(config_get_bool_1_is_false) {
+    config_init();
+    config_set_string("flag", "1");
+    ASSERT_EQ(config_get_bool("flag"), 0);
+}
+
+TEST(config_get_bool_0_is_false) {
+    config_init();
+    config_set_string("flag", "0");
+    ASSERT_EQ(config_get_bool("flag"), 0);
+}
+
+/* === Int overflow edge cases === */
+
+TEST(config_get_int_max) {
+    config_init();
+    config_set_string("val", "2147483647");
+    int val = 0;
+    ASSERT_EQ(config_get_int("val", &val), 1);
+    ASSERT_EQ(val, 2147483647);
+}
+
+TEST(config_get_int_min) {
+    config_init();
+    config_set_string("val", "-2147483648");
+    int val = 0;
+    ASSERT_EQ(config_get_int("val", &val), 1);
+}
+
+TEST(config_get_int_positive_sign) {
+    config_init();
+    config_set_string("val", "+42");
+    int val = 0;
+    ASSERT_EQ(config_get_int("val", &val), 1);
+    ASSERT_EQ(val, 42);
+}
+
+/* === Float edge cases === */
+
+TEST(config_get_float_very_small) {
+    config_init();
+    config_set_string("rate", "0.001");
+    float val = 0;
+    ASSERT_EQ(config_get_float("rate", &val), 1);
+    ASSERT(val > 0.0009 && val < 0.0011);
+}
+
+TEST(config_get_float_large) {
+    config_init();
+    config_set_string("rate", "999999.99");
+    float val = 0;
+    ASSERT_EQ(config_get_float("rate", &val), 1);
+    ASSERT(val > 999999.0);
+}
+
+/* === Enum edge cases === */
+
+TEST(config_get_enum_missing_key) {
+    config_init();
+    config_enumeration_type sort_enum[] = {
+        {"2s", 0}, {"10s", 1}, {NULL, -1}
+    };
+    int val = -1;
+    /* Key not set, should return 0 */
+    ASSERT_EQ(config_get_enum("nonexistent_key", sort_enum, &val), 0);
+    ASSERT_EQ(val, -1); /* unchanged */
+}
+
+TEST(config_get_enum_case_sensitive) {
+    config_init();
+    config_set_string("sort", "Source");
+    config_enumeration_type sort_enum[] = {
+        {"source", 3}, {"destination", 4}, {NULL, -1}
+    };
+    int val = -1;
+    ASSERT_EQ(config_get_enum("sort", sort_enum, &val), 0);
+}
+
+/* === Multiple reads of same file === */
+
+TEST(config_read_file_twice) {
+    config_init();
+    write_tmp_config("interface: eth0\nshow-bars: true\n");
+    ASSERT_EQ(read_config(tmpfile_path, 0), 1);
+    ASSERT_EQ(read_config(tmpfile_path, 0), 1);
+    ASSERT_STR_EQ(config_get_string("interface"), "eth0");
+    cleanup_tmp();
+}
+
+/* === Config with many entries === */
+
+TEST(config_read_file_many_entries) {
+    config_init();
+    char content[4096];
+    int off = 0;
+    off += snprintf(content + off, sizeof(content) - off,
+        "interface: eth0\n"
+        "dns-resolution: true\n"
+        "port-resolution: false\n"
+        "filter-code: tcp port 80\n"
+        "show-bars: true\n"
+        "promiscuous: false\n"
+        "hide-source: false\n"
+        "hide-destination: false\n"
+        "use-bytes: true\n"
+        "sort: source\n"
+        "line-display: two-line\n"
+        "show-totals: true\n"
+        "log-scale: false\n"
+        "max-bandwidth: 100M\n"
+        "link-local: false\n"
+        "port-display: on\n"
+    );
+    write_tmp_config(content);
+    ASSERT_EQ(read_config(tmpfile_path, 0), 1);
+    ASSERT_STR_EQ(config_get_string("interface"), "eth0");
+    ASSERT_STR_EQ(config_get_string("sort"), "source");
+    ASSERT_STR_EQ(config_get_string("port-display"), "on");
+    ASSERT_STR_EQ(config_get_string("hide-source"), "false");
+    cleanup_tmp();
+}
+
+/* === Reinit clears state === */
+
+TEST(config_reinit_clears_state) {
+    config_init();
+    config_set_string("interface", "eth0");
+    ASSERT_STR_EQ(config_get_string("interface"), "eth0");
+    config_init();
+    ASSERT_NULL(config_get_string("interface"));
+}
+
 int main(void) {
     TEST_SUITE("Config File Tests");
 
@@ -623,6 +790,21 @@ int main(void) {
     RUN(config_is_directive_valid);
     RUN(config_read_then_get_float);
     RUN(config_set_all_types_then_read);
+    RUN(config_read_file_multi_continuation);
+    RUN(config_read_file_no_colon);
+    RUN(config_read_file_value_with_hash);
+    RUN(config_get_bool_1_is_false);
+    RUN(config_get_bool_0_is_false);
+    RUN(config_get_int_max);
+    RUN(config_get_int_min);
+    RUN(config_get_int_positive_sign);
+    RUN(config_get_float_very_small);
+    RUN(config_get_float_large);
+    RUN(config_get_enum_missing_key);
+    RUN(config_get_enum_case_sensitive);
+    RUN(config_read_file_twice);
+    RUN(config_read_file_many_entries);
+    RUN(config_reinit_clears_state);
 
     TEST_REPORT();
 }

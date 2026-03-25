@@ -157,8 +157,7 @@ static void bench_churn(void) {
 }
 
 int main(void) {
-    printf("iftopcolor ns_hash benchmark suite\n");
-    printf("===================================\n");
+    BENCH_HEADER("NS_HASH DNS CACHE PROFILER");
 
     generate_addrs();
 
@@ -169,6 +168,6 @@ int main(void) {
     bench_iteration();
     bench_churn();
 
-    printf("\nDone.\n");
+    BENCH_FOOTER();
     return 0;
 }

@@ -169,8 +169,7 @@ static void bench_protocol_lookup(void) {
 }
 
 int main(void) {
-    printf("iftopcolor serv_hash benchmark suite\n");
-    printf("=====================================\n");
+    BENCH_HEADER("SERV_HASH SERVICE CACHE PROFILER");
 
     generate_services();
 
@@ -181,6 +180,6 @@ int main(void) {
     bench_iteration();
     bench_protocol_lookup();
 
-    printf("\nDone.\n");
+    BENCH_FOOTER();
     return 0;
 }
