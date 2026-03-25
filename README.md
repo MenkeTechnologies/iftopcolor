@@ -1,10 +1,33 @@
-# iftopcolor
+```
+                 ██╗███████╗████████╗ ██████╗ ██████╗  ██████╗ ██████╗ ██╗      ██████╗ ██████╗
+                 ██║██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗██╔════╝██╔═══██╗██║     ██╔═══██╗██╔══██╗
+                 ██║█████╗     ██║   ██║   ██║██████╔╝██║     ██║   ██║██║     ██║   ██║██████╔╝
+                 ██║██╔══╝     ██║   ██║   ██║██╔═══╝ ██║     ██║   ██║██║     ██║   ██║██╔══██╗
+                 ██║██║        ██║   ╚██████╔╝██║     ╚██████╗╚██████╔╝███████╗╚██████╔╝██║  ██║
+                 ╚═╝╚═╝        ╚═╝    ╚═════╝ ╚═╝      ╚═════╝ ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═╝
+```
 
-A colorized fork of [iftop](http://www.ex-parrot.com/pdw/iftop/) that displays real-time bandwidth usage on a network interface, broken down by host pairs. Fully customizable color schemes via a simple config file.
+<p align="center">
+  <strong>[ REAL-TIME BANDWIDTH SURVEILLANCE // FULL SPECTRUM COLOR ]</strong>
+</p>
+
+<p align="center">
+  <code>>>> JACK IN. WATCH THE DATA FLOW. OWN YOUR NETWORK. <<<</code>
+</p>
+
+---
+
+> _A colorized fork of [iftop](http://www.ex-parrot.com/pdw/iftop/) that renders real-time bandwidth usage on a network interface, broken down by host pairs. Fully customizable color schemes via config file. Your console, your rules._
 
 ![screenshot of iftopcolor](/screenshot1.png)
 
-## Requirements
+---
+
+## `[0x01]` SYSTEM REQUIREMENTS
+
+```
+SCANNING DEPENDENCIES...
+```
 
 - CMake 3.10+
 - libpcap
@@ -20,19 +43,28 @@ A colorized fork of [iftop](http://www.ex-parrot.com/pdw/iftop/) that displays r
 | macOS | `brew install cmake` (libpcap and ncurses ship with Xcode CLI tools) |
 | FreeBSD | `pkg install cmake` |
 
-## Installation
+---
+
+## `[0x02]` INSTALLATION
 
 ```sh
+# --- DOWNLOAD THE PAYLOAD ---
 git clone https://github.com/MenkeTechnologies/iftopcolor.git
 cd iftopcolor
+
+# --- COMPILE THE ICE ---
 cmake -B build
 cmake --build build
+
+# --- DEPLOY TO /usr/local/sbin ---
 sudo cmake --install build
 ```
 
-The binary installs to `/usr/local/sbin`. Make sure this directory is in your `PATH`.
+> Make sure `/usr/local/sbin` is in your `PATH` or you'll be flatlined at the prompt.
 
-## Usage
+---
+
+## `[0x03]` USAGE
 
 iftop requires root privileges to capture packets:
 
@@ -61,47 +93,56 @@ sudo iftop
 
 ### Interactive keys
 
-| Key | Action | | Key | Action |
-|-----|--------|-|-----|--------|
-| `n` | Toggle DNS resolution | | `P` | Pause display |
-| `s` | Toggle source host | | `h` | Toggle help |
-| `d` | Toggle destination host | | `b` | Toggle bar graph |
-| `t` | Cycle line display mode | | `B` | Cycle bar graph average |
-| `N` | Toggle service resolution | | `T` | Toggle cumulative totals |
-| `S` | Toggle source port | | `j/k` | Scroll display |
-| `D` | Toggle destination port | | `f` | Edit filter code |
-| `p` | Toggle port display | | `l` | Set screen filter |
-| `1/2/3` | Sort by column | | `L` | Lin/log scales |
-| `<` / `>` | Sort by source/dest name | | `!` | Shell command |
-| `o` | Freeze current order | | `q` | Quit |
-
-## Color configuration
-
-Create `~/.iftopcolors` to customize colors. Available colors: `red`, `blue`, `green`, `yellow`, `magenta`, `cyan`, `black`, `white`. Each color can be `bold` or `nonbold`.
-
 ```
-# Example ~/.iftopcolors
-BOTH_BAR_COLOR blue bold
-HOST1_COLOR red nonbold
-HOST2_COLOR red bold
-SCALE_BAR_COLOR red nonbold
-SCALE_MARKERS_COLOR red bold
-DL_UL_INDICATOR_COLOR blue bold
-TWO_SECOND_TRANSFER_COLUMN_COLOR yellow bold
-TEN_SECOND_TRANSFER_COLUMN_COLOR magenta bold
-FOURTY_SECOND_TRANSFER_COLUMN_COLOR yellow bold
-BOTTOM_BAR_COLOR blue bold
-CUM_LABEL_COLOR yellow nonbold
-PEAK_LABEL_COLOR magenta bold
-RATES_LABEL_COLOR magenta bold
-TOTAL_LABEL_COLOR blue bold
-CUM_TRANSFER_COLUMN_COLOR magenta nonbold
-PEAK_TRANSFER_COLUMN_COLOR magenta nonbold
-RECEIVE_BAR_COLOR yellow nonbold
-SENT_BAR_COLOR yellow nonbold
+ KEY   ACTION                    KEY   ACTION
+ ───   ──────                    ───   ──────
+  n    Toggle DNS resolution      P    Pause display
+  s    Toggle source host         h    Toggle help
+  d    Toggle destination host    b    Toggle bar graph
+  t    Cycle line display mode    B    Cycle bar graph average
+  N    Toggle service resolution  T    Toggle cumulative totals
+  S    Toggle source port        j/k   Scroll display
+  D    Toggle destination port    f    Edit filter code
+  p    Toggle port display        l    Set screen filter
+ 1/2/3 Sort by column             L    Lin/log scales
+ < / > Sort by src/dst name       !    Shell command
+  o    Freeze current order       q    Quit
 ```
 
-## Tests
+---
+
+## `[0x04]` COLOR CONFIGURATION
+
+> _"The sky above the port was the color of television, tuned to a dead channel."_
+> _Your terminal doesn't have to be._
+
+Create `~/.iftopcolors` to customize colors. Available colors: `red`, `blue`, `green`, `yellow`, `magenta`, `cyan`, `black`, `white`. Each can be `bold` or `nonbold`.
+
+```ini
+# ~/.iftopcolors -- NEON NIGHTCITY PRESET
+BOTH_BAR_COLOR              blue    bold
+HOST1_COLOR                 red     nonbold
+HOST2_COLOR                 red     bold
+SCALE_BAR_COLOR             red     nonbold
+SCALE_MARKERS_COLOR         red     bold
+DL_UL_INDICATOR_COLOR       blue    bold
+TWO_SECOND_TRANSFER_COLUMN_COLOR    yellow  bold
+TEN_SECOND_TRANSFER_COLUMN_COLOR    magenta bold
+FOURTY_SECOND_TRANSFER_COLUMN_COLOR yellow  bold
+BOTTOM_BAR_COLOR            blue    bold
+CUM_LABEL_COLOR             yellow  nonbold
+PEAK_LABEL_COLOR            magenta bold
+RATES_LABEL_COLOR           magenta bold
+TOTAL_LABEL_COLOR           blue    bold
+CUM_TRANSFER_COLUMN_COLOR   magenta nonbold
+PEAK_TRANSFER_COLUMN_COLOR  magenta nonbold
+RECEIVE_BAR_COLOR           yellow  nonbold
+SENT_BAR_COLOR              yellow  nonbold
+```
+
+---
+
+## `[0x05]` TESTS
 
 A test suite covers core data structures and utilities: hash tables, address/namespace/service hashes, sorted lists, vectors, string maps, config file parsing, and utility functions.
 
@@ -112,7 +153,7 @@ cmake -B build
 cmake --build build --target test
 ```
 
-This builds and runs all test binaries. You can also run a single test:
+Run a single test:
 
 ```sh
 cmake --build build --target test_hash
@@ -121,7 +162,7 @@ cmake --build build --target test_hash
 
 ### Test suites
 
-| Suite | What it covers |
+| Suite | Covers |
 |---|---|
 | `test_util` | Utility functions |
 | `test_vector` | Dynamic vector operations |
@@ -133,9 +174,11 @@ cmake --build build --target test_hash
 | `test_stringmap` | String map lookups |
 | `test_cfgfile` | Configuration file parsing |
 
-## Benchmarks
+---
 
-A benchmark suite is included to measure the performance of core data structures: hash tables, sorted lists, vectors, and the pool allocator.
+## `[0x06]` BENCHMARKS
+
+A benchmark suite measures the performance of core data structures: hash tables, sorted lists, vectors, and the pool allocator.
 
 ### Running benchmarks
 
@@ -150,18 +193,20 @@ cmake --build build --target bench_hash bench_sorted_list bench_vector bench_poo
 ./bench/run_benchmarks.sh vector
 ```
 
-Benchmarks are compiled with aggressive optimizations (`-O3`, `-march=native`, `-flto`, `-funroll-loops`).
+> Compiled with aggressive optimizations (`-O3`, `-march=native`, `-flto`, `-funroll-loops`).
 
 ### What is benchmarked
 
-| Suite | What it measures |
+| Suite | Measures |
 |---|---|
 | `bench_hash` | Hash distribution, insert, find (hit/miss), find scaling, delete, iteration, mixed workload |
 | `bench_sorted_list` | Single insert O(n^2) vs batch insert O(n log n), iteration |
 | `bench_vector` | Push back, push/pop, remove, iteration at various sizes |
 | `bench_pool` | Pool allocator vs malloc/free for insert/delete and churn workloads |
 
-## Known issues
+---
+
+## `[0x07]` KNOWN GLITCHES IN THE MATRIX
 
 **RedHat 7.2** -- A bug in the bundled ncurses can cause a segfault. Update ncurses from Rawhide.
 
@@ -171,6 +216,14 @@ Benchmarks are compiled with aggressive optimizations (`-O3`, `-march=native`, `
 
 **Solaris** -- iftop must run in promiscuous mode to capture outgoing packets. This is auto-configured; the `-p` flag disables the non-broadcast packet filter. You may also need ncurses instead of the bundled curses.
 
-## License
+---
 
-Copyright (c) 2002 Paul Warren and contributors.
+## `[0xFF]` LICENSE
+
+```
+Copyright (c) 2026 Jacob Menke and contributors.
+```
+
+---
+
+<p align="center"><code>// END OF LINE //</code></p>

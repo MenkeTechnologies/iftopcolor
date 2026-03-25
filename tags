@@ -1,5 +1,14 @@
 !_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
 !_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_KIND_DESCRIPTION!Markdown	S,subsection	/level 2 sections/
+!_TAG_KIND_DESCRIPTION!Markdown	T,l4subsection	/level 4 sections/
+!_TAG_KIND_DESCRIPTION!Markdown	c,chapter	/chapters/
+!_TAG_KIND_DESCRIPTION!Markdown	h,hashtag	/hashtags/
+!_TAG_KIND_DESCRIPTION!Markdown	n,footnote	/footnotes/
+!_TAG_KIND_DESCRIPTION!Markdown	s,section	/sections/
+!_TAG_KIND_DESCRIPTION!Markdown	t,subsubsection	/level 3 sections/
+!_TAG_KIND_DESCRIPTION!Markdown	u,l5subsection	/level 5 sections/
+!_TAG_PARSER_VERSION!Markdown	1.1	/current.age/
 !_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
@@ -76,6 +85,7 @@ CYAN_FOREGROUND	src/ui.c	/^#define CYAN_FOREGROUND /;"	d	file:
 C_DIALECT	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define C_DIALECT /;"	d	file:
 C_DIALECT	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^#  define C_DIALECT$/;"	d	file:
 C_DIALECT	cmake-build-debug/CMakeFiles/3.17.3/CompilerIdC/CMakeCCompilerId.c	/^# define C_DIALECT /;"	d	file:
+Command-line options	README.md	/^### Command-line options$/;"	S	section:`[0x03]` USAGE
 DEB_BUILD_MAINT_OPTIONS	debian/rules	/^export DEB_BUILD_MAINT_OPTIONS = hardening=+all$/;"	m
 DEB_CFLAGS_MAINT_APPEND	debian/rules	/^export DEB_CFLAGS_MAINT_APPEND = -DNO_SYSTEM -Wall -DUSE_GETNAMEINFO=1 -DUSE_GETIFADDRS=1$/;"	m
 DEB_LDFLAGS_MAINT_APPEND	debian/rules	/^export DEB_LDFLAGS_MAINT_APPEND = -Wl,-z,defs$/;"	m
@@ -244,6 +254,7 @@ IP_OFFMASK	src/ip.h	/^#define    IP_OFFMASK /;"	d
 IP_V	src/ip.h	/^#define IP_V(/;"	d
 IS_GLIBC	config/config.guess	/^	IS_GLIBC=0$/;"	v
 IS_SOURCE_ROUTED	src/token.h	/^#define IS_SOURCE_ROUTED(/;"	d
+Interactive keys	README.md	/^### Interactive keys$/;"	S	section:`[0x03]` USAGE
 LARGEST_FRAME	src/token.h	/^#define LARGEST_FRAME(/;"	d
 LIBC	config/config.guess	/^	    LIBC=musl$/;"	v
 LIBC	config/config.guess	/^	LIBC=dietlibc$/;"	v
@@ -378,6 +389,7 @@ PPP_VINES	src/ppp.h	/^#define PPP_VINES /;"	d
 PPP_VINESCP	src/ppp.h	/^#define PPP_VINESCP /;"	d
 PPP_VJC	src/ppp.h	/^#define PPP_VJC /;"	d
 PPP_VJNC	src/ppp.h	/^#define PPP_VJNC /;"	d
+Platform packages	README.md	/^### Platform packages$/;"	S	section:`[0x01]` SYSTEM REQUIREMENTS
 RATES_LABEL_COLOR	src/ui.c	/^int RATES_LABEL_COLOR[] = {MAGENTA_FOREGROUND, BOLD};$/;"	v
 RECEIVE_BAR_COLOR	src/ui.c	/^int RECEIVE_BAR_COLOR[] = {GREEN_FOREGROUND, BOLD};$/;"	v
 RED_FOREGROUND	src/ui.c	/^#define RED_FOREGROUND /;"	d	file:
@@ -387,6 +399,8 @@ RIF_LENGTH	src/token.h	/^#define RIF_LENGTH(/;"	d
 RING_NUMBER	src/token.h	/^#define RING_NUMBER(/;"	d
 RM	cmake-build-debug/Makefile	/^RM = \/Applications\/CLion.app\/Contents\/bin\/cmake\/mac\/bin\/cmake -E rm -f$/;"	m
 ROUTING_SEGMENT_MAX	src/token.h	/^#define ROUTING_SEGMENT_MAX /;"	d
+Running benchmarks	README.md	/^### Running benchmarks$/;"	S	section:`[0x06]` BENCHMARKS
+Running tests	README.md	/^### Running tests$/;"	S	section:`[0x05]` TESTS
 SCALE_BAR_COLOR	src/ui.c	/^int SCALE_BAR_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
 SCALE_MARKERS_COLOR	src/ui.c	/^int SCALE_MARKERS_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
 SEGMENT_COUNT	src/token.h	/^#define SEGMENT_COUNT(/;"	d
@@ -448,6 +462,7 @@ TOKEN_HDRLEN	src/token.h	/^#define TOKEN_HDRLEN /;"	d
 TOKEN_RING_MAC_LEN	src/token.h	/^#define TOKEN_RING_MAC_LEN /;"	d
 TOTAL_LABEL_COLOR	src/ui.c	/^int TOTAL_LABEL_COLOR[] = {BLUE_FOREGROUND, BOLD};$/;"	v
 TWO_SECOND_TRANSFER_COLUMN_COLOR	src/ui.c	/^int TWO_SECOND_TRANSFER_COLUMN_COLOR[] = {BLUE_FOREGROUND, NONBOLD};$/;"	v
+Test suites	README.md	/^### Test suites$/;"	S	section:`[0x05]` TESTS
 UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=`(uname -p) 2>\/dev\/null`$/;"	v
 UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=alpha ;;$/;"	v
 UNAME_MACHINE	config/config.guess	/^		UNAME_MACHINE=alphaev5 ;;$/;"	v
@@ -493,6 +508,7 @@ UNIT_DIVISIONS	src/ui.c	/^#define UNIT_DIVISIONS /;"	d	file:
 USE_GETHOSTBYADDR	src/config.h	/^#define USE_GETHOSTBYADDR /;"	d
 VERSION	src/config.h	/^#define VERSION /;"	d
 WHITE_FOREGROUND	src/ui.c	/^#define WHITE_FOREGROUND /;"	d	file:
+What is benchmarked	README.md	/^### What is benchmarked$/;"	S	section:`[0x06]` BENCHMARKS
 YELLOW_FOREGROUND	src/ui.c	/^#define YELLOW_FOREGROUND /;"	d	file:
 __ADDR_HASH_H_	src/addr_hash.h	/^#define __ADDR_HASH_H_$/;"	d
 __CFGFILE_H_	src/cfgfile.h	/^#define __CFGFILE_H_$/;"	d
@@ -514,6 +530,14 @@ _inline	src/vector.h	/^#define _inline /;"	d
 _item	src/vector.h	/^typedef union _item {$/;"	u
 _stringmap	src/stringmap.h	/^typedef struct _stringmap {$/;"	s
 _vector	src/vector.h	/^typedef struct _vector {$/;"	s
+`[0x01]` SYSTEM REQUIREMENTS	README.md	/^## `[0x01]` SYSTEM REQUIREMENTS$/;"	s
+`[0x02]` INSTALLATION	README.md	/^## `[0x02]` INSTALLATION$/;"	s
+`[0x03]` USAGE	README.md	/^## `[0x03]` USAGE$/;"	s
+`[0x04]` COLOR CONFIGURATION	README.md	/^## `[0x04]` COLOR CONFIGURATION$/;"	s
+`[0x05]` TESTS	README.md	/^## `[0x05]` TESTS$/;"	s
+`[0x06]` BENCHMARKS	README.md	/^## `[0x06]` BENCHMARKS$/;"	s
+`[0x07]` KNOWN GLITCHES IN THE MATRIX	README.md	/^## `[0x07]` KNOWN GLITCHES IN THE MATRIX$/;"	s
+`[0xFF]` LICENSE	README.md	/^## `[0xFF]` LICENSE$/;"	s
 abi	config/config.guess	/^		abi=`echo "$UNAME_MACHINE_ARCH" | sed -e "$expr"`$/;"	v
 action	src/iftop.h	/^    unsigned char action;$/;"	m	struct:pfloghdr
 addr	src/resolver.c	/^    struct in_addr *addr;$/;"	m	struct:ares_callback_comm	typeref:struct:ares_callback_comm::in_addr	file:
