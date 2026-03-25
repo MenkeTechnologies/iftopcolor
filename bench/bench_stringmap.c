@@ -158,7 +158,7 @@ static void bench_duplicate_insert(void) {
     BENCH_RUN("insert 1000 duplicates (returns existing)", 10000, {
         for (int j = 0; j < n; j++) {
             item *existing = stringmap_insert(sm, keys_random[j], item_long(j + 1));
-            if (existing) bench_use((int)existing->l);
+            if (existing) bench_use((int)existing->num);
         }
     });
 

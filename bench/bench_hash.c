@@ -21,7 +21,7 @@ static addr_pair make_pair_v4(uint32_t src, uint16_t sport,
                               uint32_t dst, uint16_t dport) {
     addr_pair ap;
     memset(&ap, 0, sizeof(ap));
-    ap.af = AF_INET;
+    ap.address_family = AF_INET;
     ap.protocol = 6;
     ap.src.s_addr = htonl(src);
     ap.src_port = sport;
@@ -33,7 +33,7 @@ static addr_pair make_pair_v4(uint32_t src, uint16_t sport,
 static addr_pair make_pair_v6(int index) {
     addr_pair ap;
     memset(&ap, 0, sizeof(ap));
-    ap.af = AF_INET6;
+    ap.address_family = AF_INET6;
     ap.protocol = 6;
     uint32_t *s6 = (uint32_t *)ap.src6.s6_addr;
     uint32_t *d6 = (uint32_t *)ap.dst6.s6_addr;

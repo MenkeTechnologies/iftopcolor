@@ -106,12 +106,12 @@ static history_pool_block *hist_pool_blocks = NULL;
 static history_type *hist_free_list = NULL;
 
 history_type *history_create() {
-    history_type *h;
+    history_type *hist;
     if (__builtin_expect(hist_free_list != NULL, 1)) {
-        h = hist_free_list;
-        hist_free_list = *(history_type **) h;
-        memset(h, 0, sizeof *h);
-        return h;
+        hist = hist_free_list;
+        hist_free_list = *(history_type **) hist;
+        memset(hist, 0, sizeof *hist);
+        return hist;
     }
     /* Allocate new block */
     history_pool_block *block = malloc(sizeof(history_pool_block));
@@ -129,28 +129,28 @@ history_type *history_create() {
     return &block->items[0];
 }
 
-static inline void history_free(history_type *h) {
-    *(history_type **) h = hist_free_list;
-    hist_free_list = h;
+static inline void history_free(history_type *hist) {
+    *(history_type **) hist = hist_free_list;
+    hist_free_list = hist;
 }
 
 void history_rotate() {
-    hash_node_type *n = NULL;
+    hash_node_type *node = NULL;
     history_pos = (history_pos + 1) % HISTORY_LENGTH;
-    hash_next_item(history, &n);
-    while (n != NULL) {
-        hash_node_type *next = n;
-        history_type *d = (history_type *) n->record;
+    hash_next_item(history, &node);
+    while (node != NULL) {
+        hash_node_type *next = node;
+        history_type *hist_data = (history_type *) node->record;
         hash_next_item(history, &next);
 
-        if (d->last_write == history_pos) {
-            addr_hash_delete_node(history, n);
-            history_free(d);
+        if (hist_data->last_write == history_pos) {
+            addr_hash_delete_node(history, node);
+            history_free(hist_data);
         } else {
-            d->recv[history_pos] = 0;
-            d->sent[history_pos] = 0;
+            hist_data->recv[history_pos] = 0;
+            hist_data->sent[history_pos] = 0;
         }
-        n = next;
+        node = next;
     }
 
     history_totals.sent[history_pos] = 0;
@@ -163,16 +163,16 @@ void history_rotate() {
 
 
 void tick(int print) {
-    time_t t;
+    time_t now;
 
     pthread_mutex_lock(&tick_mutex);
 
-    t = time(NULL);
-    if (t - last_timestamp >= RESOLUTION) {
+    now = time(NULL);
+    if (now - last_timestamp >= RESOLUTION) {
         analyse_data();
         ui_print();
         history_rotate();
-        last_timestamp = t;
+        last_timestamp = now;
     } else {
         ui_tick(print);
     }
@@ -258,11 +258,11 @@ static inline void assign_addr_pair(addr_pair *ap, struct ip *iptr, int flip) {
 
 static void __attribute__((hot)) handle_ip_packet(struct ip *iptr, int hw_dir) {
     int direction = 0; /* incoming */
-    history_type *ht;
+    history_type *hist;
     union {
         history_type **ht_pp;
         void **void_pp;
-    } u_ht = {&ht};
+    } u_ht = {&hist};
     addr_pair ap;
     unsigned int len = 0;
     struct in6_addr scribdst;   /* Scratch pad. */
@@ -417,19 +417,19 @@ static void __attribute__((hot)) handle_ip_packet(struct ip *iptr, int hw_dir) {
     }
 
     if (addr_hash_find(history, &ap, u_ht.void_pp) == HASH_STATUS_KEY_NOT_FOUND) {
-        ht = history_create();
-        addr_hash_insert(history, &ap, ht);
+        hist = history_create();
+        addr_hash_insert(history, &ap, hist);
     }
 
     /* Update record */
-    ht->last_write = history_pos;
+    hist->last_write = history_pos;
     if (((ip_ver == 4) && (iptr->ip_src.s_addr == ap.src.s_addr))
         || ((ip_ver == 6) && !memcmp(&ip6tr->ip6_src, &ap.src6, sizeof(ap.src6)))) {
-        ht->sent[history_pos] += len;
-        ht->total_sent += len;
+        hist->sent[history_pos] += len;
+        hist->total_sent += len;
     } else {
-        ht->recv[history_pos] += len;
-        ht->total_recv += len;
+        hist->recv[history_pos] += len;
+        hist->total_recv += len;
     }
 
     /* Update totals — use pointer arithmetic to avoid branch */
@@ -655,9 +655,9 @@ char *set_filter_code(const char *filter) {
  */
 void packet_init() {
     char errbuf[PCAP_ERRBUF_SIZE];
-    char *m;
+    char *errmsg;
     int i;
-    int dlt;
+    int datalink_type;
     int result;
 
 #ifdef HAVE_DLPI
@@ -700,40 +700,40 @@ void packet_init() {
         fprintf(stderr, "pcap_open_live(%s): %s\n", options.interface, errbuf);
         exit(1);
     }
-    dlt = pcap_datalink(pd);
-    if (dlt == DLT_EN10MB) {
+    datalink_type = pcap_datalink(pd);
+    if (datalink_type == DLT_EN10MB) {
         packet_handler = handle_eth_packet;
     }
 #ifdef DLT_PFLOG
-    else if (dlt == DLT_PFLOG) {
+    else if (datalink_type == DLT_PFLOG) {
         packet_handler = handle_pflog_packet;
     }
 #endif
-    else if (dlt == DLT_RAW) {
+    else if (datalink_type == DLT_RAW) {
         packet_handler = handle_raw_packet;
-    } else if (dlt == DLT_NULL) {
+    } else if (datalink_type == DLT_NULL) {
         packet_handler = handle_null_packet;
     }
 #ifdef DLT_LOOP
-    else if (dlt == DLT_LOOP) {
+    else if (datalink_type == DLT_LOOP) {
         packet_handler = handle_null_packet;
     }
 #endif
 #ifdef DLT_IEEE802_11_RADIO
-    else if (dlt == DLT_IEEE802_11_RADIO) {
+    else if (datalink_type == DLT_IEEE802_11_RADIO) {
         packet_handler = handle_radiotap_packet;
     }
 #endif
-    else if (dlt == DLT_IEEE802) {
+    else if (datalink_type == DLT_IEEE802) {
         packet_handler = handle_tokenring_packet;
-    } else if (dlt == DLT_PPP) {
+    } else if (datalink_type == DLT_PPP) {
         packet_handler = handle_ppp_packet;
     }
 /* 
  * SLL support not available in older libpcaps
  */
 #ifdef DLT_LINUX_SLL
-    else if (dlt == DLT_LINUX_SLL) {
+    else if (datalink_type == DLT_LINUX_SLL) {
         packet_handler = handle_cooked_packet;
     }
 #endif
@@ -741,12 +741,12 @@ void packet_init() {
 
         fprintf(stderr, "Unsupported datalink type: %d\n"
                         "Please report this issue, quoting the datalink type and what you were\n"
-                        "trying to do at the time\n.", dlt);
+                        "trying to do at the time\n.", datalink_type);
         exit(1);
     }
 
-    if ((m = set_filter_code(options.filtercode))) {
-        fprintf(stderr, "set_filter_code: %s\n", m);
+    if ((errmsg = set_filter_code(options.filtercode))) {
+        fprintf(stderr, "set_filter_code: %s\n", errmsg);
         exit(1);
         return;
     }

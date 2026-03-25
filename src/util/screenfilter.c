@@ -19,8 +19,8 @@ extern options_t options;
 
 regex_t preg;
 
-int screen_filter_set(char *s) {
-    int r;
+int screen_filter_set(char *pattern) {
+    int result;
 
     if (options.screenfilter != NULL) {
         xfree(options.screenfilter);
@@ -28,25 +28,25 @@ int screen_filter_set(char *s) {
         regfree(&preg);
     }
 
-    r = regcomp(&preg, s, REG_ICASE | REG_EXTENDED);
+    result = regcomp(&preg, pattern, REG_ICASE | REG_EXTENDED);
 
-    if (r == 0) {
-        options.screenfilter = s;
+    if (result == 0) {
+        options.screenfilter = pattern;
         return 1;
     } else {
-        xfree(s);
+        xfree(pattern);
         return 0;
     }
 }
 
-int screen_filter_match(char *s) {
-    int r;
+int screen_filter_match(char *text) {
+    int result;
     if (options.screenfilter == NULL) {
         return 1;
     }
 
-    r = regexec(&preg, s, 0, NULL, 0);
-    if (r == 0) {
+    result = regexec(&preg, text, 0, NULL, 0);
+    if (result == 0) {
         return 1;
     } else {
         return 0;

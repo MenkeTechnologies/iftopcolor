@@ -568,9 +568,9 @@ int screen_line_bandwidth_compare(host_pair_line *aa, host_pair_line *bb, int st
  */
 int screen_line_host_compare(void *a, void *b, host_pair_line *aa, host_pair_line *bb) {
     char hosta[HOSTNAME_LENGTH], hostb[HOSTNAME_LENGTH];
-    int r;
+    int cmp_result;
 
-    /* This isn't overly efficient because we resolve again before 
+    /* This isn't overly efficient because we resolve again before
        display. */
     if (options.dnsresolution) {
         resolve(aa->ap.address_family, a, hosta, HOSTNAME_LENGTH);
@@ -580,12 +580,12 @@ int screen_line_host_compare(void *a, void *b, host_pair_line *aa, host_pair_lin
         inet_ntop(bb->ap.address_family, b, hostb, sizeof(hostb));
     }
 
-    r = strcmp(hosta, hostb);
+    cmp_result = strcmp(hosta, hostb);
 
-    if (r == 0) {
+    if (cmp_result == 0) {
         return screen_line_bandwidth_compare(aa, bb, 2);
     } else {
-        return (r > 0);
+        return (cmp_result > 0);
     }
 
 
@@ -609,28 +609,28 @@ int screen_line_compare(void *a, void *b) {
     return 1;
 }
 
-void readable_size(float n, char *buf, int bsize, int ksize, int bytes) {
+void readable_size(float bandwidth, char *buf, int bsize, int ksize, int bytes) {
 
     int i = 0;
     float size = 1;
 
     /* Convert to bits? */
     if (bytes == 0) {
-        n *= 8;
+        bandwidth *= 8;
     }
 
     while (1) {
-        if (n < size * 1000 || i >= UNIT_DIVISIONS - 1) {
-            snprintf(buf, bsize, " %4.0f%s", n / size, bytes ? unit_bytes[i] : unit_bits[i]);
+        if (bandwidth < size * 1000 || i >= UNIT_DIVISIONS - 1) {
+            snprintf(buf, bsize, " %4.0f%s", bandwidth / size, bytes ? unit_bytes[i] : unit_bits[i]);
             break;
         }
         i++;
         size *= ksize;
-        if (n < size * 10) {
-            snprintf(buf, bsize, " %4.2f%s", n / size, bytes ? unit_bytes[i] : unit_bits[i]);
+        if (bandwidth < size * 10) {
+            snprintf(buf, bsize, " %4.2f%s", bandwidth / size, bytes ? unit_bytes[i] : unit_bits[i]);
             break;
-        } else if (n < size * 100) {
-            snprintf(buf, bsize, " %4.1f%s", n / size, bytes ? unit_bytes[i] : unit_bits[i]);
+        } else if (bandwidth < size * 100) {
+            snprintf(buf, bsize, " %4.1f%s", bandwidth / size, bytes ? unit_bytes[i] : unit_bits[i]);
             break;
         }
     }
@@ -675,7 +675,7 @@ static float get_max_bandwidth() {
 
 /* rate in bits */
 static int get_bar_length(const int rate) {
-    float l;
+    float bar_length;
     if (rate <= 0)
         return 0;
     if (rate > scale[rateidx].max) {
@@ -687,15 +687,15 @@ static int get_bar_length(const int rate) {
         }
     }
     if (options.log_scale) {
-        l = log(rate) / log(get_max_bandwidth());
+        bar_length = log(rate) / log(get_max_bandwidth());
     } else {
-        l = rate / get_max_bandwidth();
+        bar_length = rate / get_max_bandwidth();
     }
-    return (l * COLS);
+    return (bar_length * COLS);
 }
 
 static void draw_bar_scale(int *y) {
-    float i;
+    float marker;
     float max, interval;
     max = get_max_bandwidth();
     interval = get_bar_interval(max);
@@ -706,39 +706,39 @@ static void draw_bar_scale(int *y) {
         clrtoeol();
 
         mvhline(*y + 1, 0, 0, COLS);
-        /* i in bytes */
+        /* marker in bytes */
 
         if (options.log_scale) {
-            i = 1.25;
+            marker = 1.25;
             stop = max / 8;
         } else {
-            i = max / (5 * 8);
+            marker = max / (5 * 8);
             stop = max / 8;
         }
 
-        /* for (i = 1.25; i * 8 <= max; i *= interval) { */
-        while (i <= stop) {
-            char s[40], *p;
-            int x;
+        /* for (marker = 1.25; marker * 8 <= max; marker *= interval) { */
+        while (marker <= stop) {
+            char size_buf[40], *label;
+            int xpos;
             /* This 1024 vs 1000 stuff is just plain evil */
-            readable_size(i, s, sizeof s, options.log_scale ? 1000 : 1024, options.bandwidth_in_bytes);
-            p = s + strspn(s, " ");
-            x = get_bar_length(i * 8);
-            mvaddch(*y + 1, x, ACS_BTEE);
-            if (x + strlen(p) >= COLS)
-                x = COLS - strlen(p);
+            readable_size(marker, size_buf, sizeof size_buf, options.log_scale ? 1000 : 1024, options.bandwidth_in_bytes);
+            label = size_buf + strspn(size_buf, " ");
+            xpos = get_bar_length(marker * 8);
+            mvaddch(*y + 1, xpos, ACS_BTEE);
+            if (xpos + strlen(label) >= COLS)
+                xpos = COLS - strlen(label);
 
             turnOnColor(SCALE_MARKERS_COLOR);
 
-            mvaddstr(*y, x, p);
+            mvaddstr(*y, xpos, label);
 
             turnOffColor(SCALE_MARKERS_COLOR);
 
 
             if (options.log_scale) {
-                i *= interval;
+                marker *= interval;
             } else {
-                i += max / (5 * 8);
+                marker += max / (5 * 8);
             }
         }
         mvaddch(*y + 1, 0, ACS_LLCORNER);
@@ -758,38 +758,38 @@ int history_length(const int d) {
 
 void draw_line_total(float sent, float recv, int y, int x, option_linedisplay_t linedisplay, int bytes) {
     char buf[10];
-    float n;
+    float bandwidth;
     switch (linedisplay) {
         case OPTION_LINEDISPLAY_TWO_LINE:
             draw_line_total(sent, recv, y, x, OPTION_LINEDISPLAY_ONE_LINE_SENT, bytes);
             draw_line_total(sent, recv, y + 1, x, OPTION_LINEDISPLAY_ONE_LINE_RECV, bytes);
             break;
         case OPTION_LINEDISPLAY_ONE_LINE_SENT:
-            n = sent;
+            bandwidth = sent;
             break;
         case OPTION_LINEDISPLAY_ONE_LINE_RECV:
-            n = recv;
+            bandwidth = recv;
             break;
         case OPTION_LINEDISPLAY_ONE_LINE_BOTH:
-            n = recv + sent;
+            bandwidth = recv + sent;
             break;
     }
 
 
     if (linedisplay != OPTION_LINEDISPLAY_TWO_LINE) {
-        readable_size(n, buf, 10, 1024, bytes);
-        if (n == sent) {
+        readable_size(bandwidth, buf, 10, 1024, bytes);
+        if (bandwidth == sent) {
             turnOnColor(TWO_SECOND_TRANSFER_COLUMN_COLOR);
-        } else if (n == recv) {
+        } else if (bandwidth == recv) {
             turnOnColor(TEN_SECOND_TRANSFER_COLUMN_COLOR);
         } else {
             turnOnColor(FOURTY_SECOND_TRANSFER_COLUMN_COLOR);
         }
         mvaddstr(y, x, buf);
 
-        if (n == sent) {
+        if (bandwidth == sent) {
             turnOffColor(TWO_SECOND_TRANSFER_COLUMN_COLOR);
-        } else if (n == recv) {
+        } else if (bandwidth == recv) {
             turnOffColor(TEN_SECOND_TRANSFER_COLUMN_COLOR);
         } else {
             turnOffColor(FOURTY_SECOND_TRANSFER_COLUMN_COLOR);
@@ -800,11 +800,11 @@ void draw_line_total(float sent, float recv, int y, int x, option_linedisplay_t 
 
 }
 
-void draw_bar(float n, int y, short colorpair) {
+void draw_bar(float bandwidth, int y, short colorpair) {
     int L;
     colorpair = has_colors() == TRUE ? colorpair : 0; /* set 0 if terminal is not color capable*/
     mvchgat(y, 0, 0, A_NORMAL, 0, NULL);
-    L = get_bar_length(8 * n);
+    L = get_bar_length(8 * bandwidth);
     if (L > 0)
         mvchgat(y, 0, L + 1, A_REVERSE, colorpair, NULL);
 
@@ -915,34 +915,34 @@ void screen_list_clear() {
 
 void calculate_totals(const int hist_idx[]) {
     int i;
-    long r, s;
+    long recv_bytes, sent_bytes;
 
     /* Peaks: scan all history */
     for (i = 0; i < HISTORY_LENGTH; i++) {
-        r = history_totals.recv[i];
-        s = history_totals.sent[i];
-        if (r > peakrecv) peakrecv = r;
-        if (s > peaksent) peaksent = s;
-        if (r + s > peaktotal) peaktotal = r + s;
+        recv_bytes = history_totals.recv[i];
+        sent_bytes = history_totals.sent[i];
+        if (recv_bytes > peakrecv) peakrecv = recv_bytes;
+        if (sent_bytes > peaksent) peaksent = sent_bytes;
+        if (recv_bytes + sent_bytes > peaktotal) peaktotal = recv_bytes + sent_bytes;
     }
 
     /* Totals: unrolled, using precomputed index array */
-    r = history_totals.recv[hist_idx[0]];
-    s = history_totals.sent[hist_idx[0]];
-    totals.recv[0] += r;
-    totals.sent[0] += s;
-    totals.recv[1] += r;
-    totals.sent[1] += s;
-    totals.recv[2] += r;
-    totals.sent[2] += s;
+    recv_bytes = history_totals.recv[hist_idx[0]];
+    sent_bytes = history_totals.sent[hist_idx[0]];
+    totals.recv[0] += recv_bytes;
+    totals.sent[0] += sent_bytes;
+    totals.recv[1] += recv_bytes;
+    totals.sent[1] += sent_bytes;
+    totals.recv[2] += recv_bytes;
+    totals.sent[2] += sent_bytes;
 
     for (i = 1; i < history_divs[1]; i++) {
-        r = history_totals.recv[hist_idx[i]];
-        s = history_totals.sent[hist_idx[i]];
-        totals.recv[1] += r;
-        totals.sent[1] += s;
-        totals.recv[2] += r;
-        totals.sent[2] += s;
+        recv_bytes = history_totals.recv[hist_idx[i]];
+        sent_bytes = history_totals.sent[hist_idx[i]];
+        totals.recv[1] += recv_bytes;
+        totals.sent[1] += sent_bytes;
+        totals.recv[2] += recv_bytes;
+        totals.sent[2] += sent_bytes;
     }
     for (; i < HISTORY_LENGTH; i++) {
         totals.recv[2] += history_totals.recv[hist_idx[i]];
@@ -958,7 +958,7 @@ void calculate_totals(const int hist_idx[]) {
 }
 
 void make_screen_list() {
-    hash_node_type *n = NULL;
+    hash_node_type *node = NULL;
     int i;
     int count = 0;
     int capacity = 256;
@@ -974,8 +974,8 @@ void make_screen_list() {
         items = xmalloc(capacity * sizeof(void *));
     }
 
-    while (hash_next_item(screen_hash, &n) == HASH_STATUS_OK) {
-        host_pair_line *line = (host_pair_line *) n->record;
+    while (hash_next_item(screen_hash, &node) == HASH_STATUS_OK) {
+        host_pair_line *line = (host_pair_line *) node->record;
         for (i = 0; i < HISTORY_DIVISIONS; i++) {
             line->recv[i] *= inv_hist_len[i];
             line->sent[i] *= inv_hist_len[i];
@@ -1000,9 +1000,9 @@ void make_screen_list() {
  * Zeros all data in the screen hash, but does not remove items.
  */
 void screen_hash_clear() {
-    hash_node_type *n = NULL;
-    while (hash_next_item(screen_hash, &n) == HASH_STATUS_OK) {
-        host_pair_line *hpl = (host_pair_line *) n->record;
+    hash_node_type *node = NULL;
+    while (hash_next_item(screen_hash, &node) == HASH_STATUS_OK) {
+        host_pair_line *hpl = (host_pair_line *) node->record;
         hpl->total_recv = hpl->total_sent = 0;
         memset(hpl->recv, 0, sizeof(hpl->recv));
         memset(hpl->sent, 0, sizeof(hpl->sent));
@@ -1010,7 +1010,7 @@ void screen_hash_clear() {
 }
 
 void analyse_data() {
-    hash_node_type *n = NULL;
+    hash_node_type *node = NULL;
     int hist_idx[HISTORY_LENGTH];
     int i;
 
@@ -1038,8 +1038,8 @@ void analyse_data() {
     const int agg_dst = options.aggregate_dest;
     const int showports = options.showports;
 
-    while (hash_next_item(history, &n) == HASH_STATUS_OK) {
-        history_type *d = (history_type *) n->record;
+    while (hash_next_item(history, &node) == HASH_STATUS_OK) {
+        history_type *hist_data = (history_type *) node->record;
         host_pair_line *screen_line;
         union {
             host_pair_line **h_p_l_pp;
@@ -1047,7 +1047,7 @@ void analyse_data() {
         } u_screen_line = {&screen_line};
         addr_pair ap;
 
-        ap = *(addr_pair *) n->key;
+        ap = *(addr_pair *) node->key;
 
         /* Aggregate hosts, if required */
         if (agg_src) {
@@ -1075,34 +1075,34 @@ void analyse_data() {
             screen_line->ap = ap;
         }
 
-        screen_line->total_sent += d->total_sent;
-        screen_line->total_recv += d->total_recv;
+        screen_line->total_sent += hist_data->total_sent;
+        screen_line->total_recv += hist_data->total_recv;
 
         /* Unrolled: history_divs = {1, 5, 20}. Use precomputed index array. */
         {
-            long r, s;
+            long recv_bytes, sent_bytes;
             /* i=0: contributes to div 0,1,2 */
-            r = d->recv[hist_idx[0]];
-            s = d->sent[hist_idx[0]];
-            screen_line->recv[0] += r;
-            screen_line->sent[0] += s;
-            screen_line->recv[1] += r;
-            screen_line->sent[1] += s;
-            screen_line->recv[2] += r;
-            screen_line->sent[2] += s;
+            recv_bytes = hist_data->recv[hist_idx[0]];
+            sent_bytes = hist_data->sent[hist_idx[0]];
+            screen_line->recv[0] += recv_bytes;
+            screen_line->sent[0] += sent_bytes;
+            screen_line->recv[1] += recv_bytes;
+            screen_line->sent[1] += sent_bytes;
+            screen_line->recv[2] += recv_bytes;
+            screen_line->sent[2] += sent_bytes;
             /* i=1..4: contributes to div 1,2 */
             for (i = 1; i < history_divs[1]; i++) {
-                r = d->recv[hist_idx[i]];
-                s = d->sent[hist_idx[i]];
-                screen_line->recv[1] += r;
-                screen_line->sent[1] += s;
-                screen_line->recv[2] += r;
-                screen_line->sent[2] += s;
+                recv_bytes = hist_data->recv[hist_idx[i]];
+                sent_bytes = hist_data->sent[hist_idx[i]];
+                screen_line->recv[1] += recv_bytes;
+                screen_line->sent[1] += sent_bytes;
+                screen_line->recv[2] += recv_bytes;
+                screen_line->sent[2] += sent_bytes;
             }
             /* i=5..19: contributes to div 2 only */
             for (; i < HISTORY_LENGTH; i++) {
-                screen_line->recv[2] += d->recv[hist_idx[i]];
-                screen_line->sent[2] += d->sent[hist_idx[i]];
+                screen_line->recv[2] += hist_data->recv[hist_idx[i]];
+                screen_line->sent[2] += hist_data->sent[hist_idx[i]];
             }
         }
 
@@ -1430,9 +1430,9 @@ void ui_loop() {
     extern sig_atomic_t foad;
 
     while (foad == 0) {
-        int i;
-        i = getch();
-        switch (i) {
+        int keycode;
+        keycode = getch();
+        switch (keycode) {
             case 'q':
                 foad = 1;
                 break;
@@ -1655,24 +1655,24 @@ void ui_loop() {
                 char *s;
                 dontshowdisplay = 1;
                 if ((s = edline(0, "Command", "")) && s[strspn(s, " \t")]) {
-                    int i, dowait = 0;
+                    int exit_status, needs_wait = 0;
                     erase();
                     refresh();
                     endwin();
                     errno = 0;
-                    i = system(s);
-                    if (i == -1 || (i == 127 && errno != 0)) {
+                    exit_status = system(s);
+                    if (exit_status == -1 || (exit_status == 127 && errno != 0)) {
                         fprintf(stderr, "system: %s: %s\n", s, strerror(errno));
-                        dowait = 1;
-                    } else if (i != 0) {
-                        if (WIFEXITED(i))
-                            fprintf(stderr, "%s: exited with code %d\n", s, WEXITSTATUS(i));
-                        else if (WIFSIGNALED(i))
-                            fprintf(stderr, "%s: killed by signal %d\n", s, WTERMSIG(i));
-                        dowait = 1;
+                        needs_wait = 1;
+                    } else if (exit_status != 0) {
+                        if (WIFEXITED(exit_status))
+                            fprintf(stderr, "%s: exited with code %d\n", s, WEXITSTATUS(exit_status));
+                        else if (WIFSIGNALED(exit_status))
+                            fprintf(stderr, "%s: killed by signal %d\n", s, WTERMSIG(exit_status));
+                        needs_wait = 1;
                     }
                     ui_curses_init();
-                    if (dowait) {
+                    if (needs_wait) {
                         fprintf(stderr, "Press any key....");
                         while (getch() == ERR);
                     }

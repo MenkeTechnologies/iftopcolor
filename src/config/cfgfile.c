@@ -47,10 +47,10 @@ stringmap config;
 
 extern options_t options;
 
-int is_cfgdirective_valid(const char *s) {
-    int t;
-    for (t = 0; config_directives[t] != NULL; t++)
-        if (strcmp(s, config_directives[t]) == 0) return 1;
+int is_cfgdirective_valid(const char *directive) {
+    int idx;
+    for (idx = 0; config_directives[idx] != NULL; idx++)
+        if (strcmp(directive, config_directives[idx]) == 0) return 1;
     return 0;
 }
 
@@ -64,30 +64,30 @@ int config_init() {
  * stringmap of the results. Prints errors to stderr, rather than using
  * syslog, since this file is called at program startup. Returns 1 on success
  * or 0 on failure. */
-int read_config_file(const char *f, int whinge) {
+int read_config_file(const char *filepath, int whinge) {
     int ret = 0;
     FILE *fp;
     char *line;
-    int i = 1;
+    int line_num = 1;
 
     line = xmalloc(MAX_CONFIG_LINE);
 
-    fp = fopen(f, "rt");
+    fp = fopen(filepath, "rt");
     if (!fp) {
-        if (whinge) fprintf(stderr, "%s: %s\n", f, strerror(errno));
+        if (whinge) fprintf(stderr, "%s: %s\n", filepath, strerror(errno));
         goto fail;
     }
 
     while (fgets(line, MAX_CONFIG_LINE, fp)) {
-        char *key, *value, *r;
+        char *key, *value, *end;
 
-        for (r = line + strlen(line) - 1; r > line && *r == '\n'; *(r--) = 0);
+        for (end = line + strlen(line) - 1; end > line && *end == '\n'; *(end--) = 0);
 
         /* Get continuation lines. Ugly. */
         while (*(line + strlen(line) - 1) == '\\') {
             if (!fgets(line + strlen(line) - 1, MAX_CONFIG_LINE - strlen(line), fp))
                 break;
-            for (r = line + strlen(line) - 1; r > line && *r == '\n'; *(r--) = 0);
+            for (end = line + strlen(line) - 1; end > line && *end == '\n'; *(end--) = 0);
         }
 
         /* Strip comment. */
@@ -101,35 +101,35 @@ int read_config_file(const char *f, int whinge) {
 
         if (value) {
             /*    foo  : bar baz quux
-             * key^  ^r ^value         */
+             * key^  ^end ^value         */
             ++value;
 
-            r = key + strcspn(key, " \t:");
-            if (r != key) {
-                item *I;
-                *r = 0;
+            end = key + strcspn(key, " \t:");
+            if (end != key) {
+                item *existing;
+                *end = 0;
 
                 /*    foo\0: bar baz quux
-                 * key^      ^value      ^r */
+                 * key^      ^value      ^end */
                 value += strspn(value, " \t");
-                r = value + strlen(value) - 1;
-                while (strchr(" \t", *r) && r > value) --r;
-                *(r + 1) = 0;
+                end = value + strlen(value) - 1;
+                while (strchr(" \t", *end) && end > value) --end;
+                *(end + 1) = 0;
 
                 /* (Removed check for zero length value.) */
 
                 /* Check that this is a valid key. */
                 if (!is_cfgdirective_valid(key))
-                    fprintf(stderr, "%s:%d: warning: unknown directive \"%s\"\n", f, i, key);
+                    fprintf(stderr, "%s:%d: warning: unknown directive \"%s\"\n", filepath, line_num, key);
                 else {
                     char *dup = xstrdup(value);
-                    if ((I = stringmap_insert(config, key, item_ptr(dup)))) {
+                    if ((existing = stringmap_insert(config, key, item_ptr(dup)))) {
                         /* Don't warn of repeated directives, because they
                          * may have been specified via the command line
                          * Previous option takes precedence.
                          */
                         xfree(dup);
-                        fprintf(stderr, "%s:%d: warning: repeated directive \"%s\"\n", f, i, key);
+                        fprintf(stderr, "%s:%d: warning: repeated directive \"%s\"\n", filepath, line_num, key);
                     }
                 }
             }
@@ -137,7 +137,7 @@ int read_config_file(const char *f, int whinge) {
 
         memset(line, 0, MAX_CONFIG_LINE); /* security paranoia */
 
-        ++i;
+        ++line_num;
     }
 
     ret = 1;
@@ -150,19 +150,19 @@ int read_config_file(const char *f, int whinge) {
 }
 
 int config_get_int(const char *directive, int *value) {
-    stringmap S;
-    char *s, *t;
+    stringmap entry;
+    char *str, *endptr;
 
     if (!value) return -1;
 
-    S = stringmap_find(config, directive);
-    if (!S) return 0;
+    entry = stringmap_find(config, directive);
+    if (!entry) return 0;
 
-    s = (char *) S->data.ptr;
-    if (!*s) return -1;
+    str = (char *) entry->data.ptr;
+    if (!*str) return -1;
     errno = 0;
-    *value = strtol(s, &t, 10);
-    if (*t) return -1;
+    *value = strtol(str, &endptr, 10);
+    if (*endptr) return -1;
 
     return errno == ERANGE ? -1 : 1;
 }
@@ -171,19 +171,19 @@ int config_get_int(const char *directive, int *value) {
  * Get an integer value from a config string. Returns 1 on success, -1 on
  * failure, or 0 if no value was found. */
 int config_get_float(const char *directive, float *value) {
-    stringmap S;
-    char *s, *t;
+    stringmap entry;
+    char *str, *endptr;
 
     if (!value) return -1;
 
-    if (!(S = stringmap_find(config, directive)))
+    if (!(entry = stringmap_find(config, directive)))
         return 0;
 
-    s = (char *) S->data.ptr;
-    if (!*s) return -1;
+    str = (char *) entry->data.ptr;
+    if (!*str) return -1;
     errno = 0;
-    *value = strtod(s, &t);
-    if (*t) return -1;
+    *value = strtod(str, &endptr);
+    if (*endptr) return -1;
 
     return errno == ERANGE ? -1 : 1;
 }
@@ -192,40 +192,40 @@ int config_get_float(const char *directive, float *value) {
  * Get a string value from the config file. Returns NULL if it is not
  * present. */
 char *config_get_string(const char *directive) {
-    stringmap S;
+    stringmap entry;
 
-    S = stringmap_find(config, directive);
-    if (S) return (char *) S->data.ptr;
+    entry = stringmap_find(config, directive);
+    if (entry) return (char *) entry->data.ptr;
     else return NULL;
 }
 
 /* config_get_bool:
  * Get a boolean value from the config file. Returns false if not present. */
 int config_get_bool(const char *directive) {
-    char *s;
+    char *str;
 
-    s = config_get_string(directive);
-    if (s && (strcmp(s, "yes") == 0 || strcmp(s, "true") == 0))
+    str = config_get_string(directive);
+    if (str && (strcmp(str, "yes") == 0 || strcmp(str, "true") == 0))
         return 1;
     else
         return 0;
 }
 
 /* config_get_enum:
- * Get an enumeration value from the config file. Returns false if not 
+ * Get an enumeration value from the config file. Returns false if not
  * present or an invalid value is found. */
 int config_get_enum(const char *directive, config_enumeration_type *enumeration, int *value) {
-    char *s;
-    config_enumeration_type *t;
-    s = config_get_string(directive);
-    if (s) {
-        for (t = enumeration; t->name; t++) {
-            if (strcmp(s, t->name) == 0) {
-                *value = t->value;
+    char *str;
+    config_enumeration_type *entry;
+    str = config_get_string(directive);
+    if (str) {
+        for (entry = enumeration; entry->name; entry++) {
+            if (strcmp(str, entry->name) == 0) {
+                *value = entry->value;
                 return 1;
             }
         }
-        fprintf(stderr, "Invalid enumeration value \"%s\" for directive \"%s\"\n", s, directive);
+        fprintf(stderr, "Invalid enumeration value \"%s\" for directive \"%s\"\n", str, directive);
     }
     return 0;
 }
@@ -233,15 +233,15 @@ int config_get_enum(const char *directive, config_enumeration_type *enumeration,
 /* config_set_string; Sets a value in the config, possibly overriding
  * an existing value
  */
-void config_set_string(const char *directive, const char *s) {
-    stringmap S;
+void config_set_string(const char *directive, const char *str) {
+    stringmap entry;
 
-    S = stringmap_find(config, directive);
-    if (S) {
-        xfree(S->data.ptr);
-        S->data = item_ptr(xstrdup(s));
+    entry = stringmap_find(config, directive);
+    if (entry) {
+        xfree(entry->data.ptr);
+        entry->data = item_ptr(xstrdup(str));
     } else {
-        stringmap_insert(config, directive, item_ptr(xstrdup(s)));
+        stringmap_insert(config, directive, item_ptr(xstrdup(str)));
     }
 }
 

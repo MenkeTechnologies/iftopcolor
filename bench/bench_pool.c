@@ -18,7 +18,7 @@ static int dummy_recs[N_FLOWS];
 static void generate_flows(void) {
     for (int i = 0; i < N_FLOWS; i++) {
         memset(&flows[i], 0, sizeof(addr_pair));
-        flows[i].af = AF_INET;
+        flows[i].address_family = AF_INET;
         flows[i].protocol = 6;
         flows[i].src.s_addr = htonl(0x0a000001 + i);
         flows[i].src_port = 1024 + (i % 60000);

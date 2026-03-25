@@ -75,10 +75,10 @@ config_enumeration_type showports_enumeration[] = {
         {NULL,               -1}
 };
 
-static int is_bad_interface_name(char *i) {
-    char **p;
-    for (p = bad_interface_names; *p; ++p)
-        if (strncmp(i, *p, strlen(*p)) == 0)
+static int is_bad_interface_name(char *name) {
+    char **prefix;
+    for (prefix = bad_interface_names; *prefix; ++prefix)
+        if (strncmp(name, *prefix, strlen(*prefix)) == 0)
             return 1;
     return 0;
 }
@@ -88,9 +88,9 @@ static int is_bad_interface_name(char *i) {
 static char *get_first_interface(void) {
     struct if_nameindex *nameindex;
     struct ifreq ifr;
-    char *i = NULL;
-    int j = 0;
-    int s;
+    char *iface = NULL;
+    int idx = 0;
+    int sock;
     /* Use if_nameindex(3) instead? */
 
     nameindex = if_nameindex();
@@ -98,26 +98,26 @@ static char *get_first_interface(void) {
         return NULL;
     }
 
-    s = socket(AF_INET, SOCK_DGRAM, 0); /* any sort of IP socket will do */
+    sock = socket(AF_INET, SOCK_DGRAM, 0); /* any sort of IP socket will do */
 
-    while (nameindex[j].if_index != 0) {
-        if (strcmp(nameindex[j].if_name, "lo") != 0 && !is_bad_interface_name(nameindex[j].if_name)) {
-            strncpy(ifr.ifr_name, nameindex[j].if_name, sizeof(ifr.ifr_name));
-            if ((s == -1) || (ioctl(s, SIOCGIFFLAGS, &ifr) == -1) || (ifr.ifr_flags & IFF_UP)) {
-                i = xstrdup(nameindex[j].if_name);
+    while (nameindex[idx].if_index != 0) {
+        if (strcmp(nameindex[idx].if_name, "lo") != 0 && !is_bad_interface_name(nameindex[idx].if_name)) {
+            strncpy(ifr.ifr_name, nameindex[idx].if_name, sizeof(ifr.ifr_name));
+            if ((sock == -1) || (ioctl(sock, SIOCGIFFLAGS, &ifr) == -1) || (ifr.ifr_flags & IFF_UP)) {
+                iface = xstrdup(nameindex[idx].if_name);
                 break;
             }
         }
-        j++;
+        idx++;
     }
-    if (s != -1)
-        close(s);
+    if (sock != -1)
+        close(sock);
     if_freenameindex(nameindex);
-    return i;
+    return iface;
 }
 
 void options_set_defaults() {
-    char *s;
+    char *home_dir;
     /* Should go through the list of interfaces, and find the first one which
      * is up and is not lo or dummy*. */
     options.interface = get_first_interface();
@@ -159,11 +159,11 @@ void options_set_defaults() {
     options.bar_interval = 1;
 
     /* Figure out the name for the config file */
-    s = getenv("HOME");
-    if (s != NULL) {
-        int i = strlen(s) + 9 + 1;
-        options.config_file = xmalloc(i);
-        snprintf(options.config_file, i, "%s/.iftoprc", s);
+    home_dir = getenv("HOME");
+    if (home_dir != NULL) {
+        int path_len = strlen(home_dir) + 9 + 1;
+        options.config_file = xmalloc(path_len);
+        snprintf(options.config_file, path_len, "%s/.iftoprc", home_dir);
     } else {
         options.config_file = xstrdup("iftoprc");
     }
@@ -214,20 +214,20 @@ static void set_net_filter(char *arg) {
     /* Accept a netmask like /24 or /255.255.255.0. */
     if (mask[strspn(mask, "0123456789")] == '\0') {
         /* Whole string is numeric */
-        int n;
-        n = atoi(mask);
-        if (n > 32) {
+        int prefix_len;
+        prefix_len = atoi(mask);
+        if (prefix_len > 32) {
             die("Invalid netmask");
         } else {
-            if (n == 32) {
+            if (prefix_len == 32) {
                 /* This needs to be special cased, although I don't fully
                  * understand why
                  */
                 options.netfiltermask.s_addr = htonl(0xffffffffl);
             } else {
-                u_int32_t mm = 0xffffffffl;
-                mm >>= n;
-                options.netfiltermask.s_addr = htonl(~mm);
+                u_int32_t netmask = 0xffffffffl;
+                netmask >>= prefix_len;
+                options.netfiltermask.s_addr = htonl(~netmask);
             }
         }
     } else if (inet_aton(mask, &options.netfiltermask) == 0) {
@@ -359,10 +359,10 @@ void options_read_args(int argc, char **argv) {
  * Gets a value from the config, sets *value to a copy of the value, if
  * found.  Leaves the option unchanged otherwise. */
 int options_config_get_string(const char *name, char **value) {
-    char *s;
-    s = config_get_string(name);
-    if (s != NULL) {
-        *value = xstrdup(s);
+    char *str;
+    str = config_get_string(name);
+    if (str != NULL) {
+        *value = xstrdup(str);
         return 1;
     }
     return 0;
@@ -385,10 +385,10 @@ int options_config_get_int(const char *name, int *value) {
 }
 
 int options_config_get_enum(char *name, config_enumeration_type *enumeration, int *result) {
-    int i;
+    int enum_val;
     if (config_get_string(name)) {
-        if (config_get_enum(name, enumeration, &i)) {
-            *result = i;
+        if (config_get_enum(name, enumeration, &enum_val)) {
+            *result = enum_val;
             return 1;
         }
     }
@@ -412,12 +412,12 @@ int options_config_get_bw_rate(char *directive, long long *result) {
     char *units;
     long long mult = 1;
     long long value;
-    char *s;
-    s = config_get_string(directive);
-    if (s) {
-        units = s + strspn(s, "0123456789");
+    char *str;
+    str = config_get_string(directive);
+    if (str) {
+        units = str + strspn(str, "0123456789");
         if (strlen(units) > 1) {
-            fprintf(stderr, "Invalid units in value: %s\n", s);
+            fprintf(stderr, "Invalid units in value: %s\n", str);
             return 0;
         }
         if (strlen(units) == 1) {
@@ -430,13 +430,13 @@ int options_config_get_bw_rate(char *directive, long long *result) {
             } else if (*units == 'b' || *units == 'B') {
                 /* bits => mult = 1 */
             } else {
-                fprintf(stderr, "Invalid units in value: %s\n", s);
+                fprintf(stderr, "Invalid units in value: %s\n", str);
                 return 0;
             }
         }
         *units = '\0';
-        if (sscanf(s, "%lld", &value) != 1) {
-            fprintf(stderr, "Error reading rate: %s\n", s);
+        if (sscanf(str, "%lld", &value) != 1) {
+            fprintf(stderr, "Error reading rate: %s\n", str);
         }
         options.max_bandwidth = value * mult;
         return 1;
@@ -445,44 +445,44 @@ int options_config_get_bw_rate(char *directive, long long *result) {
 }
 
 /*
- * Read the net filter option.  
+ * Read the net filter option.
  */
 int options_config_get_net_filter() {
-    char *s;
-    s = config_get_string("net-filter");
-    if (s) {
+    char *str;
+    str = config_get_string("net-filter");
+    if (str) {
         char *mask;
 
         options.netfilter = 0;
 
-        mask = strchr(s, '/');
+        mask = strchr(str, '/');
         if (mask == NULL) {
-            fprintf(stderr, "Could not parse net/mask: %s\n", s);
+            fprintf(stderr, "Could not parse net/mask: %s\n", str);
             return 0;
         }
         *mask = '\0';
         mask++;
-        if (inet_aton(s, &options.netfilternet) == 0) {
-            fprintf(stderr, "Invalid network address: %s\n", s);
+        if (inet_aton(str, &options.netfilternet) == 0) {
+            fprintf(stderr, "Invalid network address: %s\n", str);
             return 0;
         }
         /* Accept a netmask like /24 or /255.255.255.0. */
         if (mask[strspn(mask, "0123456789")] == '\0') {
             /* Whole string is numeric */
-            int n;
-            n = atoi(mask);
-            if (n > 32) {
+            int prefix_len;
+            prefix_len = atoi(mask);
+            if (prefix_len > 32) {
                 fprintf(stderr, "Invalid netmask length: %s\n", mask);
             } else {
-                if (n == 32) {
+                if (prefix_len == 32) {
                     /* This needs to be special cased, although I don't fully
                      * understand why
                      */
                     options.netfiltermask.s_addr = htonl(0xffffffffl);
                 } else {
-                    u_int32_t mm = 0xffffffffl;
-                    mm >>= n;
-                    options.netfiltermask.s_addr = htonl(~mm);
+                    u_int32_t netmask = 0xffffffffl;
+                    netmask >>= prefix_len;
+                    options.netfiltermask.s_addr = htonl(~netmask);
                 }
             }
             options.netfilter = 1;
@@ -490,7 +490,7 @@ int options_config_get_net_filter() {
             if (inet_aton(mask, &options.netfiltermask) != 0)
                 options.netfilter = 1;
             else {
-                fprintf(stderr, "Invalid netmask: %s\n", s);
+                fprintf(stderr, "Invalid netmask: %s\n", str);
                 return 0;
             }
         }
@@ -501,57 +501,57 @@ int options_config_get_net_filter() {
 }
 
 /*
- * Read the net filter IPv6 option.  
+ * Read the net filter IPv6 option.
  */
 int options_config_get_net_filter6() {
-    char *s;
+    char *str;
     int j;
 
-    s = config_get_string("net-filter6");
-    if (s) {
+    str = config_get_string("net-filter6");
+    if (str) {
         char *mask;
 
         options.netfilter6 = 0;
 
-        mask = strchr(s, '/');
+        mask = strchr(str, '/');
         if (mask == NULL) {
-            fprintf(stderr, "Could not parse IPv6 net/prefix: %s\n", s);
+            fprintf(stderr, "Could not parse IPv6 net/prefix: %s\n", str);
             return 0;
         }
         *mask = '\0';
         mask++;
-        if (inet_pton(AF_INET6, s, &options.netfilter6net) == 0) {
-            fprintf(stderr, "Invalid IPv6 network address: %s\n", s);
+        if (inet_pton(AF_INET6, str, &options.netfilter6net) == 0) {
+            fprintf(stderr, "Invalid IPv6 network address: %s\n", str);
             return 0;
         }
         /* Accept prefix lengths and address expressions. */
         if (mask[strspn(mask, "0123456789")] == '\0') {
             /* Whole string is numeric */
-            unsigned int n;
+            unsigned int prefix_len;
 
-            n = atoi(mask);
-            if (n > 128 || n < 1) {
+            prefix_len = atoi(mask);
+            if (prefix_len > 128 || prefix_len < 1) {
                 fprintf(stderr, "Invalid IPv6 prefix length: %s\n", mask);
             } else {
-                int bl, rem;
-                const uint8_t mm = 0xff;
-                uint8_t part = mm;
+                int full_bytes, remainder;
+                const uint8_t all_ones = 0xff;
+                uint8_t partial = all_ones;
 
-                bl = n / 8;
-                rem = n % 8;
-                part <<= 8 - rem;
-                for (j = 0; j < bl; ++j)
-                    options.netfilter6mask.s6_addr[j] = mm;
+                full_bytes = prefix_len / 8;
+                remainder = prefix_len % 8;
+                partial <<= 8 - remainder;
+                for (j = 0; j < full_bytes; ++j)
+                    options.netfilter6mask.s6_addr[j] = all_ones;
 
-                if (rem > 0)
-                    options.netfilter6mask.s6_addr[bl] = part;
+                if (remainder > 0)
+                    options.netfilter6mask.s6_addr[full_bytes] = partial;
                 options.netfilter6 = 1;
             }
         } else {
             if (inet_pton(AF_INET6, mask, &options.netfilter6mask) != 0)
                 options.netfilter6 = 1;
             else {
-                fprintf(stderr, "Invalid IPv6 netmask: %s\n", s);
+                fprintf(stderr, "Invalid IPv6 netmask: %s\n", str);
                 return 0;
             }
         }

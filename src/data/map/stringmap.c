@@ -15,67 +15,67 @@
 /* stringmap_new:
  * Allocate memory for a new stringmap. */
 stringmap stringmap_new() {
-    stringmap S;
+    stringmap map;
 
-    S = xcalloc(sizeof *S, 1);
+    map = xcalloc(sizeof *map, 1);
 
-    return S;
+    return map;
 }
 
 /* stringmap_delete:
  * Free memory for a stringmap. */
-void stringmap_delete(stringmap S) {
-    if (!S) return;
-    if (S->lesser) stringmap_delete(S->lesser);
-    if (S->greater) stringmap_delete(S->greater);
+void stringmap_delete(stringmap map) {
+    if (!map) return;
+    if (map->lesser) stringmap_delete(map->lesser);
+    if (map->greater) stringmap_delete(map->greater);
 
-    xfree(S->key);
-    xfree(S);
+    xfree(map->key);
+    xfree(map);
 }
 
 /* stringmap_delete_free:
  * Free memory for a stringmap, and the objects contained in it, assuming that
  * they are pointers to memory allocated by xmalloc(3). */
-void stringmap_delete_free(stringmap S) {
-    if (!S) return;
-    if (S->lesser) stringmap_delete_free(S->lesser);
-    if (S->greater) stringmap_delete_free(S->greater);
+void stringmap_delete_free(stringmap map) {
+    if (!map) return;
+    if (map->lesser) stringmap_delete_free(map->lesser);
+    if (map->greater) stringmap_delete_free(map->greater);
 
-    xfree(S->key);
-    xfree(S->data.ptr);
-    xfree(S);
+    xfree(map->key);
+    xfree(map->data.ptr);
+    xfree(map);
 }
 
 /* stringmap_insert:
- * Insert into S an item having key k and value d. Returns a pointer to
+ * Insert into map an item having key k and value d. Returns a pointer to
  * the existing item value, or NULL if a new item was created.
  */
-item *stringmap_insert(stringmap S, const char *k, const item d) {
-    if (!S) return NULL;
-    if (S->key == NULL) {
-        S->key = xstrdup(k);
-        S->data = d;
+item *stringmap_insert(stringmap map, const char *k, const item d) {
+    if (!map) return NULL;
+    if (map->key == NULL) {
+        map->key = xstrdup(k);
+        map->data = d;
         return NULL;
     } else {
-        stringmap S2;
-        for (S2 = S;;) {
-            int i = strcmp(k, S2->key);
-            if (i == 0) {
-                return &(S2->data);
-            } else if (i < 0) {
-                if (S2->lesser) S2 = S2->lesser;
+        stringmap current;
+        for (current = map;;) {
+            int cmp = strcmp(k, current->key);
+            if (cmp == 0) {
+                return &(current->data);
+            } else if (cmp < 0) {
+                if (current->lesser) current = current->lesser;
                 else {
-                    if (!(S2->lesser = stringmap_new())) return NULL;
-                    S2->lesser->key = xstrdup(k);
-                    S2->lesser->data = d;
+                    if (!(current->lesser = stringmap_new())) return NULL;
+                    current->lesser->key = xstrdup(k);
+                    current->lesser->data = d;
                     return NULL;
                 }
-            } else if (i > 0) {
-                if (S2->greater) S2 = S2->greater;
+            } else if (cmp > 0) {
+                if (current->greater) current = current->greater;
                 else {
-                    if (!(S2->greater = stringmap_new())) return NULL;
-                    S2->greater->key = xstrdup(k);
-                    S2->greater->data = d;
+                    if (!(current->greater = stringmap_new())) return NULL;
+                    current->greater->key = xstrdup(k);
+                    current->greater->data = d;
                     return NULL;
                 }
             }
@@ -84,20 +84,20 @@ item *stringmap_insert(stringmap S, const char *k, const item d) {
 }
 
 /* stringmap_find:
- * Find in d an item having key k in the stringmap S, returning the item found
+ * Find in d an item having key k in the stringmap, returning the item found
  * on success NULL if no key was found. */
-stringmap stringmap_find(const stringmap S, const char *k) {
-    stringmap S2;
-    int i;
-    if (!S || S->key == NULL) return 0;
-    for (S2 = S;;) {
-        i = strcmp(k, S2->key);
-        if (i == 0) return S2;
-        else if (i < 0) {
-            if (S2->lesser) S2 = S2->lesser;
+stringmap stringmap_find(const stringmap map, const char *k) {
+    stringmap current;
+    int cmp;
+    if (!map || map->key == NULL) return 0;
+    for (current = map;;) {
+        cmp = strcmp(k, current->key);
+        if (cmp == 0) return current;
+        else if (cmp < 0) {
+            if (current->lesser) current = current->lesser;
             else return NULL;
-        } else if (i > 0) {
-            if (S2->greater) S2 = S2->greater;
+        } else if (cmp > 0) {
+            if (current->greater) current = current->greater;
             else return NULL;
         }
     }

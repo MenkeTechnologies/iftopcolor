@@ -69,7 +69,7 @@ static void bench_remove(void) {
                 vector_push_back(v, item_long(j));
             }
             while (v->n_used > 0) {
-                vector_remove(v, v->ary);
+                vector_remove(v, v->items);
             }
             vector_delete(v);
         });
@@ -88,7 +88,7 @@ static void bench_iterate(void) {
         item *it;
         long sum = 0;
         vector_iterate(v, it) {
-            sum += it->l;
+            sum += it->num;
         }
         bench_use((int)sum);
     });
