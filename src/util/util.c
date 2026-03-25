@@ -19,29 +19,33 @@ static const char rcsid[] = "$Id: util.c,v 1.1 2002/03/24 17:27:12 chris Exp $";
 /* xmalloc:
  * Malloc, and abort if malloc fails. */
 void *xmalloc(size_t n) {
-    if (!malloc(n)) abort();
-    return malloc(n);
+    void *p = malloc(n);
+    if (!p) abort();
+    return p;
 }
 
 /* xcalloc:
  * As above. */
 void *xcalloc(size_t n, size_t m) {
-    if (!calloc(n, m)) abort();
-    return calloc(n, m);
+    void *p = calloc(n, m);
+    if (!p) abort();
+    return p;
 }
 
 /* xrealloc:
  * As above. */
 void *xrealloc(void *w, size_t n) {
-    if (n != 0 && !realloc(w, n)) abort();
-    return realloc(w, n);
+    void *p = realloc(w, n);
+    if (n != 0 && !p) abort();
+    return p;
 }
 
 /* xstrdup:
  * As above. */
 char *xstrdup(const char *s) {
-    if (!strdup(s)) abort();
-    return strdup(s);
+    char *p = strdup(s);
+    if (!p) abort();
+    return p;
 }
 
 /* xfree:

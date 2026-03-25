@@ -497,6 +497,7 @@ void getColors() {
 //        printf(".iftopcolors config file is empty. Resorting to defaults.\n");
         }
 
+        fclose(fp);
 
     } else {
 //        printf(".iftopcolors config file does not exist. Resorting to defaults.\n");
