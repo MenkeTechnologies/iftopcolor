@@ -52,7 +52,7 @@
 
 /* ethernet address of interface. */
 int have_hw_addr = 0;
-unsigned char if_hw_addr[6];
+char if_hw_addr[6];
 
 /* IP address of interface */
 int have_ip_addr = 0;
@@ -136,7 +136,6 @@ void tick(int print) {
 
     t = time(NULL);
     if (t - last_timestamp >= RESOLUTION) {
-        //printf("TICKING\n");
         analyse_data();
         ui_print();
         history_rotate();
@@ -666,7 +665,6 @@ void packet_init() {
         fprintf(stderr, "\n");
     }
 
-    //    exit(0);
     resolver_initialise();
 
     pd = pcap_open_live(options.interface, CAPTURE_LENGTH, options.promiscuous, 1000, errbuf);

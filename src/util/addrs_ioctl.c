@@ -110,7 +110,7 @@ get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr, 
         got_hw_addr = 1;
 
         ENDHWADDR:
-        1; /* compiler whines if there is a label at the end of a block...*/
+        (void)0;
     }
 #else
     fprintf(stderr, "Cannot obtain hardware address on this platform\n");

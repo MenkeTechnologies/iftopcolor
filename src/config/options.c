@@ -55,7 +55,7 @@ config_enumeration_type sort_enumeration[] = {
         {"10s",         OPTION_SORT_DIV2},
         {"40s",         OPTION_SORT_DIV3},
         {"source",      OPTION_SORT_SRC},
-        {"destination", OPTION_SORT_SRC},
+        {"destination", OPTION_SORT_DEST},
         {NULL,          -1}
 };
 
@@ -110,6 +110,8 @@ static char *get_first_interface(void) {
         }
         j++;
     }
+    if (s != -1)
+        close(s);
     if_freenameindex(nameindex);
     return i;
 }
