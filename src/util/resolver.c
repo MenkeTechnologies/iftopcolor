@@ -130,7 +130,9 @@ char* do_resolve(struct addr_storage *addr) {
         
         /* Enlarge the buffer.  */
         hstbuflen *= 2;
-        tmphstbuf = realloc (tmphstbuf, hstbuflen);
+        void *tmp = realloc (tmphstbuf, hstbuflen);
+        if (!tmp) break;
+        tmphstbuf = tmp;
       }
 
     /*  Check for errors.  */
@@ -242,6 +244,14 @@ static void do_resolve_ares_callback(void *arg, int status, unsigned char *abuf,
     }
 }
 
+static void ares_channel_destroy(void *ptr) {
+    ares_channel *chan = ptr;
+    if (chan) {
+        ares_destroy(*chan);
+        xfree(chan);
+    }
+}
+
 char *do_resolve(struct addr_storage * addr) {
     struct ares_callback_comm C;
     char s[35];
@@ -257,9 +267,9 @@ char *do_resolve(struct addr_storage * addr) {
     /* Make sure we have an ARES channel for this thread. */
     pthread_mutex_lock(&ares_init_mtx);
     if (!gotkey) {
-        pthread_key_create(&ares_key, NULL);
+        pthread_key_create(&ares_key, ares_channel_destroy);
         gotkey = 1;
-        
+
     }
     pthread_mutex_unlock(&ares_init_mtx);
     
@@ -267,7 +277,11 @@ char *do_resolve(struct addr_storage * addr) {
     if (!chan) {
         chan = xmalloc(sizeof *chan);
         pthread_setspecific(ares_key, chan);
-        if (ares_init(chan) != ARES_SUCCESS) return NULL;
+        if (ares_init(chan) != ARES_SUCCESS) {
+            xfree(chan);
+            pthread_setspecific(ares_key, NULL);
+            return NULL;
+        }
     }
     
     a = (unsigned char*)&addr->as_addr4;
@@ -363,6 +377,8 @@ char *do_resolve(struct in6_addr *addr) {
             case -1:
                 close(p[0]);
                 close(p[1]);
+                xfree(workerinfo);
+                pthread_setspecific(worker_key, NULL);
                 return NULL;
 
             default:

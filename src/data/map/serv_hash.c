@@ -59,6 +59,7 @@ void serv_hash_initialise(hash_type *sh) {
             service->port = ntohs(ent->s_port);
             service->protocol = pent->p_proto;
             hash_insert(sh, service, xstrdup(ent->s_name));
+            xfree(service);
         }
     }
     endprotoent();

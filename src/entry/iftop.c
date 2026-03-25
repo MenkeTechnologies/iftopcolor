@@ -636,6 +636,7 @@ char *set_filter_code(const char *filter) {
         sprintf(x, "(%s) and (ip or ip6)", filter);
     } else
         x = xstrdup("ip or ip6");
+    pcap_freecode(&pcap_filter);
     if (pcap_compile(pd, &pcap_filter, x, 1, 0) == -1) {
         xfree(x);
         return pcap_geterr(pd);

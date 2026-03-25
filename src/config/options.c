@@ -122,7 +122,7 @@ void options_set_defaults() {
      * is up and is not lo or dummy*. */
     options.interface = get_first_interface();
     if (!options.interface)
-        options.interface = "eth0";
+        options.interface = xstrdup("eth0");
 
     options.filtercode = NULL;
     options.netfilter = 0;
@@ -565,9 +565,13 @@ int options_config_get_net_filter6() {
 }
 
 void options_make() {
+    xfree(options.interface);
+    options.interface = NULL;
     options_config_get_string("interface", &options.interface);
     options_config_get_bool("dns-resolution", &options.dnsresolution);
     options_config_get_bool("port-resolution", &options.portresolution);
+    xfree(options.filtercode);
+    options.filtercode = NULL;
     options_config_get_string("filter-code", &options.filtercode);
     options_config_get_bool("show-bars", &options.showbars);
     options_config_get_promiscuous();
@@ -580,6 +584,8 @@ void options_make() {
     options_config_get_bool("log-scale", &options.log_scale);
     options_config_get_bw_rate("max-bandwidth", &options.max_bandwidth);
     options_config_get_enum("port-display", showports_enumeration, (int *) &options.showports);
+    xfree(options.screenfilter);
+    options.screenfilter = NULL;
     options_config_get_string("screen-filter", &options.screenfilter);
     options_config_get_bool("link-local", &options.link_local);
     options_config_get_net_filter();

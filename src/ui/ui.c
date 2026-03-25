@@ -984,7 +984,9 @@ void make_screen_list() {
         if (!freeze) {
             if (count >= capacity) {
                 capacity *= 2;
-                items = realloc(items, capacity * sizeof(void *));
+                void *tmp = realloc(items, capacity * sizeof(void *));
+                if (!tmp) break;
+                items = tmp;
             }
             items[count++] = line;
         }
@@ -1174,6 +1176,7 @@ void ui_print() {
     if (!line || lcols != COLS) {
         xfree(line);
         line = calloc(COLS + 1, 1);
+        lcols = COLS;
     }
 
     /* 
