@@ -2,9 +2,6 @@
  * util.c:
  * Various utility functions.
  *
- * Copyright (c) 2002 Chris Lightfoot. All rights reserved.
- * Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
- *
  */
 
 #include <sys/types.h>

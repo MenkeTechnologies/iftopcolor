@@ -2,8 +2,6 @@
  * vector.c:
  * simple vectors
  *
- * Copyright (c) 2001 Chris Lightfoot. All rights reserved.
- *
  */
 
 #include <stdlib.h>

@@ -2,8 +2,6 @@
  * stringmap.h:
  * map of strings
  *
- * Copyright (c) 2001 Chris Lightfoot. All rights reserved.
- *
  */
 
 #ifndef __STRINGMAP_H_ /* include guard */

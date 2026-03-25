@@ -2,8 +2,6 @@
  * vector.h:
  * simple vectors
  *
- * Copyright (c) 2001 Chris Lightfoot. All rights reserved.
- *
  */
 
 #ifndef __VECTOR_H_ /* include guard */
