@@ -79,8 +79,8 @@ foreach(t IN LISTS TEST_TARGETS)
     set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_CLEAN_FILES $<TARGET_FILE:${t}>)
 endforeach()
 
-# "make test" builds and runs all tests
-add_custom_target(test
+# "make check" builds and runs all tests
+add_custom_target(check
     DEPENDS ${TEST_TARGETS}
     COMMAND ${CMAKE_COMMAND} -E echo ""
     COMMAND ${CMAKE_COMMAND} -E echo "=== Running tests ==="

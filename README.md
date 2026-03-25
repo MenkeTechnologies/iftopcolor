@@ -54,10 +54,10 @@ cd iftopcolor
 
 # --- COMPILE THE ICE ---
 cmake -B build
-cmake --build build
+make -C build
 
 # --- DEPLOY TO /usr/local/sbin ---
-sudo cmake --install build
+sudo make -C build install
 ```
 
 > Make sure `/usr/local/sbin` is in your `PATH` or you'll be flatlined at the prompt.
@@ -150,13 +150,13 @@ A test suite covers core data structures and utilities: hash tables, address/nam
 
 ```sh
 cmake -B build
-cmake --build build --target test
+make -C build check
 ```
 
 Run a single test:
 
 ```sh
-cmake --build build --target test_hash
+make -C build test_hash
 ./build/test_hash
 ```
 
@@ -185,8 +185,7 @@ A benchmark suite measures the performance of core data structures: hash tables,
 ```sh
 # Build and run all benchmarks
 cmake -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build --target bench_hash bench_sorted_list bench_vector bench_pool
-./bench/run_benchmarks.sh
+make -C build bench
 
 # Run a specific benchmark suite
 ./bench/run_benchmarks.sh hash
