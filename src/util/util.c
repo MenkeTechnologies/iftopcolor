@@ -13,39 +13,39 @@
 
 /* xmalloc:
  * Malloc, and abort if malloc fails. */
-void *xmalloc(size_t n) {
-    void *p = malloc(n);
-    if (!p) abort();
-    return p;
+void *xmalloc(size_t size) {
+    void *ptr = malloc(size);
+    if (!ptr) abort();
+    return ptr;
 }
 
 /* xcalloc:
  * As above. */
-void *xcalloc(size_t n, size_t m) {
-    void *p = calloc(n, m);
-    if (!p) abort();
-    return p;
+void *xcalloc(size_t count, size_t size) {
+    void *ptr = calloc(count, size);
+    if (!ptr) abort();
+    return ptr;
 }
 
 /* xrealloc:
  * As above. */
-void *xrealloc(void *w, size_t n) {
-    void *p = realloc(w, n);
-    if (n != 0 && !p) abort();
-    return p;
+void *xrealloc(void *orig, size_t size) {
+    void *ptr = realloc(orig, size);
+    if (size != 0 && !ptr) abort();
+    return ptr;
 }
 
 /* xstrdup:
  * As above. */
-char *xstrdup(const char *s) {
-    char *p = strdup(s);
-    if (!p) abort();
-    return p;
+char *xstrdup(const char *str) {
+    char *ptr = strdup(str);
+    if (!ptr) abort();
+    return ptr;
 }
 
 /* xfree:
  * Free, ignoring a passed NULL value. */
-void xfree(void *v) {
-    if (v) free(v);
+void xfree(void *ptr) {
+    if (ptr) free(ptr);
 }
 

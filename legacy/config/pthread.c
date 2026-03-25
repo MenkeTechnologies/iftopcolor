@@ -18,7 +18,7 @@ static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 static int return_value = -1;
 
-void *worker_thread(void *v) {
+void *worker_thread(void *arg) {
     /* Record successful return and signal parent to wake up. */
     return_value = 0;
     pthread_mutex_lock(&mtx);

@@ -10,8 +10,8 @@
 
 /* --- Helper: string-keyed hash --- */
 
-static int str_compare(void *a, void *b) {
-    return strcmp((char *)a, (char *)b) == 0;
+static int str_compare(void *left, void *right) {
+    return strcmp((char *)left, (char *)right) == 0;
 }
 
 static int str_hash(void *key) {
@@ -48,8 +48,8 @@ static void destroy_str_hash(hash_type *h) {
 
 /* --- Helper: int-keyed hash --- */
 
-static int int_compare(void *a, void *b) {
-    return *(int *)a == *(int *)b;
+static int int_compare(void *left, void *right) {
+    return *(int *)left == *(int *)right;
 }
 
 static int int_hash(void *key) {
@@ -78,7 +78,7 @@ static hash_type *create_int_hash(void) {
 }
 
 /* Force all to bucket 0 */
-static int always_zero_hash(void *k) { (void)k; return 0; }
+static int always_zero_hash(void *key) { (void)key; return 0; }
 
 /* === Initialise / Destroy === */
 

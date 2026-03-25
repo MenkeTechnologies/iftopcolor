@@ -10,8 +10,8 @@
 
 #include "../include/iftop.h"
 
-static int min(const int a, const int b) {
-    return a < b ? a : b;
+static int min(const int left, const int right) {
+    return left < right ? left : right;
 }
 
 /* edline:

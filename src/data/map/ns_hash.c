@@ -9,17 +9,17 @@
 
 #define hash_table_size 256
 
-int ns_hash_compare(void *a, void *b) {
-    struct in6_addr *aa = (struct in6_addr *) a;
-    struct in6_addr *bb = (struct in6_addr *) b;
-    return IN6_ARE_ADDR_EQUAL(aa, bb);
+int ns_hash_compare(void *left, void *right) {
+    struct in6_addr *left_addr = (struct in6_addr *) left;
+    struct in6_addr *right_addr = (struct in6_addr *) right;
+    return IN6_ARE_ADDR_EQUAL(left_addr, right_addr);
 }
 
-static int __inline__ hash_uint32(uint32_t n) {
-    return ((n & 0x000000FF)
-            + ((n & 0x0000FF00) >> 8)
-            + ((n & 0x00FF0000) >> 16)
-            + ((n & 0xFF000000) >> 24));
+static int __inline__ hash_uint32(uint32_t value) {
+    return ((value & 0x000000FF)
+            + ((value & 0x0000FF00) >> 8)
+            + ((value & 0x00FF0000) >> 16)
+            + ((value & 0xFF000000) >> 24));
 }
 
 int ns_hash_hash(void *key) {

@@ -11,26 +11,26 @@
 /* Comparison function wrapper for qsort */
 static int (*qsort_compare_fn)(void *, void *);
 
-static int qsort_compare_wrapper(const void *a, const void *b) {
-    void *aa = *(void *const *)a;
-    void *bb = *(void *const *)b;
+static int qsort_compare_wrapper(const void *left, const void *right) {
+    void *aa = *(void *const *)left;
+    void *bb = *(void *const *)right;
     return qsort_compare_fn(aa, bb) ? 1 : -1;
 }
 
-void sorted_list_insert(sorted_list_type *list, void *item) {
-    sorted_list_node *node, *p;
+void sorted_list_insert(sorted_list_type *list, void *data) {
+    sorted_list_node *node, *prev;
 
-    p = &(list->root);
+    prev = &(list->root);
 
-    while (p->next != NULL && list->compare(item, p->next->data) > 0) {
-        p = p->next;
+    while (prev->next != NULL && list->compare(data, prev->next->data) > 0) {
+        prev = prev->next;
     }
 
     node = xmalloc(sizeof *node);
 
-    node->next = p->next;
-    node->data = item;
-    p->next = node;
+    node->next = prev->next;
+    node->data = data;
+    prev->next = node;
 }
 
 /*

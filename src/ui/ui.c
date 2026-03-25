@@ -566,18 +566,18 @@ int screen_line_bandwidth_compare(host_pair_line *aa, host_pair_line *bb, int st
  * Compare two screen lines based on hostname / IP.  Fall over to compare by
  * bandwidth.
  */
-int screen_line_host_compare(void *a, void *b, host_pair_line *aa, host_pair_line *bb) {
+int screen_line_host_compare(void *left, void *right, host_pair_line *aa, host_pair_line *bb) {
     char hosta[HOSTNAME_LENGTH], hostb[HOSTNAME_LENGTH];
     int cmp_result;
 
     /* This isn't overly efficient because we resolve again before
        display. */
     if (options.dnsresolution) {
-        resolve(aa->ap.address_family, a, hosta, HOSTNAME_LENGTH);
-        resolve(bb->ap.address_family, b, hostb, HOSTNAME_LENGTH);
+        resolve(aa->ap.address_family, left, hosta, HOSTNAME_LENGTH);
+        resolve(bb->ap.address_family, right, hostb, HOSTNAME_LENGTH);
     } else {
-        inet_ntop(aa->ap.address_family, a, hosta, sizeof(hosta));
-        inet_ntop(bb->ap.address_family, b, hostb, sizeof(hostb));
+        inet_ntop(aa->ap.address_family, left, hosta, sizeof(hosta));
+        inet_ntop(bb->ap.address_family, right, hostb, sizeof(hostb));
     }
 
     cmp_result = strcmp(hosta, hostb);
@@ -591,9 +591,9 @@ int screen_line_host_compare(void *a, void *b, host_pair_line *aa, host_pair_lin
 
 }
 
-int screen_line_compare(void *a, void *b) {
-    host_pair_line *aa = (host_pair_line *) a;
-    host_pair_line *bb = (host_pair_line *) b;
+int screen_line_compare(void *left, void *right) {
+    host_pair_line *aa = (host_pair_line *) left;
+    host_pair_line *bb = (host_pair_line *) right;
     if (options.sort == OPTION_SORT_DIV1) {
         return screen_line_bandwidth_compare(aa, bb, 0);
     } else if (options.sort == OPTION_SORT_DIV2) {
@@ -694,7 +694,7 @@ static int get_bar_length(const int rate) {
     return (bar_length * COLS);
 }
 
-static void draw_bar_scale(int *y) {
+static void draw_bar_scale(int *row) {
     float marker;
     float max, interval;
     max = get_max_bandwidth();
@@ -702,10 +702,10 @@ static void draw_bar_scale(int *y) {
     if (options.showbars) {
         float stop;
         /* Draw bar graph scale on top of the window. */
-        move(*y, 0);
+        move(*row, 0);
         clrtoeol();
 
-        mvhline(*y + 1, 0, 0, COLS);
+        mvhline(*row + 1, 0, 0, COLS);
         /* marker in bytes */
 
         if (options.log_scale) {
@@ -724,13 +724,13 @@ static void draw_bar_scale(int *y) {
             readable_size(marker, size_buf, sizeof size_buf, options.log_scale ? 1000 : 1024, options.bandwidth_in_bytes);
             label = size_buf + strspn(size_buf, " ");
             xpos = get_bar_length(marker * 8);
-            mvaddch(*y + 1, xpos, ACS_BTEE);
+            mvaddch(*row + 1, xpos, ACS_BTEE);
             if (xpos + strlen(label) >= COLS)
                 xpos = COLS - strlen(label);
 
             turnOnColor(SCALE_MARKERS_COLOR);
 
-            mvaddstr(*y, xpos, label);
+            mvaddstr(*row, xpos, label);
 
             turnOffColor(SCALE_MARKERS_COLOR);
 
@@ -741,28 +741,28 @@ static void draw_bar_scale(int *y) {
                 marker += max / (5 * 8);
             }
         }
-        mvaddch(*y + 1, 0, ACS_LLCORNER);
-        *y += 2;
+        mvaddch(*row + 1, 0, ACS_LLCORNER);
+        *row += 2;
     } else {
-        mvhline(*y, 0, 0, COLS);
-        *y += 1;
+        mvhline(*row, 0, 0, COLS);
+        *row += 1;
     }
 }
 
-int history_length(const int d) {
-    if (history_len < history_divs[d])
+int history_length(const int division) {
+    if (history_len < history_divs[division])
         return history_len * RESOLUTION;
     else
-        return history_divs[d] * RESOLUTION;
+        return history_divs[division] * RESOLUTION;
 }
 
-void draw_line_total(float sent, float recv, int y, int x, option_linedisplay_t linedisplay, int bytes) {
+void draw_line_total(float sent, float recv, int row, int col, option_linedisplay_t linedisplay, int bytes) {
     char buf[10];
     float bandwidth;
     switch (linedisplay) {
         case OPTION_LINEDISPLAY_TWO_LINE:
-            draw_line_total(sent, recv, y, x, OPTION_LINEDISPLAY_ONE_LINE_SENT, bytes);
-            draw_line_total(sent, recv, y + 1, x, OPTION_LINEDISPLAY_ONE_LINE_RECV, bytes);
+            draw_line_total(sent, recv, row, col, OPTION_LINEDISPLAY_ONE_LINE_SENT, bytes);
+            draw_line_total(sent, recv, row + 1, col, OPTION_LINEDISPLAY_ONE_LINE_RECV, bytes);
             break;
         case OPTION_LINEDISPLAY_ONE_LINE_SENT:
             bandwidth = sent;
@@ -785,7 +785,7 @@ void draw_line_total(float sent, float recv, int y, int x, option_linedisplay_t 
         } else {
             turnOnColor(FOURTY_SECOND_TRANSFER_COLUMN_COLOR);
         }
-        mvaddstr(y, x, buf);
+        mvaddstr(row, col, buf);
 
         if (bandwidth == sent) {
             turnOffColor(TWO_SECOND_TRANSFER_COLUMN_COLOR);
@@ -800,22 +800,22 @@ void draw_line_total(float sent, float recv, int y, int x, option_linedisplay_t 
 
 }
 
-void draw_bar(float bandwidth, int y, short colorpair) {
-    int L;
+void draw_bar(float bandwidth, int row, short colorpair) {
+    int length;
     colorpair = has_colors() == TRUE ? colorpair : 0; /* set 0 if terminal is not color capable*/
-    mvchgat(y, 0, 0, A_NORMAL, 0, NULL);
-    L = get_bar_length(8 * bandwidth);
-    if (L > 0)
-        mvchgat(y, 0, L + 1, A_REVERSE, colorpair, NULL);
+    mvchgat(row, 0, 0, A_NORMAL, 0, NULL);
+    length = get_bar_length(8 * bandwidth);
+    if (length > 0)
+        mvchgat(row, 0, length + 1, A_REVERSE, colorpair, NULL);
 
 }
 
-void draw_line_totals(int y, host_pair_line *line, option_linedisplay_t linedisplay) {
+void draw_line_totals(int row, host_pair_line *line, option_linedisplay_t linedisplay) {
     int j;
     int x = (COLS - 8 * HISTORY_DIVISIONS);
 
     for (j = 0; j < HISTORY_DIVISIONS; j++) {
-        draw_line_total(line->sent[j], line->recv[j], y, x, linedisplay, options.bandwidth_in_bytes);
+        draw_line_total(line->sent[j], line->recv[j], row, x, linedisplay, options.bandwidth_in_bytes);
         x += 8;
     }
 
@@ -825,14 +825,14 @@ void draw_line_totals(int y, host_pair_line *line, option_linedisplay_t linedisp
                 if (SENT_BAR_COLOR[1] == BOLD) {
                     attron(A_BOLD);
                 }
-                draw_bar(line->sent[options.bar_interval], y, SENT_BAR_COLOR[0]);
+                draw_bar(line->sent[options.bar_interval], row, SENT_BAR_COLOR[0]);
                 if (SENT_BAR_COLOR[1] == BOLD) {
                     attroff(A_BOLD);
                 }
                 if (RECEIVE_BAR_COLOR[1] == BOLD) {
                     attron(A_BOLD);
                 }
-                draw_bar(line->recv[options.bar_interval], y + 1, RECEIVE_BAR_COLOR[0]);
+                draw_bar(line->recv[options.bar_interval], row + 1, RECEIVE_BAR_COLOR[0]);
 
                 if (RECEIVE_BAR_COLOR[1] == BOLD) {
                     attroff(A_BOLD);
@@ -842,7 +842,7 @@ void draw_line_totals(int y, host_pair_line *line, option_linedisplay_t linedisp
                 if (SENT_BAR_COLOR[1] == BOLD) {
                     attron(A_BOLD);
                 }
-                draw_bar(line->sent[options.bar_interval], y, SENT_BAR_COLOR[0]);
+                draw_bar(line->sent[options.bar_interval], row, SENT_BAR_COLOR[0]);
                 if (SENT_BAR_COLOR[1] == BOLD) {
                     attroff(A_BOLD);
                 }
@@ -851,7 +851,7 @@ void draw_line_totals(int y, host_pair_line *line, option_linedisplay_t linedisp
                 if (RECEIVE_BAR_COLOR[1] == BOLD) {
                     attron(A_BOLD);
                 }
-                draw_bar(line->recv[options.bar_interval], y, RECEIVE_BAR_COLOR[0]);
+                draw_bar(line->recv[options.bar_interval], row, RECEIVE_BAR_COLOR[0]);
                 if (RECEIVE_BAR_COLOR[1] == BOLD) {
                     attroff(A_BOLD);
                 }
@@ -860,7 +860,7 @@ void draw_line_totals(int y, host_pair_line *line, option_linedisplay_t linedisp
                 if (BOTH_BAR_COLOR[1] == BOLD) {
                     attron(A_BOLD);
                 }
-                draw_bar(line->recv[options.bar_interval] + line->sent[options.bar_interval], y, BOTH_BAR_COLOR[0]);
+                draw_bar(line->recv[options.bar_interval] + line->sent[options.bar_interval], row, BOTH_BAR_COLOR[0]);
                 if (BOTH_BAR_COLOR[1] == BOLD) {
                     attroff(A_BOLD);
                 }
@@ -1115,7 +1115,7 @@ void analyse_data() {
 
 }
 
-void sprint_host(char *line, int af, struct in6_addr *addr, unsigned int port, unsigned int protocol, int L) {
+void sprint_host(char *line, int af, struct in6_addr *addr, unsigned int port, unsigned int protocol, int maxlen) {
     char hostname[HOSTNAME_LENGTH];
     char service[HOSTNAME_LENGTH];
     char *s_name;
@@ -1131,7 +1131,7 @@ void sprint_host(char *line, int af, struct in6_addr *addr, unsigned int port, u
         snprintf(hostname, sizeof(hostname), " * ");
     } else {
         if (options.dnsresolution)
-            resolve(af, addr, hostname, L);
+            resolve(af, addr, hostname, maxlen);
         else
             inet_ntop(af, addr, hostname, sizeof(hostname));
     }
@@ -1150,14 +1150,14 @@ void sprint_host(char *line, int af, struct in6_addr *addr, unsigned int port, u
     }
 
 
-    sprintf(line, "%-*s", L, hostname);
-    if (left > (L - strlen(service))) {
-        left = L - strlen(service);
+    sprintf(line, "%-*s", maxlen, hostname);
+    if (left > (maxlen - strlen(service))) {
+        left = maxlen - strlen(service);
         if (left < 0) {
             left = 0;
         }
     }
-    sprintf(line + left, "%-*s", L - left, service);
+    sprintf(line + left, "%-*s", maxlen - left, service);
 }
 
 
@@ -1380,8 +1380,8 @@ void ui_tick(int print) {
 }
 
 
-void showhelp(const char *s) {
-    strncpy(helpmsg, s, HELP_MSG_SIZE);
+void showhelp(const char *message) {
+    strncpy(helpmsg, message, HELP_MSG_SIZE);
     showhelphint = 1;
     helptimer = time(NULL);
     persistenthelp = 0;

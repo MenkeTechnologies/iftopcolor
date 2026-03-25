@@ -9,9 +9,9 @@
 #include "iftop.h"
 
 /* Comparison function: sort longs descending (like bandwidth display) */
-static int compare_long_desc(void *a, void *b) {
-    long la = (long)(intptr_t)a;
-    long lb = (long)(intptr_t)b;
+static int compare_long_desc(void *left, void *right) {
+    long la = (long)(intptr_t)left;
+    long lb = (long)(intptr_t)right;
     if (la < lb) return 1;
     if (la > lb) return -1;
     return 0;

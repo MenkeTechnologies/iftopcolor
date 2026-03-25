@@ -7,8 +7,8 @@
 #include "sorted_list.h"
 #include "iftop.h"
 
-static int int_compare(void *a, void *b) {
-    long la = (long)a, lb = (long)b;
+static int int_compare(void *left, void *right) {
+    long la = (long)left, lb = (long)right;
     return (la > lb) - (la < lb);
 }
 
@@ -31,9 +31,9 @@ static int list_count(sorted_list_type *list) {
     return count;
 }
 
-static long list_nth(sorted_list_type *list, int n) {
+static long list_nth(sorted_list_type *list, int index) {
     sorted_list_node *node = sorted_list_next_item(list, NULL);
-    for (int i = 0; i < n && node; i++)
+    for (int i = 0; i < index && node; i++)
         node = sorted_list_next_item(list, node);
     return node ? (long)node->data : -1;
 }

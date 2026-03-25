@@ -23,15 +23,15 @@ typedef struct {
 
 void tick(int print);
 
-void *xmalloc(size_t n);
+void *xmalloc(size_t size);
 
-void *xcalloc(size_t n, size_t m);
+void *xcalloc(size_t count, size_t size);
 
-void *xrealloc(void *w, size_t n);
+void *xrealloc(void *orig, size_t size);
 
-char *xstrdup(const char *s);
+char *xstrdup(const char *str);
 
-void xfree(void *v);
+void xfree(void *ptr);
 
 /* options.c */
 void options_read(int argc, char **argv);

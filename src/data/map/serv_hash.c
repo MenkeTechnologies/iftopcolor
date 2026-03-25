@@ -9,9 +9,9 @@
 // Deliberately not a power of 2 or 10
 #define hash_table_size 123
 
-int serv_hash_compare(void *a, void *b) {
-    ip_service *aa = (ip_service *) a;
-    ip_service *bb = (ip_service *) b;
+int serv_hash_compare(void *left, void *right) {
+    ip_service *aa = (ip_service *) left;
+    ip_service *bb = (ip_service *) right;
     return (aa->port == bb->port &&
             aa->protocol == bb->protocol);
 }
