@@ -212,14 +212,16 @@ make check_hash
  │ check_vector          │ Push, pop, remove, resize, iteration, shrink, ptr storage   │    68 │
  │ check_hash            │ Generic hash: insert, find, delete, collisions, high load   │    59 │
  │ check_addr_hash       │ IPv4/IPv6 pairs, pool allocator, fast-path, UDP, protocol   │    49 │
- │ check_ns_hash         │ IPv6 address to hostname cache, adjacent addrs, scaling     │    31 │
+ │ check_ns_hash         │ IPv6 address to hostname cache, adjacent addrs, eviction    │    39 │
  │ check_serv_hash       │ Port+protocol to service name, protocol differentiation     │    27 │
  │ check_sorted_list     │ Single insert, batch insert, descending order, destroy      │    46 │
  │ check_stringmap       │ Binary tree insert, find, special chars, deep chains        │    46 │
  │ check_cfgfile         │ Config parsing: string, bool, int, float, enum, file IO     │    77 │
+ │ check_options         │ options_make interface fallback, default interface safety    │     5 │
+ │ check_integration     │ Cross-module: flows, resolution, config overlay, stress     │    50 │
  │ check_leaks           │ Full lifecycle leak tests for all data structures (macOS)   │    30 │
  └───────────────────────┴──────────────────────────────────────────────────────────────┴───────┘
-                                                                                TOTAL:    474
+                                                                                TOTAL:    537
 ```
 
 ### Memory leak analysis
@@ -376,7 +378,25 @@ Memory cost: 1 MB (two 65536-entry pointer arrays for TCP/UDP). Negligible for a
 
 ---
 
-## `[0x07]` KNOWN GLITCHES IN THE MATRIX
+## `[0x07]` RECENT FIXES
+
+```
+PATCHING SYSTEM VULNERABILITIES...
+HARDENING MEMORY SUBSYSTEMS...
+STABILIZING CORE ROUTINES...
+```
+
+### `ns_hash` cache eviction policy
+
+The `ns_hash` IPv6 address-to-hostname cache had no upper bound -- on long-running sessions with high host churn, it grew without limit, consuming unbounded memory. A cache eviction policy now flushes and resets the cache when it reaches `NS_HASH_MAX_ENTRIES` (16384). The entry counter is maintained on insert and correctly avoids double-counting when an existing address is re-resolved. This keeps memory usage stable during extended monitoring sessions.
+
+### Segfault when `-i` option is not provided
+
+`options_make()` unconditionally freed and NULLed `options.interface`, then only restored it from the config file. When no `-i` flag was passed and no config file entry existed, the `NULL` pointer was forwarded to `pcap_open_live()`, causing a segfault on startup. The default interface fallback is now restored after the config lookup.
+
+---
+
+## `[0x08]` KNOWN GLITCHES IN THE MATRIX
 
 ```
 WARNING: THE FOLLOWING ANOMALIES HAVE BEEN DETECTED IN THE SYSTEM...
@@ -392,7 +412,7 @@ WARNING: THE FOLLOWING ANOMALIES HAVE BEEN DETECTED IN THE SYSTEM...
 
 ---
 
-## `[0xFF]` LICENSE
+## `[0x09]` LICENSE
 
 ```
  ┌──────────────────────────────────────────────────────────────┐
