@@ -1,5 +1,5 @@
 /*
- * test_ns_hash.c: tests for ns_hash (IPv6 address to name cache)
+ * test_ns_hash.c: tests for ns_hash (address to name cache)
  */
 
 #include <stdlib.h>
@@ -9,11 +9,22 @@
 #include "ns_hash.h"
 #include "iftop.h"
 
-static struct in6_addr make_addr6(const char *str) {
-    struct in6_addr addr;
-    memset(&addr, 0, sizeof(addr));
-    inet_pton(AF_INET6, str, &addr);
-    return addr;
+static struct addr_storage make_addr6(const char *str) {
+    struct addr_storage a;
+    memset(&a, 0, sizeof(a));
+    a.address_family = AF_INET6;
+    a.addr_len = sizeof(struct in6_addr);
+    inet_pton(AF_INET6, str, &a.as_addr6);
+    return a;
+}
+
+static struct addr_storage make_addr4(const char *str) {
+    struct addr_storage a;
+    memset(&a, 0, sizeof(a));
+    a.address_family = AF_INET;
+    a.addr_len = sizeof(struct in_addr);
+    inet_pton(AF_INET, str, &a.as_addr4);
+    return a;
 }
 
 static int ns_hash_count(hash_type *h) {
@@ -57,7 +68,7 @@ TEST(ns_hash_create_has_functions) {
 
 TEST(ns_hash_insert_find) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("2001:db8::1");
+    struct addr_storage addr = make_addr6("2001:db8::1");
     hash_insert(h, &addr, xstrdup("host1.example.com"));
     void *rec = NULL;
     ASSERT_EQ(hash_find(h, &addr, &rec), HASH_STATUS_OK);
@@ -69,8 +80,8 @@ TEST(ns_hash_insert_find) {
 
 TEST(ns_hash_find_miss) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr1 = make_addr6("::1");
-    struct in6_addr addr2 = make_addr6("::2");
+    struct addr_storage addr1 = make_addr6("::1");
+    struct addr_storage addr2 = make_addr6("::2");
     hash_insert(h, &addr1, xstrdup("localhost"));
     void *rec = NULL;
     ASSERT_EQ(hash_find(h, &addr2, &rec), HASH_STATUS_KEY_NOT_FOUND);
@@ -81,7 +92,7 @@ TEST(ns_hash_find_miss) {
 
 TEST(ns_hash_find_empty) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("::1");
+    struct addr_storage addr = make_addr6("::1");
     void *rec = NULL;
     ASSERT_EQ(hash_find(h, &addr, &rec), HASH_STATUS_KEY_NOT_FOUND);
     hash_destroy(h);
@@ -90,7 +101,7 @@ TEST(ns_hash_find_empty) {
 
 TEST(ns_hash_loopback) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("::1");
+    struct addr_storage addr = make_addr6("::1");
     hash_insert(h, &addr, xstrdup("localhost"));
     void *rec = NULL;
     ASSERT_EQ(hash_find(h, &addr, &rec), HASH_STATUS_OK);
@@ -102,7 +113,7 @@ TEST(ns_hash_loopback) {
 
 TEST(ns_hash_link_local) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("fe80::1");
+    struct addr_storage addr = make_addr6("fe80::1");
     hash_insert(h, &addr, xstrdup("link-local-host"));
     void *rec = NULL;
     ASSERT_EQ(hash_find(h, &addr, &rec), HASH_STATUS_OK);
@@ -114,7 +125,7 @@ TEST(ns_hash_link_local) {
 
 TEST(ns_hash_global_unicast) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("2001:0db8:85a3::8a2e:0370:7334");
+    struct addr_storage addr = make_addr6("2001:0db8:85a3::8a2e:0370:7334");
     hash_insert(h, &addr, xstrdup("global.example.com"));
     void *rec = NULL;
     ASSERT_EQ(hash_find(h, &addr, &rec), HASH_STATUS_OK);
@@ -126,7 +137,7 @@ TEST(ns_hash_global_unicast) {
 
 TEST(ns_hash_all_zeros) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("::");
+    struct addr_storage addr = make_addr6("::");
     hash_insert(h, &addr, xstrdup("unspecified"));
     void *rec = NULL;
     ASSERT_EQ(hash_find(h, &addr, &rec), HASH_STATUS_OK);
@@ -138,7 +149,7 @@ TEST(ns_hash_all_zeros) {
 
 TEST(ns_hash_multicast) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("ff02::1");
+    struct addr_storage addr = make_addr6("ff02::1");
     hash_insert(h, &addr, xstrdup("all-nodes"));
     void *rec = NULL;
     ASSERT_EQ(hash_find(h, &addr, &rec), HASH_STATUS_OK);
@@ -148,11 +159,71 @@ TEST(ns_hash_multicast) {
     free(h);
 }
 
+/* === IPv4 support === */
+
+TEST(ns_hash_ipv4_insert_find) {
+    hash_type *h = ns_hash_create();
+    struct addr_storage addr = make_addr4("192.168.1.1");
+    hash_insert(h, &addr, xstrdup("router.local"));
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &addr, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "router.local");
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+TEST(ns_hash_ipv4_find_miss) {
+    hash_type *h = ns_hash_create();
+    struct addr_storage addr1 = make_addr4("10.0.0.1");
+    struct addr_storage addr2 = make_addr4("10.0.0.2");
+    hash_insert(h, &addr1, xstrdup("host1"));
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &addr2, &rec), HASH_STATUS_KEY_NOT_FOUND);
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+TEST(ns_hash_ipv4_and_ipv6_coexist) {
+    hash_type *h = ns_hash_create();
+    struct addr_storage a4 = make_addr4("192.168.1.1");
+    struct addr_storage a6 = make_addr6("2001:db8::1");
+    hash_insert(h, &a4, xstrdup("ipv4-host"));
+    hash_insert(h, &a6, xstrdup("ipv6-host"));
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &a4, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "ipv4-host");
+    ASSERT_EQ(hash_find(h, &a6, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "ipv6-host");
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+TEST(ns_hash_ipv4_same_bytes_different_family) {
+    /* Ensure an IPv4 addr doesn't match an IPv6 addr with same leading bytes */
+    hash_type *h = ns_hash_create();
+    struct addr_storage a4 = make_addr4("0.0.0.1");
+    struct addr_storage a6 = make_addr6("::1");
+    hash_insert(h, &a4, xstrdup("v4-loopback"));
+    hash_insert(h, &a6, xstrdup("v6-loopback"));
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &a4, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "v4-loopback");
+    ASSERT_EQ(hash_find(h, &a6, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "v6-loopback");
+    ASSERT_EQ(ns_hash_count(h), 2);
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
 /* === Multiple entries === */
 
 TEST(ns_hash_multiple_entries) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addrs[5];
+    struct addr_storage addrs[5];
     char *names[] = {"host0", "host1", "host2", "host3", "host4"};
     for (int i = 0; i < 5; i++) {
         char addr_str[64];
@@ -172,7 +243,7 @@ TEST(ns_hash_multiple_entries) {
 
 TEST(ns_hash_50_entries) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addrs[50];
+    struct addr_storage addrs[50];
     for (int i = 0; i < 50; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
@@ -193,8 +264,8 @@ TEST(ns_hash_50_entries) {
 
 TEST(ns_hash_same_suffix_different_prefix) {
     hash_type *h = ns_hash_create();
-    struct in6_addr a1 = make_addr6("2001:db8::1");
-    struct in6_addr a2 = make_addr6("2001:db9::1");
+    struct addr_storage a1 = make_addr6("2001:db8::1");
+    struct addr_storage a2 = make_addr6("2001:db9::1");
     hash_insert(h, &a1, xstrdup("net8"));
     hash_insert(h, &a2, xstrdup("net9"));
     void *rec = NULL;
@@ -211,7 +282,7 @@ TEST(ns_hash_same_suffix_different_prefix) {
 
 TEST(ns_hash_delete_entry) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("fe80::1");
+    struct addr_storage addr = make_addr6("fe80::1");
     hash_insert(h, &addr, xstrdup("link-local"));
     ASSERT_EQ(hash_delete(h, &addr), HASH_STATUS_OK);
     void *rec = NULL;
@@ -222,7 +293,7 @@ TEST(ns_hash_delete_entry) {
 
 TEST(ns_hash_delete_missing) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("::1");
+    struct addr_storage addr = make_addr6("::1");
     ASSERT_EQ(hash_delete(h, &addr), HASH_STATUS_KEY_NOT_FOUND);
     hash_destroy(h);
     free(h);
@@ -230,7 +301,7 @@ TEST(ns_hash_delete_missing) {
 
 TEST(ns_hash_delete_then_reinsert) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("2001:db8::1");
+    struct addr_storage addr = make_addr6("2001:db8::1");
     hash_insert(h, &addr, xstrdup("old"));
     hash_delete(h, &addr);
     hash_insert(h, &addr, xstrdup("new"));
@@ -247,7 +318,7 @@ TEST(ns_hash_delete_all_clears) {
     for (int i = 0; i < 10; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8::%d", i + 1);
-        struct in6_addr addr = make_addr6(addr_str);
+        struct addr_storage addr = make_addr6(addr_str);
         hash_insert(h, &addr, xstrdup("name"));
     }
     hash_delete_all_free(h);
@@ -268,7 +339,7 @@ TEST(ns_hash_iterate_empty) {
 
 TEST(ns_hash_iterate_single) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("::1");
+    struct addr_storage addr = make_addr6("::1");
     hash_insert(h, &addr, xstrdup("only"));
     ASSERT_EQ(ns_hash_count(h), 1);
     hash_delete_all_free(h);
@@ -280,12 +351,12 @@ TEST(ns_hash_iterate_single) {
 
 TEST(ns_hash_key_is_copied) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("2001:db8::1");
+    struct addr_storage addr = make_addr6("2001:db8::1");
     hash_insert(h, &addr, xstrdup("original"));
     /* Modify the original key */
     memset(&addr, 0xff, sizeof(addr));
     /* Should still find with original address */
-    struct in6_addr lookup = make_addr6("2001:db8::1");
+    struct addr_storage lookup = make_addr6("2001:db8::1");
     void *rec = NULL;
     ASSERT_EQ(hash_find(h, &lookup, &rec), HASH_STATUS_OK);
     ASSERT_STR_EQ((char *)rec, "original");
@@ -298,7 +369,7 @@ TEST(ns_hash_key_is_copied) {
 
 TEST(ns_hash_200_entries) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addrs[200];
+    struct addr_storage addrs[200];
     for (int i = 0; i < 200; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8:%x::%x", i / 256, i % 256 + 1);
@@ -326,9 +397,9 @@ TEST(ns_hash_200_entries) {
 TEST(ns_hash_different_subnets) {
     hash_type *h = ns_hash_create();
     /* Addresses from different /48 subnets should hash to different buckets usually */
-    struct in6_addr a1 = make_addr6("2001:db8:1::1");
-    struct in6_addr a2 = make_addr6("2001:db8:2::1");
-    struct in6_addr a3 = make_addr6("2001:db8:3::1");
+    struct addr_storage a1 = make_addr6("2001:db8:1::1");
+    struct addr_storage a2 = make_addr6("2001:db8:2::1");
+    struct addr_storage a3 = make_addr6("2001:db8:3::1");
     hash_insert(h, &a1, xstrdup("net1"));
     hash_insert(h, &a2, xstrdup("net2"));
     hash_insert(h, &a3, xstrdup("net3"));
@@ -348,7 +419,7 @@ TEST(ns_hash_different_subnets) {
 
 TEST(ns_hash_overwrite_value) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("2001:db8::1");
+    struct addr_storage addr = make_addr6("2001:db8::1");
     hash_insert(h, &addr, xstrdup("old_name"));
     hash_delete(h, &addr);
     hash_insert(h, &addr, xstrdup("new_name"));
@@ -364,9 +435,9 @@ TEST(ns_hash_overwrite_value) {
 
 TEST(ns_hash_adjacent_addresses) {
     hash_type *h = ns_hash_create();
-    struct in6_addr a1 = make_addr6("2001:db8::1");
-    struct in6_addr a2 = make_addr6("2001:db8::2");
-    struct in6_addr a3 = make_addr6("2001:db8::3");
+    struct addr_storage a1 = make_addr6("2001:db8::1");
+    struct addr_storage a2 = make_addr6("2001:db8::2");
+    struct addr_storage a3 = make_addr6("2001:db8::3");
     hash_insert(h, &a1, xstrdup("first"));
     hash_insert(h, &a2, xstrdup("second"));
     hash_insert(h, &a3, xstrdup("third"));
@@ -386,9 +457,9 @@ TEST(ns_hash_adjacent_addresses) {
 
 TEST(ns_hash_delete_preserves_others) {
     hash_type *h = ns_hash_create();
-    struct in6_addr a1 = make_addr6("::1");
-    struct in6_addr a2 = make_addr6("::2");
-    struct in6_addr a3 = make_addr6("::3");
+    struct addr_storage a1 = make_addr6("::1");
+    struct addr_storage a2 = make_addr6("::2");
+    struct addr_storage a3 = make_addr6("::3");
     hash_insert(h, &a1, xstrdup("one"));
     hash_insert(h, &a2, xstrdup("two"));
     hash_insert(h, &a3, xstrdup("three"));
@@ -411,7 +482,7 @@ TEST(ns_hash_iterate_count_matches) {
     for (int i = 0; i < 30; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8::%d", i + 1);
-        struct in6_addr addr = make_addr6(addr_str);
+        struct addr_storage addr = make_addr6(addr_str);
         hash_insert(h, &addr, xstrdup("name"));
     }
     ASSERT_EQ(ns_hash_count(h), 30);
@@ -424,7 +495,7 @@ TEST(ns_hash_iterate_count_matches) {
 
 TEST(ns_hash_long_hostname) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("2001:db8::1");
+    struct addr_storage addr = make_addr6("2001:db8::1");
     char long_name[256];
     memset(long_name, 'x', 255);
     long_name[255] = '\0';
@@ -441,7 +512,7 @@ TEST(ns_hash_long_hostname) {
 
 TEST(ns_hash_empty_name) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addr = make_addr6("::1");
+    struct addr_storage addr = make_addr6("::1");
     hash_insert(h, &addr, xstrdup(""));
     void *rec = NULL;
     ASSERT_EQ(hash_find(h, &addr, &rec), HASH_STATUS_OK);
@@ -455,7 +526,7 @@ TEST(ns_hash_empty_name) {
 
 TEST(ns_hash_500_entries) {
     hash_type *h = ns_hash_create();
-    struct in6_addr addrs[500];
+    struct addr_storage addrs[500];
     for (int i = 0; i < 500; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8:%x::%x", i / 256, i % 256 + 1);
@@ -483,7 +554,7 @@ TEST(ns_hash_evict_no_op_when_under_limit) {
     for (int i = 0; i < 10; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8::%d", i + 1);
-        struct in6_addr addr = make_addr6(addr_str);
+        struct addr_storage addr = make_addr6(addr_str);
         hash_insert(h, &addr, xstrdup("name"));
         count++;
     }
@@ -503,7 +574,7 @@ TEST(ns_hash_evict_clears_at_limit) {
     for (int i = 0; i < limit; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
-        struct in6_addr addr = make_addr6(addr_str);
+        struct addr_storage addr = make_addr6(addr_str);
         hash_insert(h, &addr, xstrdup("name"));
         count++;
     }
@@ -524,7 +595,7 @@ TEST(ns_hash_evict_clears_above_limit) {
     for (int i = 0; i < limit + 10; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
-        struct in6_addr addr = make_addr6(addr_str);
+        struct addr_storage addr = make_addr6(addr_str);
         hash_insert(h, &addr, xstrdup("name"));
         count++;
     }
@@ -543,7 +614,7 @@ TEST(ns_hash_evict_one_below_limit) {
     for (int i = 0; i < limit - 1; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
-        struct in6_addr addr = make_addr6(addr_str);
+        struct addr_storage addr = make_addr6(addr_str);
         hash_insert(h, &addr, xstrdup("name"));
         count++;
     }
@@ -564,7 +635,7 @@ TEST(ns_hash_evict_repopulate_after_eviction) {
     for (int i = 0; i < limit; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
-        struct in6_addr addr = make_addr6(addr_str);
+        struct addr_storage addr = make_addr6(addr_str);
         hash_insert(h, &addr, xstrdup("old"));
         count++;
     }
@@ -574,18 +645,18 @@ TEST(ns_hash_evict_repopulate_after_eviction) {
     for (int i = 0; i < 5; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8:1::%x", i + 1);
-        struct in6_addr addr = make_addr6(addr_str);
+        struct addr_storage addr = make_addr6(addr_str);
         hash_insert(h, &addr, xstrdup("new"));
         count++;
     }
     ASSERT_EQ(count, 5);
     ASSERT_EQ(ns_hash_count(h), 5);
     /* Old entries should be gone */
-    struct in6_addr old_addr = make_addr6("2001:db8::1");
+    struct addr_storage old_addr = make_addr6("2001:db8::1");
     void *rec = NULL;
     ASSERT_EQ(hash_find(h, &old_addr, &rec), HASH_STATUS_KEY_NOT_FOUND);
     /* New entries should be findable */
-    struct in6_addr new_addr = make_addr6("2001:db8:1::1");
+    struct addr_storage new_addr = make_addr6("2001:db8:1::1");
     ASSERT_EQ(hash_find(h, &new_addr, &rec), HASH_STATUS_OK);
     ASSERT_STR_EQ((char *)rec, "new");
     hash_delete_all_free(h);
@@ -602,7 +673,7 @@ TEST(ns_hash_evict_multiple_cycles) {
             ns_hash_evict_if_full(h, &count, limit);
             char addr_str[64];
             snprintf(addr_str, sizeof(addr_str), "2001:db8:%x::%x", cycle, i + 1);
-            struct in6_addr addr = make_addr6(addr_str);
+            struct addr_storage addr = make_addr6(addr_str);
             hash_insert(h, &addr, xstrdup("name"));
             count++;
         }
@@ -628,7 +699,7 @@ TEST(ns_hash_evict_counter_tracks_external_deletes) {
     for (int i = 0; i < 10; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
-        struct in6_addr addr = make_addr6(addr_str);
+        struct addr_storage addr = make_addr6(addr_str);
         hash_insert(h, &addr, xstrdup("1.2.3.4")); /* numeric placeholder */
         count++;
     }
@@ -636,7 +707,7 @@ TEST(ns_hash_evict_counter_tracks_external_deletes) {
     for (int i = 0; i < 5; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
-        struct in6_addr addr = make_addr6(addr_str);
+        struct addr_storage addr = make_addr6(addr_str);
         void *old = NULL;
         ASSERT_EQ(hash_find(h, &addr, &old), HASH_STATUS_OK);
         hash_delete(h, &addr);
@@ -657,7 +728,7 @@ TEST(ns_hash_evict_with_limit_1) {
     hash_type *h = ns_hash_create();
     int count = 0;
     /* Limit of 1: every insert triggers eviction of previous */
-    struct in6_addr addr1 = make_addr6("2001:db8::1");
+    struct addr_storage addr1 = make_addr6("2001:db8::1");
     hash_insert(h, &addr1, xstrdup("first"));
     count++;
     /* count is now 1, eviction should trigger */
@@ -666,7 +737,7 @@ TEST(ns_hash_evict_with_limit_1) {
     ASSERT_EQ(count, 0);
     ASSERT_EQ(ns_hash_count(h), 0);
     /* Insert again */
-    struct in6_addr addr2 = make_addr6("2001:db8::2");
+    struct addr_storage addr2 = make_addr6("2001:db8::2");
     hash_insert(h, &addr2, xstrdup("second"));
     count++;
     ASSERT_EQ(ns_hash_count(h), 1);
@@ -686,7 +757,7 @@ TEST(ns_hash_reuse_after_clear) {
         for (int i = 0; i < 20; i++) {
             char addr_str[64];
             snprintf(addr_str, sizeof(addr_str), "2001:db8::%d", i + 1);
-            struct in6_addr addr = make_addr6(addr_str);
+            struct addr_storage addr = make_addr6(addr_str);
             hash_insert(h, &addr, xstrdup("name"));
         }
         ASSERT_EQ(ns_hash_count(h), 20);
@@ -711,6 +782,10 @@ int main(void) {
     RUN(ns_hash_global_unicast);
     RUN(ns_hash_all_zeros);
     RUN(ns_hash_multicast);
+    RUN(ns_hash_ipv4_insert_find);
+    RUN(ns_hash_ipv4_find_miss);
+    RUN(ns_hash_ipv4_and_ipv6_coexist);
+    RUN(ns_hash_ipv4_same_bytes_different_family);
     RUN(ns_hash_multiple_entries);
     RUN(ns_hash_50_entries);
     RUN(ns_hash_same_suffix_different_prefix);

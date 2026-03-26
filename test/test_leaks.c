@@ -303,10 +303,13 @@ TEST(leak_ns_hash_create_destroy) {
 TEST(leak_ns_hash_insert_cleanup) {
     hash_type *h = ns_hash_create();
     for (int i = 0; i < 100; i++) {
-        struct in6_addr addr;
+        struct addr_storage addr;
+        memset(&addr, 0, sizeof(addr));
+        addr.address_family = AF_INET6;
+        addr.addr_len = sizeof(struct in6_addr);
         char str[64];
         snprintf(str, sizeof(str), "2001:db8::%x", i);
-        inet_pton(AF_INET6, str, &addr);
+        inet_pton(AF_INET6, str, &addr.as_addr6);
         char name[64];
         snprintf(name, sizeof(name), "host%d.example.com", i);
         hash_insert(h, &addr, xstrdup(name));
@@ -323,10 +326,13 @@ TEST(leak_ns_hash_evict_cycles) {
     for (int cycle = 0; cycle < 10; cycle++) {
         for (int i = 0; i < limit; i++) {
             ns_hash_evict_if_full(h, &count, limit);
-            struct in6_addr addr;
+            struct addr_storage addr;
+            memset(&addr, 0, sizeof(addr));
+            addr.address_family = AF_INET6;
+            addr.addr_len = sizeof(struct in6_addr);
             char str[64];
             snprintf(str, sizeof(str), "2001:db8:%x::%x", cycle, i + 1);
-            inet_pton(AF_INET6, str, &addr);
+            inet_pton(AF_INET6, str, &addr.as_addr6);
             hash_insert(h, &addr, xstrdup("hostname"));
             count++;
         }

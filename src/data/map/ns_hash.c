@@ -10,29 +10,26 @@
 #define hash_table_size 256
 
 int ns_hash_compare(void *left, void *right) {
-    struct in6_addr *left_addr = (struct in6_addr *)left;
-    struct in6_addr *right_addr = (struct in6_addr *)right;
-    return IN6_ARE_ADDR_EQUAL(left_addr, right_addr);
-}
-
-static int __inline__ hash_uint32(uint32_t value) {
-    return ((value & 0x000000FF) + ((value & 0x0000FF00) >> 8) + ((value & 0x00FF0000) >> 16) +
-            ((value & 0xFF000000) >> 24));
+    struct addr_storage *l = (struct addr_storage *)left;
+    struct addr_storage *r = (struct addr_storage *)right;
+    if (l->address_family != r->address_family) {
+        return 0;
+    }
+    return memcmp(&l->addr, &r->addr, l->addr_len) == 0;
 }
 
 int ns_hash_hash(void *key) {
-    int hash;
-    uint32_t *addr6 = (uint32_t *)((struct in6_addr *)key)->s6_addr;
-
-    hash = (hash_uint32(addr6[0]) + hash_uint32(addr6[1]) + hash_uint32(addr6[2]) +
-            hash_uint32(addr6[3])) %
-           0xFF;
-
-    return hash;
+    struct addr_storage *a = (struct addr_storage *)key;
+    unsigned char *bytes = (unsigned char *)&a->addr;
+    int hash = 0;
+    for (int i = 0; i < a->addr_len; i++) {
+        hash += bytes[i];
+    }
+    return hash % 0xFF;
 }
 
 void *ns_hash_copy_key(void *orig) {
-    struct in6_addr *copy;
+    struct addr_storage *copy;
 
     copy = xmalloc(sizeof *copy);
     memcpy(copy, orig, sizeof *copy);

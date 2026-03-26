@@ -22,17 +22,6 @@
 
 #define RESOLVE_QUEUE_LENGTH 20
 
-struct addr_storage {
-    int address_family; /* AF_INET or AF_INET6 */
-    int addr_len;       /* sizeof(struct in_addr or in6_addr) */
-    union {
-        struct in_addr addr4;
-        struct in6_addr addr6;
-    } addr;
-#define as_addr4 addr.addr4
-#define as_addr6 addr.addr6
-};
-
 struct addr_storage resolve_queue[RESOLVE_QUEUE_LENGTH];
 
 pthread_cond_t resolver_queue_cond;

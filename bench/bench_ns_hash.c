@@ -1,5 +1,5 @@
 /*
- * bench_ns_hash.c: benchmarks for ns_hash (IPv6 address to name cache)
+ * bench_ns_hash.c: benchmarks for ns_hash (address to name cache)
  *
  * Covers: insert, find (hit/miss), delete, iteration, and scaling.
  */
@@ -11,15 +11,17 @@
 #include "iftop.h"
 
 #define MAX_ADDRS 5000
-static struct in6_addr addrs[MAX_ADDRS];
+static struct addr_storage addrs[MAX_ADDRS];
 static char names[MAX_ADDRS][64];
 
 static void generate_addrs(void) {
     for (int i = 0; i < MAX_ADDRS; i++) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8:%x::%x", (i / 256) + 1, (i % 256) + 1);
-        memset(&addrs[i], 0, sizeof(struct in6_addr));
-        inet_pton(AF_INET6, addr_str, &addrs[i]);
+        memset(&addrs[i], 0, sizeof(struct addr_storage));
+        addrs[i].address_family = AF_INET6;
+        addrs[i].addr_len = sizeof(struct in6_addr);
+        inet_pton(AF_INET6, addr_str, &addrs[i].as_addr6);
         snprintf(names[i], sizeof(names[i]), "host-%d.example.com", i);
     }
 }

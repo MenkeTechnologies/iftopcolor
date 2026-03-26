@@ -330,6 +330,24 @@ TEST(resolve_mixed_protocol_services) {
     addr_hash_teardown(flows);
 }
 
+static struct addr_storage make_ns_key6(const char *str) {
+    struct addr_storage a;
+    memset(&a, 0, sizeof(a));
+    a.address_family = AF_INET6;
+    a.addr_len = sizeof(struct in6_addr);
+    inet_pton(AF_INET6, str, &a.as_addr6);
+    return a;
+}
+
+static struct addr_storage ns_key_from_in6(int af, struct in6_addr *addr) {
+    struct addr_storage a;
+    memset(&a, 0, sizeof(a));
+    a.address_family = af;
+    a.addr_len = (af == AF_INET) ? sizeof(struct in_addr) : sizeof(struct in6_addr);
+    memcpy(&a.addr, addr, a.addr_len);
+    return a;
+}
+
 TEST(resolve_ipv6_hostname_cache) {
     hash_type *ns_cache = ns_hash_create();
     hash_type *flows = addr_hash_create();
@@ -340,10 +358,9 @@ TEST(resolve_ipv6_hostname_cache) {
     addr_hash_insert(flows, &ap, &bw);
 
     /* Cache hostname for the source address */
-    struct in6_addr src_addr;
-    inet_pton(AF_INET6, "2001:db8::1", &src_addr);
+    struct addr_storage src_key = make_ns_key6("2001:db8::1");
     char *hostname = xstrdup("client.example.com");
-    hash_insert(ns_cache, &src_addr, hostname);
+    hash_insert(ns_cache, &src_key, hostname);
 
     /* Look up hostname from flow's source */
     hash_node_type *node = NULL;
@@ -351,8 +368,9 @@ TEST(resolve_ipv6_hostname_cache) {
     addr_pair *key = (addr_pair *)node->key;
     ASSERT_EQ(key->address_family, AF_INET6);
 
+    struct addr_storage lookup = ns_key_from_in6(key->address_family, &key->src6);
     void *cached = NULL;
-    ASSERT_EQ(hash_find(ns_cache, &key->src6, &cached), HASH_STATUS_OK);
+    ASSERT_EQ(hash_find(ns_cache, &lookup, &cached), HASH_STATUS_OK);
     ASSERT_STR_EQ((char *)cached, "client.example.com");
 
     hash_delete_all_free(ns_cache);
@@ -370,11 +388,10 @@ TEST(resolve_full_pipeline) {
     serv_table_insert(services, 443, 6, "https");
 
     /* Cache IPv6 hostnames */
-    struct in6_addr addr1, addr2;
-    inet_pton(AF_INET6, "2001:db8::10", &addr1);
-    inet_pton(AF_INET6, "2001:db8::20", &addr2);
-    hash_insert(ns_cache, &addr1, xstrdup("laptop.local"));
-    hash_insert(ns_cache, &addr2, xstrdup("server.example.com"));
+    struct addr_storage ak1 = make_ns_key6("2001:db8::10");
+    struct addr_storage ak2 = make_ns_key6("2001:db8::20");
+    hash_insert(ns_cache, &ak1, xstrdup("laptop.local"));
+    hash_insert(ns_cache, &ak2, xstrdup("server.example.com"));
 
     /* Insert flow */
     addr_pair ap = make_ipv6("2001:db8::10", 55000, "2001:db8::20", 443, 6);
@@ -391,9 +408,11 @@ TEST(resolve_full_pipeline) {
     ASSERT_STR_EQ(svc, "https");
 
     /* Hostname resolution */
+    struct addr_storage src_lookup = ns_key_from_in6(key->address_family, &key->src6);
+    struct addr_storage dst_lookup = ns_key_from_in6(key->address_family, &key->dst6);
     void *src_host = NULL, *dst_host = NULL;
-    ASSERT_EQ(hash_find(ns_cache, &key->src6, &src_host), HASH_STATUS_OK);
-    ASSERT_EQ(hash_find(ns_cache, &key->dst6, &dst_host), HASH_STATUS_OK);
+    ASSERT_EQ(hash_find(ns_cache, &src_lookup, &src_host), HASH_STATUS_OK);
+    ASSERT_EQ(hash_find(ns_cache, &dst_lookup, &dst_host), HASH_STATUS_OK);
     ASSERT_STR_EQ((char *)src_host, "laptop.local");
     ASSERT_STR_EQ((char *)dst_host, "server.example.com");
 
@@ -1364,11 +1383,10 @@ TEST(resolve_hostname_and_service_together) {
     serv_table *services = serv_table_create();
 
     /* Set up hostname cache for IPv6 addresses */
-    struct in6_addr src_addr, dst_addr;
-    inet_pton(AF_INET6, "2001:db8::10", &src_addr);
-    inet_pton(AF_INET6, "2001:db8::20", &dst_addr);
-    hash_insert(ns_cache, &src_addr, xstrdup("workstation.local"));
-    hash_insert(ns_cache, &dst_addr, xstrdup("cdn.example.com"));
+    struct addr_storage src_key = make_ns_key6("2001:db8::10");
+    struct addr_storage dst_key = make_ns_key6("2001:db8::20");
+    hash_insert(ns_cache, &src_key, xstrdup("workstation.local"));
+    hash_insert(ns_cache, &dst_key, xstrdup("cdn.example.com"));
 
     /* Set up services */
     serv_table_insert(services, 443, 6, "https");
@@ -1392,13 +1410,15 @@ TEST(resolve_hostname_and_service_together) {
         ASSERT_NOT_NULL(svc);
 
         /* Hostname resolution (source) */
+        struct addr_storage sl = ns_key_from_in6(key->address_family, &key->src6);
         void *src_name = NULL;
-        ASSERT_EQ(hash_find(ns_cache, &key->src6, &src_name), HASH_STATUS_OK);
+        ASSERT_EQ(hash_find(ns_cache, &sl, &src_name), HASH_STATUS_OK);
         ASSERT_STR_EQ((char *)src_name, "workstation.local");
 
         /* Hostname resolution (destination) */
+        struct addr_storage dl = ns_key_from_in6(key->address_family, &key->dst6);
         void *dst_name = NULL;
-        ASSERT_EQ(hash_find(ns_cache, &key->dst6, &dst_name), HASH_STATUS_OK);
+        ASSERT_EQ(hash_find(ns_cache, &dl, &dst_name), HASH_STATUS_OK);
         ASSERT_STR_EQ((char *)dst_name, "cdn.example.com");
 
         if (key->dst_port == 443) {
@@ -1423,9 +1443,8 @@ TEST(resolve_partial_hostname_cache) {
     hash_type *flows = addr_hash_create();
     hash_type *ns_cache = ns_hash_create();
 
-    struct in6_addr cached_addr;
-    inet_pton(AF_INET6, "2001:db8::1", &cached_addr);
-    hash_insert(ns_cache, &cached_addr, xstrdup("known-host.local"));
+    struct addr_storage cached_key = make_ns_key6("2001:db8::1");
+    hash_insert(ns_cache, &cached_key, xstrdup("known-host.local"));
 
     /* Two flows: one src cached, one not */
     addr_pair ap1 = make_ipv6("2001:db8::1", 5000, "2001:db8::99", 80, 6);
@@ -1438,8 +1457,9 @@ TEST(resolve_partial_hostname_cache) {
     hash_node_type *node = NULL;
     while (hash_next_item(flows, &node) == HASH_STATUS_OK) {
         addr_pair *key = (addr_pair *)node->key;
+        struct addr_storage lookup = ns_key_from_in6(key->address_family, &key->src6);
         void *hostname = NULL;
-        if (hash_find(ns_cache, &key->src6, &hostname) == HASH_STATUS_OK) {
+        if (hash_find(ns_cache, &lookup, &hostname) == HASH_STATUS_OK) {
             ASSERT_STR_EQ((char *)hostname, "known-host.local");
             cached_count++;
         } else {
