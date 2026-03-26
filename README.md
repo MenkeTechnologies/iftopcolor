@@ -186,7 +186,7 @@ VALIDATING MEMORY SUBSYSTEMS...
 INTEGRITY CHECK IN PROGRESS...
 ```
 
-A test suite covers core data structures and utilities: hash tables, address/namespace/service hashes, sorted lists, vectors, string maps, config file parsing, and utility functions.
+A test suite covers core data structures and utilities: hash tables, address/namespace hashes, service lookup table, sorted lists, vectors, string maps, config file parsing, and utility functions.
 
 ### Running tests
 
@@ -213,13 +213,13 @@ make check_hash
  │ check_hash            │ Generic hash: insert, find, delete, collisions, high load   │    59 │
  │ check_addr_hash       │ IPv4/IPv6 pairs, pool allocator, fast-path, UDP, protocol   │    49 │
  │ check_ns_hash         │ IPv6 address to hostname cache, adjacent addrs, scaling     │    31 │
- │ check_serv_hash       │ Port+protocol to service name, protocol differentiation     │    30 │
+ │ check_serv_hash       │ Port+protocol to service name, protocol differentiation     │    27 │
  │ check_sorted_list     │ Single insert, batch insert, descending order, destroy      │    46 │
  │ check_stringmap       │ Binary tree insert, find, special chars, deep chains        │    46 │
  │ check_cfgfile         │ Config parsing: string, bool, int, float, enum, file IO     │    77 │
  │ check_leaks           │ Full lifecycle leak tests for all data structures (macOS)   │    30 │
  └───────────────────────┴──────────────────────────────────────────────────────────────┴───────┘
-                                                                                TOTAL:    477
+                                                                                TOTAL:    474
 ```
 
 ### Memory leak analysis
@@ -230,7 +230,7 @@ Leak detection uses macOS `leaks --atExit` to verify zero unreachable allocation
 make leakcheck
 ```
 
-Covers: vector, generic hash, address hash (pool allocator), ns_hash, serv_hash, sorted list (single and batch), stringmap, and config file subsystems.
+Covers: vector, generic hash, address hash (pool allocator), ns_hash, serv_table, sorted list (single and batch), stringmap, and config file subsystems.
 
 ---
 
@@ -271,7 +271,7 @@ make bench
  │ benchmark_pool             │ Pool vs malloc: insert/delete, churn, multi-block, reuse, post-churn  │
  │ benchmark_stringmap        │ Sequential vs random keys, find scaling, config-style workload        │
  │ benchmark_ns_hash          │ IPv6 address cache: insert, find, delete, iteration, churn            │
- │ benchmark_serv_hash        │ Service cache: insert, find, delete, iteration, TCP/UDP diff          │
+ │ benchmark_serv_hash        │ Service cache: insert, lookup, delete, TCP/UDP direct-index arrays    │
  │ benchmark_cfgfile          │ Config set/get, type parsing, file reading, realistic workload        │
  └────────────────────────────┴───────────────────────────────────────────────────────────────────────┘
 ```
@@ -303,16 +303,28 @@ RENDERING PERFORMANCE HEATMAP...
 
 Hash distribution is near-ideal -- IPv4 stddev 2.26 vs ideal 2.21, IPv6 stddev 2.21 vs ideal 2.21. Virtually zero wasted buckets.
 
-#### `ns_hash` vs `serv_hash` -- specialized hash variant duel
+#### `serv_table` -- direct-index array vs old chaining hash
 
-> _Two hashes. Same generic backbone. Wildly different key structures. The bottleneck is always comparison._
+> _The old serv\_hash used a 123-bucket chaining hash with a degenerate hash function that only hashed on protocol -- all TCP entries landed in one bucket, all UDP in another. Every lookup walked the entire chain. The new serv\_table uses direct-index arrays for TCP/UDP (port as index) with a small hash fallback for rare protocols. One array dereference. No comparisons. No chains._
+
+```
+ IMPLEMENTATION         FIND HIT (200 entries)     THROUGHPUT          MECHANISM
+ ──────────────         ──────────────────────     ──────────          ─────────
+ serv_table [NEW]             0.5 ns/op            1.8B ops/s         direct array[port]
+ serv_hash  [OLD]            53.4 ns/op           18.7M ops/s         chained hash (degenerate)
+                                                                       ~~~ 100x FASTER ~~~
+```
+
+Memory cost: 1 MB (two 65536-entry pointer arrays for TCP/UDP). Negligible for a network monitor.
+
+#### `ns_hash` -- IPv6 address hostname cache
+
+> _Specialized hash for IPv6 address-to-hostname resolution caching._
 
 ```
  VARIANT        FIND HIT (200 entries)     THROUGHPUT          KEY COMPARISON
  ───────        ──────────────────────     ──────────          ──────────────
  ns_hash              2.6 ns/op            384M ops/s          IN6_ARE_ADDR_EQUAL (16-byte memcmp)
- serv_hash           53.4 ns/op           18.7M ops/s          compound struct (port + protocol)
-                                                                ~~~ 20x DELTA ~~~
 ```
 
 #### Sorted list -- brute force O(n^2) vs batch O(n log n)

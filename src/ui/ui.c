@@ -67,6 +67,7 @@ typedef struct host_pair_line_tag {
     double long total_sent;
     double long recv[HISTORY_DIVISIONS];
     double long sent[HISTORY_DIVISIONS];
+    char cached_hostname[HOSTNAME_LENGTH]; /* pre-resolved for sort */
 } host_pair_line;
 
 
@@ -79,7 +80,7 @@ extern options_t options;
 void ui_finish();
 
 hash_type *screen_hash;
-hash_type *service_hash;
+serv_table *service_hash;
 sorted_list_type screen_list;
 host_pair_line totals;
 int peaksent, peakrecv, peaktotal;
@@ -563,32 +564,18 @@ int screen_line_bandwidth_compare(host_pair_line *aa, host_pair_line *bb, int st
 }
 
 /*
- * Compare two screen lines based on hostname / IP.  Fall over to compare by
- * bandwidth.
+ * Compare two screen lines based on pre-resolved hostname.
+ * Hostnames are cached in cached_hostname before sorting to avoid
+ * repeated resolve() calls (which acquire a mutex) during qsort.
  */
-int screen_line_host_compare(void *left, void *right, host_pair_line *aa, host_pair_line *bb) {
-    char hosta[HOSTNAME_LENGTH], hostb[HOSTNAME_LENGTH];
-    int cmp_result;
-
-    /* This isn't overly efficient because we resolve again before
-       display. */
-    if (options.dnsresolution) {
-        resolve(aa->ap.address_family, left, hosta, HOSTNAME_LENGTH);
-        resolve(bb->ap.address_family, right, hostb, HOSTNAME_LENGTH);
-    } else {
-        inet_ntop(aa->ap.address_family, left, hosta, sizeof(hosta));
-        inet_ntop(bb->ap.address_family, right, hostb, sizeof(hostb));
-    }
-
-    cmp_result = strcmp(hosta, hostb);
+int screen_line_host_compare(host_pair_line *aa, host_pair_line *bb) {
+    int cmp_result = strcmp(aa->cached_hostname, bb->cached_hostname);
 
     if (cmp_result == 0) {
         return screen_line_bandwidth_compare(aa, bb, 2);
     } else {
         return (cmp_result > 0);
     }
-
-
 }
 
 int screen_line_compare(void *left, void *right) {
@@ -600,10 +587,8 @@ int screen_line_compare(void *left, void *right) {
         return screen_line_bandwidth_compare(aa, bb, 1);
     } else if (options.sort == OPTION_SORT_DIV3) {
         return screen_line_bandwidth_compare(aa, bb, 2);
-    } else if (options.sort == OPTION_SORT_SRC) {
-        return screen_line_host_compare(&(aa->ap.src6), &(bb->ap.src6), aa, bb);
-    } else if (options.sort == OPTION_SORT_DEST) {
-        return screen_line_host_compare(&(aa->ap.dst6), &(bb->ap.dst6), aa, bb);
+    } else if (options.sort == OPTION_SORT_SRC || options.sort == OPTION_SORT_DEST) {
+        return screen_line_host_compare(aa, bb);
     }
 
     return 1;
@@ -993,6 +978,23 @@ void make_screen_list() {
     }
 
     if (!freeze) {
+        /* Pre-resolve hostnames before sorting to avoid repeated
+         * resolve() calls (each acquiring a mutex) during qsort. */
+        if (options.sort == OPTION_SORT_SRC || options.sort == OPTION_SORT_DEST) {
+            int is_src = (options.sort == OPTION_SORT_SRC);
+            for (i = 0; i < count; i++) {
+                host_pair_line *hpl = (host_pair_line *) items[i];
+                void *addr = is_src ? (void *)&hpl->ap.src6 : (void *)&hpl->ap.dst6;
+                if (options.dnsresolution) {
+                    resolve(hpl->ap.address_family, addr,
+                            hpl->cached_hostname, HOSTNAME_LENGTH);
+                } else {
+                    inet_ntop(hpl->ap.address_family, addr,
+                              hpl->cached_hostname, sizeof(hpl->cached_hostname));
+                }
+            }
+        }
+
         sorted_list_insert_batch(&screen_list, items, count);
         free(items);
     }
@@ -1120,13 +1122,7 @@ void analyse_data() {
 void sprint_host(char *line, int af, struct in6_addr *addr, unsigned int port, unsigned int protocol, int maxlen) {
     char hostname[HOSTNAME_LENGTH];
     char service[HOSTNAME_LENGTH];
-    char *s_name;
-    union {
-        char **ch_pp;
-        void **void_pp;
-    } u_s_name = {&s_name};
-
-    ip_service skey;
+    const char *s_name;
     int left;
 
     if (IN6_IS_ADDR_UNSPECIFIED(addr)) {
@@ -1140,9 +1136,9 @@ void sprint_host(char *line, int af, struct in6_addr *addr, unsigned int port, u
     left = strlen(hostname);
 
     if (port != 0) {
-        skey.port = port;
-        skey.protocol = protocol;
-        if (options.portresolution && hash_find(service_hash, &skey, u_s_name.void_pp) == HASH_STATUS_OK) {
+        s_name = (options.portresolution) ?
+            serv_table_lookup(service_hash, port, protocol) : NULL;
+        if (s_name) {
             snprintf(service, HOSTNAME_LENGTH, ":%s", s_name);
         } else {
             snprintf(service, HOSTNAME_LENGTH, ":%d", port);
@@ -1400,8 +1396,8 @@ void ui_init() {
     screen_list_init();
     screen_hash = addr_hash_create();
 
-    service_hash = serv_hash_create();
-    serv_hash_initialise(service_hash);
+    service_hash = serv_table_create();
+    serv_table_init(service_hash);
 
     snprintf(msg, 20, "Listening on %s", options.interface);
     showhelp(msg);

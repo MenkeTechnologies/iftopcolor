@@ -309,23 +309,19 @@ TEST(leak_ns_hash_insert_cleanup) {
  *  Service Hash (port+proto to name)
  * ================================================================ */
 
-TEST(leak_serv_hash_create_destroy) {
-    hash_type *h = serv_hash_create();
-    hash_destroy(h);
-    free(h);
+TEST(leak_serv_table_create_destroy) {
+    serv_table *t = serv_table_create();
+    serv_table_destroy(t);
 }
 
-TEST(leak_serv_hash_insert_cleanup) {
-    hash_type *h = serv_hash_create();
+TEST(leak_serv_table_insert_cleanup) {
+    serv_table *t = serv_table_create();
     for (int i = 0; i < 100; i++) {
-        ip_service svc = {80 + i, 6};
         char name[32];
         snprintf(name, sizeof(name), "svc_%d", i);
-        hash_insert(h, &svc, xstrdup(name));
+        serv_table_insert(t, 80 + i, 6, name);
     }
-    hash_delete_all_free(h);
-    hash_destroy(h);
-    free(h);
+    serv_table_destroy(t);
 }
 
 /* ================================================================
@@ -497,8 +493,8 @@ int main(void) {
     RUN(leak_ns_hash_insert_cleanup);
 
     /* Service Hash */
-    RUN(leak_serv_hash_create_destroy);
-    RUN(leak_serv_hash_insert_cleanup);
+    RUN(leak_serv_table_create_destroy);
+    RUN(leak_serv_table_insert_cleanup);
 
     /* Sorted List */
     RUN(leak_sorted_list_single_inserts);
