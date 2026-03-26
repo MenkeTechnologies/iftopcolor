@@ -584,6 +584,12 @@ void options_make() {
     xfree(options.interface);
     options.interface = NULL;
     options_config_get_string("interface", &options.interface);
+    if (!options.interface) {
+        options.interface = get_first_interface();
+        if (!options.interface) {
+            options.interface = xstrdup("eth0");
+        }
+    }
     options_config_get_bool("dns-resolution", &options.dnsresolution);
     options_config_get_bool("port-resolution", &options.portresolution);
     xfree(options.filtercode);
