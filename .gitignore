@@ -6,6 +6,11 @@ cmake_install.cmake
 install_manifest.txt
 Makefile
 *.o
+*.d
+*.dSYM/
+compile_commands.json
+CTestTestfile.cmake
+Testing/
 
 # Binaries
 iftop
@@ -17,19 +22,26 @@ benchmark_*
 .idea/
 cmake-build-*/
 *.cache
+.vscode/
+*.swp
+*.swo
 
 # OS
 .DS_Store
+Thumbs.db
 
 # Tags
 tags
+TAGS
 GPATH
 GRTAGS
 GTAGS
+.tags
 
 # Autotools (legacy)
 config.status
 config.log
+config.h
 .deps/
 Makefile.in
 aclocal.m4

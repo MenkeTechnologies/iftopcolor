@@ -37,6 +37,27 @@ add_custom_target(cyberpunk-clean
     COMMAND ${PROJECT_SOURCE_DIR}/scripts/build_banner.sh clean-end
 )
 
+add_custom_target(distclean
+    COMMAND ${PROJECT_SOURCE_DIR}/scripts/build_banner.sh distclean-start
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean
+    COMMAND ${CMAKE_COMMAND} -E rm -rf
+        ${CMAKE_BINARY_DIR}/build
+        ${CMAKE_BINARY_DIR}/CMakeCache.txt
+        ${CMAKE_BINARY_DIR}/CMakeFiles
+        ${CMAKE_BINARY_DIR}/cmake_install.cmake
+        ${CMAKE_BINARY_DIR}/install_manifest.txt
+        ${CMAKE_BINARY_DIR}/Makefile
+        ${CMAKE_BINARY_DIR}/compile_commands.json
+        ${CMAKE_BINARY_DIR}/CTestTestfile.cmake
+        ${CMAKE_BINARY_DIR}/Testing
+        ${CMAKE_BINARY_DIR}/bench/CMakeFiles
+        ${CMAKE_BINARY_DIR}/tags
+        ${CMAKE_BINARY_DIR}/GPATH
+        ${CMAKE_BINARY_DIR}/GRTAGS
+        ${CMAKE_BINARY_DIR}/GTAGS
+    COMMAND ${PROJECT_SOURCE_DIR}/scripts/build_banner.sh distclean-end
+)
+
 # --- Benchmarks ---
 # Shared sources needed by benchmarks (no UI, no pcap, no resolver)
 set(BENCH_COMMON_SRCS
