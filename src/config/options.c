@@ -278,7 +278,7 @@ static void usage(FILE *fp) {
                 "\n"
                 "\033[36m  ── SYSTEM ─────────────────────────────────────────\033[0m\n"
                 "\033[35m  v" IFTOP_VERSION
-                " \033[0m// \033[33m(c) 2002 Jacob Menke and contributors\033[0m\n"
+                " \033[0m// \033[33m(c) 2026 Jacob Menke and contributors\033[0m\n"
                 "\033[35m  The net is vast and infinite.\033[0m\n"
                 "\n");
 }

@@ -1,7 +1,7 @@
 /*
  * screenfilter.h:
  *
- * Copyright (c) 2002 Jacob Menke
+ * Copyright (c) 2026 Jacob Menke
  */
 
 #ifndef __SCREENFILTER_H_ /* include guard */

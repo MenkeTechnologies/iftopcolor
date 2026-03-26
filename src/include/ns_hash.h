@@ -1,7 +1,7 @@
 /*
  * ns_hash.h:
  *
- * Copyright (c) 2002 Jacob Menke
+ * Copyright (c) 2026 Jacob Menke
  *
  */
 
