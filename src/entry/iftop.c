@@ -453,13 +453,11 @@ static void handle_raw_packet(unsigned char *args, const struct pcap_pkthdr *pkt
 
 static void handle_pflog_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr,
                                 const unsigned char *packet) {
-    register u_int length = pkthdr->len;
     u_int hdrlen;
     const struct pfloghdr *hdr;
 
     hdr = (struct pfloghdr *)packet;
     hdrlen = BPF_WORDALIGN(hdr->length);
-    length -= hdrlen;
     packet += hdrlen;
     handle_ip_packet((struct ip *)packet, -1);
 }
@@ -525,7 +523,6 @@ static void handle_tokenring_packet(unsigned char *args, const struct pcap_pkthd
 
 static void handle_ppp_packet(unsigned char *args, const struct pcap_pkthdr *pkthdr,
                               const unsigned char *packet) {
-    register u_int length = pkthdr->len;
     register u_int caplen = pkthdr->caplen;
     u_int proto;
 
@@ -539,11 +536,9 @@ static void handle_ppp_packet(unsigned char *args, const struct pcap_pkthdr *pkt
         }
 
         packet += 2;
-        length -= 2;
 
         proto = EXTRACT_16BITS(packet);
         packet += 2;
-        length -= 2;
 
         if (proto == PPP_IP || proto == ETHERTYPE_IP || proto == ETHERTYPE_IPV6) {
             handle_ip_packet((struct ip *)packet, -1);

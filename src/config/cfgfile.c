@@ -57,7 +57,6 @@ int config_init() {
  * syslog, since this file is called at program startup. Returns 1 on success
  * or 0 on failure. */
 int read_config_file(const char *filepath, int whinge) {
-    int ret = 0;
     FILE *fp;
     char *line;
     int line_num = 1;
