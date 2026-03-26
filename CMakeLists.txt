@@ -21,6 +21,7 @@ target_link_libraries(iftop ${CL})
 
 install(CODE "execute_process(COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh install-start)")
 install(TARGETS iftop DESTINATION sbin)
+install(FILES ${PROJECT_SOURCE_DIR}/man/iftop.8 DESTINATION share/man/man8)
 install(CODE "execute_process(COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh install-end)")
 
 # --- Cyberpunk build banners ---

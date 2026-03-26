@@ -1,18 +1,24 @@
-.TH IFTOP 8
+.TH IFTOP 8 "2026-03-26" "iftopcolor 1.1" "System Administration"
 .\"
 .\" iftop.8:
-.\" Manual page for iftop.
-.\"
-.\" $Id: iftop.8,v 1.27 2010/11/27 11:06:12 pdw Exp $
+.\" Manual page for iftopcolor (iftop fork with full-spectrum color).
 .\"
 
 .SH NAME
-iftop - display bandwidth usage on an interface by host
+iftop \- display bandwidth usage on an interface by host
 
 .SH SYNOPSIS
-\fBiftop\fP \fB-h\fP |
-[\fB-nNpblBP\fP] [\fB-i\fP \fIinterface\fP] [\fB-f\fP \fIfilter code\fP] [\fB-F\fP \fInet\fP/\fImask\fP]
-[\fB-G\fP \fInet6\fP/\fImask6\fP]
+\fBiftop\fP \fB\-h\fP
+.br
+\fBiftop\fP
+[\fB\-nNpblBP\fP]
+[\fB\-i\fP \fIinterface\fP]
+[\fB\-f\fP \fIfilter\ code\fP]
+[\fB\-F\fP \fInet\fP/\fImask\fP]
+[\fB\-G\fP \fInet6\fP/\fImask6\fP]
+[\fB\-m\fP \fIlimit\fP]
+[\fB\-c\fP \fIconfig\ file\fP]
+
 .SH DESCRIPTION
 \fBiftop\fP listens to network traffic on a named \fIinterface\fP, or on the
 first interface it can find which looks like an external interface if none is
@@ -20,20 +26,26 @@ specified, and displays a table of current bandwidth usage by pairs of hosts.
 \fBiftop\fP must be run with sufficient permissions to monitor all network
 traffic on the \fIinterface\fP; see \fBpcap\fP(3) for more information, but on
 most systems this means that it must be run as root.
-
+.PP
+This is \fBiftopcolor\fP, a fork of the original iftop with fully customizable
+color schemes via a config file (\fB~/.iftopcolors\fP), performance-optimized
+data structures including pool-allocated hash tables and direct-index service
+lookup arrays, and a comprehensive test and benchmark suite.
+.PP
 By default, \fBiftop\fP will look up the hostnames associated with addresses it
-finds in packets. This can cause substantial traffic of itself, and may result
-in a confusing display. You may wish to suppress display of DNS traffic by
+finds in packets.  This can cause substantial traffic of itself, and may result
+in a confusing display.  You may wish to suppress display of DNS traffic by
 using filter code such as \fBnot port domain\fP, or switch it off entirely,
-by using the \fB-n\fP option or by pressing \fBr\fP when the program is running.
-
+by using the \fB\-n\fP option or by pressing \fBn\fP when the program is
+running.
+.PP
 By default, \fBiftop\fP counts all IP packets that pass through the filter, and
 the direction of the packet is determined according to the direction the packet
-is moving across the interface.  Using the \fB-F\fP option it is possible to
+is moving across the interface.  Using the \fB\-F\fP option it is possible to
 get \fBiftop\fP to show packets entering and leaving a given network.  For
-example, \fBiftop \-F 10.0.0.0/255.0.0.0\fP will analyse packets flowing in and
-out of the 10.* network.
-
+example, \fBiftop \-F 10.0.0.0/255.0.0.0\fP will analyse packets flowing in
+and out of the 10.* network.
+.PP
 Some other filter ideas:
 .TP
 \fBnot ether host ff:ff:ff:ff:ff:ff\fP
@@ -43,93 +55,211 @@ Ignore ethernet broadcast packets.
 Count web traffic only, unless it is being directed through a local web cache.
 .TP
 \fBicmp\fP
-How much bandwidth are users wasting trying to figure out why the network is
-slow?
+How much bandwidth is being used by ICMP traffic?
+
+.SH REQUIREMENTS
+
+.TS
+l l.
+CMake 3.10+	Build system
+libpcap	Packet capture substrate
+ncurses (ncursesw on Linux)	Terminal rendering engine
+pthreads	Parallel execution threads
+.TE
+.SS Platform-specific installation
+.TP
+\fBDebian/Ubuntu\fP
+sudo apt install cmake libpcap\-dev libncursesw5\-dev
+.TP
+\fBFedora/RHEL\fP
+sudo dnf install cmake libpcap\-devel ncurses\-devel
+.TP
+\fBmacOS\fP
+brew install cmake (libpcap and ncurses ship with Xcode CLI tools)
+.TP
+\fBFreeBSD\fP
+pkg install cmake
+
+.SH INSTALLATION
+
+.nf
+  git clone https://github.com/MenkeTechnologies/iftopcolor.git
+  cd iftopcolor
+  mkdir build && cd build && cmake ..
+  make
+  sudo make install
+.fi
+.PP
+The binary is installed to \fB/usr/local/sbin\fP.  The man page is installed
+to \fB/usr/local/share/man/man8\fP.  Make sure \fB/usr/local/sbin\fP is in
+your \fBPATH\fP.
 
 .SH OPTIONS
 
 .TP
-\fB-h\fP
+\fB\-h\fP
 Print a summary of usage.
 .TP
-\fB-n\fP
-Don't do hostname lookups. 
+\fB\-n\fP
+Don't do hostname lookups.
 .TP
-\fB-N\fP
-Do not resolve port number to service names
+\fB\-N\fP
+Do not resolve port numbers to service names.
 .TP
-\fB-p\fP
+\fB\-p\fP
 Run in promiscuous mode, so that traffic which does not pass directly through
 the specified interface is also counted.
 .TP
-\fB-P\fP
+\fB\-P\fP
 Turn on port display.
 .TP
-\fB-l\fP
+\fB\-l\fP
 Display and count datagrams addressed to or from link-local IPv6 addresses.
 The default is not to display that address category.
 .TP
-\fB-b\fP
-Don't display bar graphs of traffic. 
+\fB\-b\fP
+Don't display bar graphs of traffic.
 .TP
-\fB-B\fP
+\fB\-B\fP
 Display bandwidth rates in bytes/sec rather than bits/sec.
 .TP
-\fB-i\fP \fIinterface\fP
+\fB\-i\fP \fIinterface\fP
 Listen to packets on \fIinterface\fP.
 .TP
-\fB-f\fP \fIfilter code\fP
-Use \fIfilter code\fP to select the packets to count. Only IP packets are ever
-counted, so the specified code is evaluated as \fB(\fP\fIfilter code\fP\fB) and ip\fP.
+\fB\-f\fP \fIfilter code\fP
+Use \fIfilter code\fP to select the packets to count.  Only IP packets are ever
+counted, so the specified code is evaluated as
+\fB(\fP\fIfilter code\fP\fB) and (ip or ip6)\fP.
 .TP
-\fB-F\fP \fInet\fP/\fImask\fP
+\fB\-F\fP \fInet\fP/\fImask\fP
 Specifies an IPv4 network for traffic analysis.  If specified, iftop will only
 include packets flowing in to or out of the given network, and packet direction
 is determined relative to the network boundary, rather than to the interface.
 You may specify \fImask\fP as a dotted quad, such as /255.255.255.0, or as a
 single number specifying the number of bits set in the netmask, such as /24.
 .TP
-\fB-G\fP \fInet6\fP/\fImask6\fP
-Specifies an IPv6 network for traffic analysis. The value of \fImask6\fP can be
-given as a prefix length or as a numerical address string for more compound
+\fB\-G\fP \fInet6\fP/\fImask6\fP
+Specifies an IPv6 network for traffic analysis.  The value of \fImask6\fP can
+be given as a prefix length or as a numerical address string for more compound
 bitmasking.
 .TP
-\fB-c\fP \fIconfig file\fP
+\fB\-m\fP \fIlimit\fP
+Set the upper limit for the bar graph scale to \fIlimit\fP, e.g.\& "10M".
+The value must always be in bits, regardless of whether the option to display
+in bytes has been chosen.
+.TP
+\fB\-c\fP \fIconfig file\fP
 Specifies an alternate config file.  If not specified, iftop will use
-\fB~/.iftoprc\fP if it exists.  See below for a description of config files
+\fB~/.iftoprc\fP if it exists.  See
+.B CONFIG FILE
+below for a description of config file directives.
 
 .SH DISPLAY
 
-When running, \fBiftop\fP uses the whole screen to display network usage. At
+When running, \fBiftop\fP uses the whole screen to display network usage.  At
 the top of the display is a logarithmic scale for the bar graph which gives a
 visual indication of traffic.
-
+.PP
 The main part of the display lists, for each pair of hosts, the rate at which
 data has been sent and received over the preceding 2, 10 and 40 second
-intervals. The direction of data flow is indicated by arrows, <= and =>. For
-instance,
+intervals.  The direction of data flow is indicated by arrows, <= and =>.
+For instance,
+.PP
 .nf
-
-foo.example.com  =>  bar.example.com      1Kb  500b   100b
-                 <=                       2Mb    2Mb    2Mb
-
+  foo.example.com  =>  bar.example.com      1Kb  500b   100b
+                   <=                       2Mb    2Mb    2Mb
 .fi
+.PP
 shows, on the first line, traffic from \fBfoo.example.com\fP to
 \fBbar.example.com\fP; in the preceding 2 seconds, this averaged 1Kbit/s,
 around half that amount over the preceding 10s, and a fifth of that over the
-whole of the last 40s. During each of those intervals, the data sent in the
-other direction was about 2Mbit/s. On the actual display, part of each line
+whole of the last 40s.  During each of those intervals, the data sent in the
+other direction was about 2Mbit/s.  On the actual display, part of each line
 is inverted to give a visual indication of the 10s average of traffic.
-You might expect to see something like this where host \fBfoo\fP is making
-repeated HTTP requests to \fBbar\fP, which is sending data back which saturates
-a 2Mbit/s link.
-
+.PP
 By default, the pairs of hosts responsible for the most traffic (10 second
 average) are displayed at the top of the list.
-
+.PP
 At the bottom of the display, various totals are shown, including peak traffic
 over the last 40s, total traffic transferred (after filtering), and total
 transfer rates averaged over 2s, 10s and 40s.
+
+.SH INTERACTIVE COMMANDS
+
+.TP
+.B n
+Toggle DNS host resolution.
+.TP
+.B s
+Toggle display of source host.
+.TP
+.B d
+Toggle display of destination host.
+.TP
+.B t
+Cycle through line display modes: two-line (default), one-line-both,
+one-line-received, one-line-sent.
+.TP
+.B N
+Toggle service name resolution for port numbers.
+.TP
+.B S
+Toggle display of source port.
+.TP
+.B D
+Toggle display of destination port.
+.TP
+.B p
+Toggle port display on/off.
+.TP
+.BR 1 ", " 2 ", " 3
+Sort by the 1st, 2nd, or 3rd column (2s, 10s, or 40s average).
+.TP
+.B <
+Sort by source hostname.
+.TP
+.B >
+Sort by destination hostname.
+.TP
+.B o
+Freeze current display order.  Traffic between hosts not currently visible will
+not be shown, but is still included in totals.
+.TP
+.B P
+Pause display.
+.TP
+.B h
+Toggle the help display.
+.TP
+.B b
+Toggle bar graph display.
+.TP
+.B B
+Cycle bar graph averaging period.
+.TP
+.B T
+Toggle cumulative line totals.
+.TP
+.BR j " / " k
+Scroll the display of hosts.  Most useful when the display order is frozen.
+.TP
+.B f
+Edit the BPF filter code while running.  Note that changing the filter affects
+only newly captured traffic; existing entries may persist for up to 40 seconds.
+.TP
+.B l
+Set a POSIX extended regular expression to filter hostnames on the display.
+This does not affect what is captured, only what is shown.  Display filters do
+not affect the totals at the bottom of the screen.
+.TP
+.B L
+Toggle between linear and logarithmic bar graph scales.
+.TP
+.B !
+Run a shell command.
+.TP
+.B q
+Quit.
 
 .SH SOURCE / DEST AGGREGATION
 
@@ -138,64 +268,20 @@ for each source or destination will be aggregated together.  This is most
 useful when \fBiftop\fP is run in promiscuous mode, or is run on a gateway
 machine.
 
-.SH PORT DISPLAY
-
-\fBS\fP or \fBD\fP toggle the display of source and destination ports
-respectively. \fBp\fP will toggle port display on/off.
-
-.SH DISPLAY TYPE
-
-\fBt\fP cycles through the four line display modes; the default 2-line display,
-with sent and received traffic on separate lines, and 3 1-line displays, with
-sent, received, or total traffic shown.
-
-.SH DISPLAY ORDER
-
-By default, the display is ordered according to the 10s average (2nd column).
-By pressing \fB1\fP, \fB2\fP or \fB3\fP it is possible to sort by the 1st, 2nd
-or 3rd column.   By pressing \fB<\fP or \fB>\fP the display will be sorted by
-source or destination hostname respectively.
-
-.SH DISPLAY FILTERING
-
-\fBl\fP allows you to enter a POSIX extended regular expression that will be
-used to filter hostnames shown in the display.  This is a good way to quickly
-limit what is shown on the display.  Note that this happens at a much later
-stage than filter code, and does not affect what is actually captured.  Display
-filters DO NOT affect the totals at the bottom of the screen.
-
-.SH PAUSE DISPLAY / FREEZE ORDER
-
-\fBP\fP will pause the current display.
-
-\fBo\fP will freeze the current screen order.  This has the side effect that
-traffic between hosts not shown on the screen at the time will not be shown at
-all, although it will be included in the totals at the bottom of the screen.
-
-.SH SCROLL DISPLAY
-
-\fBj\fP and \fBk\fP will scroll the display of hosts.  This feature is most
-useful when the display order is frozen (see above).
-
-.SH FILTER CODE
-
-\fBf\fP allows you to edit the filter code whilst iftop running.  This
-can lead to some unexpected behaviour.
-
 .SH CONFIG FILE
 
-iftop can read its configuration from a config file.  If the \fB-c\fP option is
-not specified, iftop will attempt to read its configuration from
+iftop can read its configuration from a config file.  If the \fB\-c\fP option
+is not specified, iftop will attempt to read its configuration from
 \fB~/.iftoprc\fP, if it exists.  Any command line options specified will
 override settings in the config file.
-
+.PP
 The config file consists of one configuration directive per line.  Each
 directive is a name value pair, for example:
+.PP
 .nf
-
-interface: eth0
-
+  interface: eth0
 .fi
+.PP
 sets the network interface.  The following config directives are supported:
 
 .TP
@@ -245,7 +331,9 @@ Shows cumulative total for each item.
 Use a logarithmic scale for bar graphs.
 .TP
 \fBmax-bandwidth:\fP \fIbw\fP
-Fixes the maximum for the bar graph scale to \fIbw\fP, e.g. "10M". Note that the value has to always be in bits, regardless if the option to display in bytes has been chosen.
+Fixes the maximum for the bar graph scale to \fIbw\fP, e.g.\& "10M".  The
+value must always be in bits, regardless of whether the option to display in
+bytes has been chosen.
 .TP
 \fBnet-filter:\fP \fInet/mask\fP
 Defines an IP network boundary for determining packet direction.
@@ -256,41 +344,235 @@ Defines an IPv6 network boundary for determining packet direction.
 \fBscreen-filter:\fP \fIregexp\fP
 Sets a regular expression to filter screen output.
 
-.SH QUIRKS (aka they're features, not bugs)
+.SH COLOR CONFIGURATION
+
+Create \fB~/.iftopcolors\fP to customize the display colors.  Each line sets
+one element to a color and boldness.  Available colors: \fBred\fP, \fBblue\fP,
+\fBgreen\fP, \fByellow\fP, \fBmagenta\fP, \fBcyan\fP, \fBblack\fP,
+\fBwhite\fP.  Each can be \fBbold\fP or \fBnonbold\fP.
+.PP
+.nf
+  # ~/.iftopcolors
+  BOTH_BAR_COLOR              blue    bold
+  HOST1_COLOR                 red     nonbold
+  HOST2_COLOR                 red     bold
+  SCALE_BAR_COLOR             red     nonbold
+  SCALE_MARKERS_COLOR         red     bold
+  DL_UL_INDICATOR_COLOR       blue    bold
+  TWO_SECOND_TRANSFER_COLUMN_COLOR    yellow  bold
+  TEN_SECOND_TRANSFER_COLUMN_COLOR    magenta bold
+  FOURTY_SECOND_TRANSFER_COLUMN_COLOR yellow  bold
+  BOTTOM_BAR_COLOR            blue    bold
+  CUM_LABEL_COLOR             yellow  nonbold
+  PEAK_LABEL_COLOR            magenta bold
+  RATES_LABEL_COLOR           magenta bold
+  TOTAL_LABEL_COLOR           blue    bold
+  CUM_TRANSFER_COLUMN_COLOR   magenta nonbold
+  PEAK_TRANSFER_COLUMN_COLOR  magenta nonbold
+  RECEIVE_BAR_COLOR           yellow  nonbold
+  SENT_BAR_COLOR              yellow  nonbold
+.fi
+
+.SH TESTING
+
+A test suite of 474 tests covers core data structures and utilities.
+.SS Running tests
+.nf
+  mkdir build && cd build && cmake ..
+  make check
+.fi
+.PP
+Run a single test suite:
+.PP
+.nf
+  make check_hash
+  ./check_hash
+.fi
+.SS Test suites
+.TS
+l l r.
+Suite	Coverage	Tests
+_
+check_util	xmalloc, xcalloc, xrealloc, xstrdup, xfree, alloc chains	41
+check_vector	Push, pop, remove, resize, iteration, shrink, ptr storage	68
+check_hash	Generic hash: insert, find, delete, collisions, high load	59
+check_addr_hash	IPv4/IPv6 pairs, pool allocator, fast-path, UDP, protocol	49
+check_ns_hash	IPv6 address to hostname cache, adjacent addrs, scaling	31
+check_serv_hash	Port+protocol to service name, protocol differentiation	27
+check_sorted_list	Single insert, batch insert, descending order, destroy	46
+check_stringmap	Binary tree insert, find, special chars, deep chains	46
+check_cfgfile	Config parsing: string, bool, int, float, enum, file IO	77
+check_leaks	Full lifecycle leak tests for all data structures (macOS)	30
+_
+	Total	474
+.TE
+.SS Memory leak analysis
+Leak detection uses macOS \fBleaks \-\-atExit\fP to verify zero unreachable
+allocations after full create/populate/destroy lifecycles for every data
+structure.
+.PP
+.nf
+  make leakcheck
+.fi
+.PP
+Covers: vector, generic hash, address hash (pool allocator), ns_hash,
+serv_table, sorted list (single and batch), stringmap, and config file
+subsystems.
+
+.SH BENCHMARKS
+
+Benchmarks are compiled with aggressive optimizations:
+\fB\-O3\fP, \fB\-march=native\fP, \fB\-flto\fP, \fB\-funroll\-loops\fP.
+.SS Running benchmarks
+.nf
+  mkdir build && cd build && cmake \-DCMAKE_BUILD_TYPE=Release ..
+  make bench
+.fi
+.PP
+Run a single benchmark:
+.PP
+.nf
+  ./bench/run_benchmarks.sh hash
+  ./bench/run_benchmarks.sh vector
+.fi
+.SS Benchmark suites
+.TS
+l l.
+Suite	Measures
+_
+benchmark_hash	Distribution, insert, find (hit/miss), scaling, delete, iterate
+benchmark_sorted_list	Single O(n^2) vs batch O(n log n), iteration, destroy
+benchmark_vector	Push, pop, remove (front/middle/back), iterate, reallocate
+benchmark_pool	Pool vs malloc: insert/delete, churn, multi-block, reuse
+benchmark_stringmap	Sequential vs random keys, find scaling, config workload
+benchmark_ns_hash	IPv6 address cache: insert, find, delete, iteration, churn
+benchmark_serv_hash	Service cache: insert, lookup, delete, TCP/UDP direct-index
+benchmark_cfgfile	Config set/get, type parsing, file reading, realistic workload
+.TE
+.SS addr_hash vs hash \(em pool allocator vs generic malloc
+The pool allocator is a custom slab that recycles fixed-size nodes, eliminating
+per-packet malloc/free syscalls.
+.PP
+.nf
+  OPERATION                     addr_hash       hash            SPEEDUP
+  Insert 1000 IPv4 flows        10,710 ns/op    23,110 ns/op    2.2x
+  Find hit (1000 entries)            2.5 ns/op        4.0 ns/op 1.6x
+
+  ALLOCATOR                     TIME
+  Pool  (insert 2000 + delete)  24.7 ms         2.1x faster
+  Malloc (insert 2000 + delete) 51.6 ms         baseline
+.fi
+.PP
+Hash distribution is near-ideal: IPv4 stddev 2.26 vs ideal 2.21,
+IPv6 stddev 2.21 vs ideal 2.21.
+.SS serv_table \(em direct-index array vs old chaining hash
+The old serv_hash used a 123-bucket chaining hash with a degenerate hash
+function that only hashed on protocol \(em all TCP entries landed in one bucket,
+all UDP in another, producing worst-case chain walks on every lookup.
+The new serv_table uses direct-index arrays for TCP/UDP (port number as array
+index) with a small hash fallback for rare protocols.
+.PP
+.nf
+  IMPLEMENTATION         FIND HIT (200 entries)  THROUGHPUT      MECHANISM
+  serv_table [NEW]             0.5 ns/op         1.8B ops/s     array[port]
+  serv_hash  [OLD]            53.4 ns/op        18.7M ops/s     chained hash
+                                                                 100x FASTER
+.fi
+.PP
+Memory cost: 1 MB (two 65536-entry pointer arrays for TCP and UDP).
+.SS ns_hash \(em IPv6 address hostname cache
+Specialized hash for IPv6 address-to-hostname resolution caching.
+.PP
+.nf
+  VARIANT  FIND HIT (200 entries)  THROUGHPUT      KEY COMPARISON
+  ns_hash        2.6 ns/op         384M ops/s     IN6_ARE_ADDR_EQUAL (16B memcmp)
+.fi
+.SS Sorted list \(em brute force O(n^2) vs batch O(n log n)
+At small n the overhead of qsort dominates.  Past the crossover point, batch
+mode pulls away.
+.PP
+.nf
+  SIZE  SINGLE (one-by-one)  BATCH (qsort)     SPEEDUP
+   100       4,290 ns/op       6,445 ns/op      0.7x (batch overhead)
+   500      73,450 ns/op      43,656 ns/op      1.7x
+  1000     230,920 ns/op      98,820 ns/op      2.3x
+  2000     766,900 ns/op     205,380 ns/op      3.7x
+  5000   4,585,000 ns/op     613,951 ns/op      7.5x
+.fi
+.SS Stringmap \(em unbalanced BST under duress
+Sequential keys degenerate the unbalanced binary tree into a linked list.
+.PP
+.nf
+  OPERATION (1000 keys)  SEQUENTIAL       RANDOM           PENALTY
+  Insert                 873,510 ns/op    66,974 ns/op      13x
+  Find hit                 758.8 ns/op       56.5 ns/op    13.4x
+.fi
+.PP
+Sequential keys give O(n) per operation.  Random keys give O(log n).
+.SS Vector \(em contiguous memory operations
+.nf
+  OPERATION                         PERFORMANCE
+  push_back 10,000 items            4,435 ns/op       amortized O(1)
+  remove from front (1000 items)   36,240 ns/op       O(n) memmove
+  iterate 10,000 items               574.6 ns/pass    ~0.057 ns/element
+.fi
+.PP
+Iteration runs at cache-line speed: 0.057 ns/element is approximately
+17.5 billion elements per second.
+
+.SH PLATFORM NOTES
+
+.TP
+\fBRedHat 7.2\fP
+A bug in the bundled ncurses can cause a segfault.  Update ncurses from
+Rawhide.
+.TP
+\fBSlackware 8.1\fP
+You may need to upgrade libpcap (via the tcpdump package) to compile.
+.TP
+\fBFreeBSD 4.7\fP
+Lacks a proper \fBgethostbyaddr_r\fP.  Use \fB\-\-with\-resolver=\fP\fI...\fP
+to select an alternative resolver.
+.TP
+\fBSolaris\fP
+iftop must run in promiscuous mode to capture outgoing packets.  This is
+auto-configured; the \fB\-p\fP flag disables the non-broadcast packet filter.
+You may also need ncurses instead of the bundled curses.
+
+.SH QUIRKS
 
 There are some circumstances in which iftop may not do what you expect.  In
-most cases what it is doing is logical, and we believe it is correct behaviour,
-although I'm happy to hear reasoned arguments for alternative behaviour.
-
+most cases what it is doing is logical, and we believe it is correct behaviour.
+.PP
 \fBTotals don't add up\fP
-
+.PP
 There are several reasons why the totals may not appear to add up.  The
 most obvious is having a screen filter in effect, or screen ordering
 frozen.  In this case some captured information is not being shown to
 you, but is included in the totals.
-
+.PP
 A more subtle explanation comes about when running in promiscuous mode
-without specifying a \fB-F\fP option.  In this case there is no easy way
+without specifying a \fB\-F\fP option.  In this case there is no easy way
 to assign the direction of traffic between two third parties.  For the purposes
 of the main display this is done in an arbitrary fashion (by ordering of IP
 addresses), but for the sake of totals all traffic between other hosts is
 accounted as incoming, because that's what it is from the point of view of your
-interface.  The \fB-F\fP option allows you to specify an arbitrary network
+interface.  The \fB\-F\fP option allows you to specify an arbitrary network
 boundary, and to show traffic flowing across it.
-
+.PP
 \fBPeak totals don't add up\fP
-
-Again, this is a feature.  The peak sent and peak received didn't necessarily
-happen at the same time.  The peak total is the maximum of sent plus received
-in each captured time division.
-
+.PP
+The peak sent and peak received didn't necessarily happen at the same time.
+The peak total is the maximum of sent plus received in each captured time
+division.
+.PP
 \fBChanging the filter code doesn't seem to work\fP
-
+.PP
 Give it time.  Changing the filter code affects what is captured from
 the time that you entered it, but most of what is on the display is
 based on some fraction of the last 40s window of capturing.  After
 changing the filter there may be entries on the display that are
-disallowed by the current filter for up to 40s.  DISPLAY FILTERING has
+disallowed by the current filter for up to 40s.  Display filtering has
 immediate effect and does not affect what is captured.
 
 .SH FILES
@@ -298,30 +580,34 @@ immediate effect and does not affect what is captured.
 .TP
 \fB~/.iftoprc\fP
 Configuration file for iftop.
+.TP
+\fB~/.iftopcolors\fP
+Color configuration file for iftopcolor.
 
 .SH SEE ALSO
 .BR tcpdump (8),
 .BR pcap (3),
 .BR driftnet (1).
 
-.SH AUTHOR
-Paul Warren <pdw@ex-parrot.com>
+.SH AUTHORS
+Paul Warren <pdw@ex\-parrot.com> (original iftop)
+.br
+Jacob Menke (iftopcolor fork)
 
 .SH VERSION
-$Id: iftop.8,v 1.27 2010/11/27 11:06:12 pdw Exp $
+iftopcolor 1.1
 
 .SH COPYING
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
-
+.PP
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
-
+.PP
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
