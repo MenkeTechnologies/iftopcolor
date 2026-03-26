@@ -1,6 +1,9 @@
 #!/bin/sh
 # Cyberpunk banner for build system
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+V=$(sed -n 's/^#define IFTOP_VERSION "\(.*\)"/\1/p' "$SCRIPT_DIR/../src/include/conf.h")
+
 C='\033[1;36m'  # bold cyan
 M='\033[1;35m'  # bold magenta
 G='\033[1;32m'  # bold green
@@ -12,7 +15,7 @@ case "$1" in
     build-start)
         printf '\n'
         printf "  ${M}╔══════════════════════════════════════════════════════════════════════╗${R}\n"
-        printf "  ${M}║${R}  ${C}▓▓ COMPILING NEURAL NETWORK INTERFACE // iftop ${B}v2.0${R}               ${M}║${R}\n"
+        printf "  ${M}║${R}  ${C}▓▓ COMPILING NEURAL NETWORK INTERFACE // iftop ${B}v${V}${R}             ${M}║${R}\n"
         printf "  ${M}║${R}  ${Y}>> ENGAGING COMPILER UPLINK ...${R}                                    ${M}║${R}\n"
         printf "  ${M}╚══════════════════════════════════════════════════════════════════════╝${R}\n"
         printf '\n'
@@ -36,7 +39,7 @@ case "$1" in
     install-start)
         printf '\n'
         printf "  ${M}╔══════════════════════════════════════════════════════════════════════╗${R}\n"
-        printf "  ${M}║${R}  ${C}▓▓ DEPLOYING BINARY TO TARGET SYSTEM // iftop ${B}v2.0${R}                 ${M}║${R}\n"
+        printf "  ${M}║${R}  ${C}▓▓ DEPLOYING BINARY TO TARGET SYSTEM // iftop ${B}v${V}${R}               ${M}║${R}\n"
         printf "  ${M}║${R}  ${Y}>> INITIATING NEURAL IMPLANT SEQUENCE ...${R}                             ${M}║${R}\n"
         printf "  ${M}╚══════════════════════════════════════════════════════════════════════╝${R}\n"
         printf '\n'
