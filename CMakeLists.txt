@@ -19,22 +19,22 @@ add_executable(iftop ${SRC_FILES})
 
 target_link_libraries(iftop ${CL})
 
-install(CODE "execute_process(COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh install-start)")
+install(CODE "execute_process(COMMAND ${PROJECT_SOURCE_DIR}/scripts/build_banner.sh install-start)")
 install(TARGETS iftop DESTINATION sbin)
 install(FILES ${PROJECT_SOURCE_DIR}/man/iftop.8 DESTINATION share/man/man8)
-install(CODE "execute_process(COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh install-end)")
+install(CODE "execute_process(COMMAND ${PROJECT_SOURCE_DIR}/scripts/build_banner.sh install-end)")
 
 # --- Cyberpunk build banners ---
 add_custom_target(build-banner
-    COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh build-start)
+    COMMAND ${PROJECT_SOURCE_DIR}/scripts/build_banner.sh build-start)
 add_dependencies(iftop build-banner)
 add_custom_command(TARGET iftop POST_BUILD
-    COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh build-end)
+    COMMAND ${PROJECT_SOURCE_DIR}/scripts/build_banner.sh build-end)
 
 add_custom_target(cyberpunk-clean
-    COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh clean-start
+    COMMAND ${PROJECT_SOURCE_DIR}/scripts/build_banner.sh clean-start
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean
-    COMMAND ${PROJECT_SOURCE_DIR}/build_banner.sh clean-end
+    COMMAND ${PROJECT_SOURCE_DIR}/scripts/build_banner.sh clean-end
 )
 
 # --- Benchmarks ---
@@ -48,33 +48,24 @@ set(BENCH_COMMON_SRCS
     ${PROJECT_SOURCE_DIR}/src/util/util.c
 )
 
-set(BENCH_NAMES hash sorted_list vector pool stringmap)
+set(BENCH_OPTS -O3 -DNDEBUG -march=native -flto -funroll-loops -fomit-frame-pointer)
 
-foreach(b IN LISTS BENCH_NAMES)
-    add_executable(benchmark_${b} EXCLUDE_FROM_ALL bench/bench_${b}.c ${BENCH_COMMON_SRCS})
-    target_compile_options(benchmark_${b} PRIVATE -O3 -DNDEBUG -march=native -flto -funroll-loops -fomit-frame-pointer)
-    set_target_properties(benchmark_${b} PROPERTIES LINK_FLAGS "-flto")
-    target_link_libraries(benchmark_${b} -lm)
-endforeach()
+function(add_benchmark name)
+    set(extra_srcs ${ARGN})
+    add_executable(benchmark_${name} EXCLUDE_FROM_ALL bench/bench_${name}.c ${BENCH_COMMON_SRCS} ${extra_srcs})
+    target_compile_options(benchmark_${name} PRIVATE ${BENCH_OPTS})
+    set_target_properties(benchmark_${name} PROPERTIES LINK_FLAGS "-flto")
+    target_link_libraries(benchmark_${name} -lm)
+endfunction()
 
-# Benchmarks that need additional sources beyond BENCH_COMMON_SRCS
-add_executable(benchmark_ns_hash EXCLUDE_FROM_ALL bench/bench_ns_hash.c ${BENCH_COMMON_SRCS}
-    ${PROJECT_SOURCE_DIR}/src/data/map/ns_hash.c)
-target_compile_options(benchmark_ns_hash PRIVATE -O3 -DNDEBUG -march=native -flto -funroll-loops -fomit-frame-pointer)
-set_target_properties(benchmark_ns_hash PROPERTIES LINK_FLAGS "-flto")
-target_link_libraries(benchmark_ns_hash -lm)
-
-add_executable(benchmark_serv_hash EXCLUDE_FROM_ALL bench/bench_serv_hash.c ${BENCH_COMMON_SRCS}
-    ${PROJECT_SOURCE_DIR}/src/data/map/serv_hash.c)
-target_compile_options(benchmark_serv_hash PRIVATE -O3 -DNDEBUG -march=native -flto -funroll-loops -fomit-frame-pointer)
-set_target_properties(benchmark_serv_hash PROPERTIES LINK_FLAGS "-flto")
-target_link_libraries(benchmark_serv_hash -lm)
-
-add_executable(benchmark_cfgfile EXCLUDE_FROM_ALL bench/bench_cfgfile.c ${BENCH_COMMON_SRCS}
-    ${PROJECT_SOURCE_DIR}/src/config/cfgfile.c)
-target_compile_options(benchmark_cfgfile PRIVATE -O3 -DNDEBUG -march=native -flto -funroll-loops -fomit-frame-pointer)
-set_target_properties(benchmark_cfgfile PROPERTIES LINK_FLAGS "-flto")
-target_link_libraries(benchmark_cfgfile -lm)
+add_benchmark(hash)
+add_benchmark(sorted_list)
+add_benchmark(vector)
+add_benchmark(pool)
+add_benchmark(stringmap)
+add_benchmark(ns_hash    ${PROJECT_SOURCE_DIR}/src/data/map/ns_hash.c)
+add_benchmark(serv_hash  ${PROJECT_SOURCE_DIR}/src/data/map/serv_hash.c)
+add_benchmark(cfgfile    ${PROJECT_SOURCE_DIR}/src/config/cfgfile.c)
 
 # "make bench" builds all benchmarks, then runs them
 add_custom_target(bench
