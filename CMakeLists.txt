@@ -132,22 +132,21 @@ add_custom_target(check
     DEPENDS check_vector check_hash check_addr_hash check_sorted_list
             check_stringmap check_ns_hash check_serv_hash check_cfgfile check_util
             check_integration check_options check_packet check_ui_format check_screenfilter
-    COMMAND ${PROJECT_SOURCE_DIR}/test/banner.sh start
-    COMMAND $<TARGET_FILE:check_util>
-    COMMAND $<TARGET_FILE:check_vector>
-    COMMAND $<TARGET_FILE:check_hash>
-    COMMAND $<TARGET_FILE:check_addr_hash>
-    COMMAND $<TARGET_FILE:check_ns_hash>
-    COMMAND $<TARGET_FILE:check_serv_hash>
-    COMMAND $<TARGET_FILE:check_sorted_list>
-    COMMAND $<TARGET_FILE:check_stringmap>
-    COMMAND $<TARGET_FILE:check_cfgfile>
-    COMMAND $<TARGET_FILE:check_options>
-    COMMAND $<TARGET_FILE:check_packet>
-    COMMAND $<TARGET_FILE:check_ui_format>
-    COMMAND $<TARGET_FILE:check_screenfilter>
-    COMMAND $<TARGET_FILE:check_integration>
-    COMMAND ${PROJECT_SOURCE_DIR}/test/banner.sh end
+    COMMAND ${PROJECT_SOURCE_DIR}/test/run_check.sh
+        $<TARGET_FILE:check_util>
+        $<TARGET_FILE:check_vector>
+        $<TARGET_FILE:check_hash>
+        $<TARGET_FILE:check_addr_hash>
+        $<TARGET_FILE:check_ns_hash>
+        $<TARGET_FILE:check_serv_hash>
+        $<TARGET_FILE:check_sorted_list>
+        $<TARGET_FILE:check_stringmap>
+        $<TARGET_FILE:check_cfgfile>
+        $<TARGET_FILE:check_options>
+        $<TARGET_FILE:check_packet>
+        $<TARGET_FILE:check_ui_format>
+        $<TARGET_FILE:check_screenfilter>
+        $<TARGET_FILE:check_integration>
 )
 
 # "make leakcheck" runs leak tests under macOS `leaks` tool

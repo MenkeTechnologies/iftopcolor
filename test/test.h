@@ -105,8 +105,6 @@ static int test_total_count = 0;
            " %s " T_RESET T_BCYAN "\xE2\x96\x93\xE2\x96\x93\xE2\x96\x93" T_RESET "\n", \
            name)
 
-#define TEST_COUNTS_FILE "/tmp/iftop_test_counts"
-
 #define TEST_REPORT()                                                                             \
     do {                                                                                          \
         printf("\n" T_DIM " \xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94" \
@@ -129,13 +127,6 @@ static int test_total_count = 0;
             printf(T_BRED " \xE2\x96\x88\xE2\x96\x88 INTEGRITY BREACH DETECTED" T_RESET T_RED     \
                           " // %d passed, %d FAILED, %d total" T_RESET "\n",                      \
                    test_pass_count, test_fail_count, test_total_count);                           \
-        }                                                                                         \
-        {                                                                                         \
-            FILE *_cf = fopen(TEST_COUNTS_FILE, "a");                                             \
-            if (_cf) {                                                                            \
-                fprintf(_cf, "%d %d %d\n", test_pass_count, test_fail_count, test_total_count);   \
-                fclose(_cf);                                                                      \
-            }                                                                                     \
         }                                                                                         \
         return test_fail_count > 0 ? 1 : 0;                                                       \
     } while (0)
