@@ -289,7 +289,7 @@ char *do_resolve(struct addr_storage *addr) {
     }
 
     a = (unsigned char *)&addr->as_addr4;
-    sprintf(s, "%d.%d.%d.%d.in-addr.arpa.", a[3], a[2], a[1], a[0]);
+    snprintf(s, sizeof(s), "%d.%d.%d.%d.in-addr.arpa.", a[3], a[2], a[1], a[0]);
 
     C.result = 0;
     C.addr = &addr->as_addr4;

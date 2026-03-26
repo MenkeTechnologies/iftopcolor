@@ -25,7 +25,7 @@ char *edline(int linenum, const char *prompt, const char *initial) {
 
     if (initial) {
         str = xmalloc(slen = strlen(initial) * 2 + 1);
-        strcpy(str, initial);
+        memcpy(str, initial, strlen(initial) + 1);
     } else {
         str = xmalloc(slen = 256);
         *str = 0;

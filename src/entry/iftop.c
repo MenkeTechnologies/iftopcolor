@@ -638,8 +638,9 @@ static void handle_radiotap_packet(unsigned char *args, const struct pcap_pkthdr
 char *set_filter_code(const char *filter) {
     char *x;
     if (filter) {
-        x = xmalloc(strlen(filter) + sizeof "() and (ip or ip6)");
-        sprintf(x, "(%s) and (ip or ip6)", filter);
+        size_t xlen = strlen(filter) + sizeof "() and (ip or ip6)";
+        x = xmalloc(xlen);
+        snprintf(x, xlen, "(%s) and (ip or ip6)", filter);
     } else {
         x = xstrdup("ip or ip6");
     }
@@ -799,7 +800,11 @@ int main(int argc, char **argv) {
 
     ui_init();
 
-    pthread_create(&thread, NULL, (void *)&packet_loop, NULL);
+    if (pthread_create(&thread, NULL, (void *)&packet_loop, NULL) != 0) {
+        perror("pthread_create");
+        ui_finish();
+        exit(1);
+    }
 
     ui_loop();
 

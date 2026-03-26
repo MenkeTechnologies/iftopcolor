@@ -191,7 +191,11 @@ void getColors() {
     const char *homedir;
 
     if ((homedir = getenv("HOME")) == NULL) {
-        homedir = getpwuid(getuid())->pw_dir;
+        struct passwd *pw = getpwuid(getuid());
+        if (pw == NULL) {
+            return;
+        }
+        homedir = pw->pw_dir;
     }
 
     const char *filename = "/.iftopcolors";
@@ -1142,14 +1146,14 @@ void sprint_host(char *line, int af, struct in6_addr *addr, unsigned int port,
     }
 
 
-    sprintf(line, "%-*s", maxlen, hostname);
-    if (left > (maxlen - strlen(service))) {
+    snprintf(line, maxlen + 1, "%-*s", maxlen, hostname);
+    if (left > (maxlen - (int)strlen(service))) {
         left = maxlen - strlen(service);
         if (left < 0) {
             left = 0;
         }
     }
-    sprintf(line + left, "%-*s", maxlen - left, service);
+    snprintf(line + left, maxlen - left + 1, "%-*s", maxlen - left, service);
 }
 
 
