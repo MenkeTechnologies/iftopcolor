@@ -9,11 +9,11 @@
 
 #ifdef HAVE_REGCOMP
 
-#include <sys/types.h>
-#include <regex.h>
-#include <stdio.h>
-#include "../include/iftop.h"
-#include "../include/options.h"
+#    include <sys/types.h>
+#    include <regex.h>
+#    include <stdio.h>
+#    include "../include/iftop.h"
+#    include "../include/options.h"
 
 extern options_t options;
 

@@ -34,8 +34,8 @@ typedef enum {
     OPTION_LINEDISPLAY_ONE_LINE_SENT
 } option_linedisplay_t;
 
-/* 
- * This structure has to be defined in the same order as the config 
+/*
+ * This structure has to be defined in the same order as the config
  * directives in cfgfile.c.  Clearly this is EBW.
  */
 typedef struct {

@@ -25,9 +25,15 @@ stringmap stringmap_new() {
 /* stringmap_delete:
  * Free memory for a stringmap. */
 void stringmap_delete(stringmap map) {
-    if (!map) return;
-    if (map->lesser) stringmap_delete(map->lesser);
-    if (map->greater) stringmap_delete(map->greater);
+    if (!map) {
+        return;
+    }
+    if (map->lesser) {
+        stringmap_delete(map->lesser);
+    }
+    if (map->greater) {
+        stringmap_delete(map->greater);
+    }
 
     xfree(map->key);
     xfree(map);
@@ -37,9 +43,15 @@ void stringmap_delete(stringmap map) {
  * Free memory for a stringmap, and the objects contained in it, assuming that
  * they are pointers to memory allocated by xmalloc(3). */
 void stringmap_delete_free(stringmap map) {
-    if (!map) return;
-    if (map->lesser) stringmap_delete_free(map->lesser);
-    if (map->greater) stringmap_delete_free(map->greater);
+    if (!map) {
+        return;
+    }
+    if (map->lesser) {
+        stringmap_delete_free(map->lesser);
+    }
+    if (map->greater) {
+        stringmap_delete_free(map->greater);
+    }
 
     xfree(map->key);
     xfree(map->data.ptr);
@@ -51,7 +63,9 @@ void stringmap_delete_free(stringmap map) {
  * the existing item value, or NULL if a new item was created.
  */
 item *stringmap_insert(stringmap map, const char *key, const item data) {
-    if (!map) return NULL;
+    if (!map) {
+        return NULL;
+    }
     if (map->key == NULL) {
         map->key = xstrdup(key);
         map->data = data;
@@ -63,17 +77,23 @@ item *stringmap_insert(stringmap map, const char *key, const item data) {
             if (cmp == 0) {
                 return &(current->data);
             } else if (cmp < 0) {
-                if (current->lesser) current = current->lesser;
-                else {
-                    if (!(current->lesser = stringmap_new())) return NULL;
+                if (current->lesser) {
+                    current = current->lesser;
+                } else {
+                    if (!(current->lesser = stringmap_new())) {
+                        return NULL;
+                    }
                     current->lesser->key = xstrdup(key);
                     current->lesser->data = data;
                     return NULL;
                 }
             } else if (cmp > 0) {
-                if (current->greater) current = current->greater;
-                else {
-                    if (!(current->greater = stringmap_new())) return NULL;
+                if (current->greater) {
+                    current = current->greater;
+                } else {
+                    if (!(current->greater = stringmap_new())) {
+                        return NULL;
+                    }
                     current->greater->key = xstrdup(key);
                     current->greater->data = data;
                     return NULL;
@@ -89,16 +109,25 @@ item *stringmap_insert(stringmap map, const char *key, const item data) {
 stringmap stringmap_find(const stringmap map, const char *key) {
     stringmap current;
     int cmp;
-    if (!map || map->key == NULL) return 0;
+    if (!map || map->key == NULL) {
+        return 0;
+    }
     for (current = map;;) {
         cmp = strcmp(key, current->key);
-        if (cmp == 0) return current;
-        else if (cmp < 0) {
-            if (current->lesser) current = current->lesser;
-            else return NULL;
+        if (cmp == 0) {
+            return current;
+        } else if (cmp < 0) {
+            if (current->lesser) {
+                current = current->lesser;
+            } else {
+                return NULL;
+            }
         } else if (cmp > 0) {
-            if (current->greater) current = current->greater;
-            else return NULL;
+            if (current->greater) {
+                current = current->greater;
+            } else {
+                return NULL;
+            }
         }
     }
 }

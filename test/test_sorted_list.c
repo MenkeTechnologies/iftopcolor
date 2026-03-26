@@ -16,8 +16,9 @@ static int is_sorted(sorted_list_type *list) {
     sorted_list_node *prev_node = NULL;
     sorted_list_node *node = sorted_list_next_item(list, NULL);
     while (node) {
-        if (prev_node && int_compare(prev_node->data, node->data) > 0)
+        if (prev_node && int_compare(prev_node->data, node->data) > 0) {
             return 0;
+        }
         prev_node = node;
         node = sorted_list_next_item(list, node);
     }
@@ -27,14 +28,18 @@ static int is_sorted(sorted_list_type *list) {
 static int list_count(sorted_list_type *list) {
     int count = 0;
     sorted_list_node *node = sorted_list_next_item(list, NULL);
-    while (node) { count++; node = sorted_list_next_item(list, node); }
+    while (node) {
+        count++;
+        node = sorted_list_next_item(list, node);
+    }
     return count;
 }
 
 static long list_nth(sorted_list_type *list, int index) {
     sorted_list_node *node = sorted_list_next_item(list, NULL);
-    for (int i = 0; i < index && node; i++)
+    for (int i = 0; i < index && node; i++) {
         node = sorted_list_next_item(list, node);
+    }
     return node ? (long)node->data : -1;
 }
 
@@ -175,8 +180,9 @@ TEST(sorted_list_insert_many_duplicates) {
     sorted_list_type list;
     list.compare = int_compare;
     sorted_list_initialise(&list);
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 20; i++) {
         sorted_list_insert(&list, (void *)7L);
+    }
     ASSERT_EQ(list_count(&list), 20);
     ASSERT(is_sorted(&list));
     sorted_list_destroy(&list);
@@ -186,8 +192,9 @@ TEST(sorted_list_insert_already_sorted) {
     sorted_list_type list;
     list.compare = int_compare;
     sorted_list_initialise(&list);
-    for (long i = 1; i <= 10; i++)
+    for (long i = 1; i <= 10; i++) {
         sorted_list_insert(&list, (void *)i);
+    }
     ASSERT(is_sorted(&list));
     ASSERT_EQ(list_count(&list), 10);
     sorted_list_destroy(&list);
@@ -197,12 +204,14 @@ TEST(sorted_list_insert_reverse_sorted) {
     sorted_list_type list;
     list.compare = int_compare;
     sorted_list_initialise(&list);
-    for (long i = 10; i >= 1; i--)
+    for (long i = 10; i >= 1; i--) {
         sorted_list_insert(&list, (void *)i);
+    }
     ASSERT(is_sorted(&list));
     ASSERT_EQ(list_count(&list), 10);
-    for (long i = 0; i < 10; i++)
+    for (long i = 0; i < 10; i++) {
         ASSERT_EQ(list_nth(&list, i), i + 1);
+    }
     sorted_list_destroy(&list);
 }
 
@@ -293,8 +302,9 @@ TEST(sorted_list_batch_large) {
     sorted_list_initialise(&list);
     int count = 1000;
     void **items = malloc(count * sizeof(void *));
-    for (int i = 0; i < count; i++)
+    for (int i = 0; i < count; i++) {
         items[i] = (void *)(long)(count - i);
+    }
     sorted_list_insert_batch(&list, items, count);
     ASSERT_EQ(list_count(&list), count);
     free(items);
@@ -329,12 +339,14 @@ TEST(sorted_list_iterate_complete) {
     sorted_list_type list;
     list.compare = int_compare;
     sorted_list_initialise(&list);
-    for (long i = 1; i <= 5; i++)
+    for (long i = 1; i <= 5; i++) {
         sorted_list_insert(&list, (void *)i);
+    }
     long sum = 0;
     sorted_list_node *node = NULL;
-    while ((node = sorted_list_next_item(&list, node)) != NULL)
+    while ((node = sorted_list_next_item(&list, node)) != NULL) {
         sum += (long)node->data;
+    }
     ASSERT_EQ(sum, 15L);
     sorted_list_destroy(&list);
 }
@@ -437,8 +449,9 @@ TEST(sorted_list_batch_reverse_100) {
     list.compare = int_compare;
     sorted_list_initialise(&list);
     void *items[100];
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 100; i++) {
         items[i] = (void *)(long)(100 - i);
+    }
     sorted_list_insert_batch(&list, items, 100);
     ASSERT_EQ(list_count(&list), 100);
     sorted_list_destroy(&list);
@@ -449,8 +462,9 @@ TEST(sorted_list_batch_all_same) {
     list.compare = int_compare;
     sorted_list_initialise(&list);
     void *items[50];
-    for (int i = 0; i < 50; i++)
+    for (int i = 0; i < 50; i++) {
         items[i] = (void *)42L;
+    }
     sorted_list_insert_batch(&list, items, 50);
     ASSERT_EQ(list_count(&list), 50);
     sorted_list_destroy(&list);
@@ -468,9 +482,10 @@ TEST(sorted_list_batch_iterable) {
     /* Verify sum is correct (all items present) */
     long sum = 0;
     sorted_list_node *node = NULL;
-    while ((node = sorted_list_next_item(&list, node)) != NULL)
+    while ((node = sorted_list_next_item(&list, node)) != NULL) {
         sum += (long)node->data;
-    ASSERT_EQ(sum, 1+2+3+4+6+7+8+9);
+    }
+    ASSERT_EQ(sum, 1 + 2 + 3 + 4 + 6 + 7 + 8 + 9);
     sorted_list_destroy(&list);
 }
 
@@ -495,8 +510,9 @@ TEST(sorted_list_batch_5000) {
     list.compare = int_compare;
     sorted_list_initialise(&list);
     void **items = malloc(5000 * sizeof(void *));
-    for (int i = 0; i < 5000; i++)
+    for (int i = 0; i < 5000; i++) {
         items[i] = (void *)(long)((i * 2654435761L) % 100000);
+    }
     sorted_list_insert_batch(&list, items, 5000);
     ASSERT_EQ(list_count(&list), 5000);
     free(items);
@@ -509,15 +525,16 @@ TEST(sorted_list_batch_all_elements_present) {
     sorted_list_type list;
     list.compare = int_compare;
     sorted_list_initialise(&list);
-    void *items[] = {(void *)99L, (void *)3L, (void *)77L, (void *)1L,
+    void *items[] = {(void *)99L, (void *)3L,  (void *)77L, (void *)1L,
                      (void *)50L, (void *)25L, (void *)88L};
     sorted_list_insert_batch(&list, items, 7);
     ASSERT_EQ(list_count(&list), 7);
     /* Verify sum of all elements (all present regardless of order) */
     long sum = 0;
     sorted_list_node *node = NULL;
-    while ((node = sorted_list_next_item(&list, node)) != NULL)
+    while ((node = sorted_list_next_item(&list, node)) != NULL) {
         sum += (long)node->data;
+    }
     ASSERT_EQ(sum, 99 + 3 + 77 + 1 + 50 + 25 + 88);
     sorted_list_destroy(&list);
 }
@@ -529,14 +546,16 @@ TEST(sorted_list_single_batch_same_elements) {
     sorted_list_type single;
     single.compare = int_compare;
     sorted_list_initialise(&single);
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 10; i++) {
         sorted_list_insert(&single, (void *)data[i]);
+    }
     sorted_list_type batch;
     batch.compare = int_compare;
     sorted_list_initialise(&batch);
     void *items[10];
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 10; i++) {
         items[i] = (void *)data[i];
+    }
     sorted_list_insert_batch(&batch, items, 10);
     /* Both should have same count */
     ASSERT_EQ(list_count(&single), list_count(&batch));
@@ -544,11 +563,13 @@ TEST(sorted_list_single_batch_same_elements) {
     /* Both should have same sum (same elements) */
     long sum_s = 0, sum_b = 0;
     sorted_list_node *node = NULL;
-    while ((node = sorted_list_next_item(&single, node)) != NULL)
+    while ((node = sorted_list_next_item(&single, node)) != NULL) {
         sum_s += (long)node->data;
+    }
     node = NULL;
-    while ((node = sorted_list_next_item(&batch, node)) != NULL)
+    while ((node = sorted_list_next_item(&batch, node)) != NULL) {
         sum_b += (long)node->data;
+    }
     ASSERT_EQ(sum_s, sum_b);
     sorted_list_destroy(&single);
     sorted_list_destroy(&batch);
@@ -585,8 +606,9 @@ TEST(sorted_list_batch_descending_count) {
     /* All elements present */
     long sum = 0;
     sorted_list_node *node = NULL;
-    while ((node = sorted_list_next_item(&list, node)) != NULL)
+    while ((node = sorted_list_next_item(&list, node)) != NULL) {
         sum += (long)node->data;
+    }
     ASSERT_EQ(sum, 10 + 20 + 30 + 40 + 50);
     sorted_list_destroy(&list);
 }
@@ -598,8 +620,9 @@ TEST(sorted_list_batch_destroy_large) {
     list.compare = int_compare;
     sorted_list_initialise(&list);
     void **items = malloc(2000 * sizeof(void *));
-    for (int i = 0; i < 2000; i++)
+    for (int i = 0; i < 2000; i++) {
         items[i] = (void *)(long)(2000 - i);
+    }
     sorted_list_insert_batch(&list, items, 2000);
     ASSERT_EQ(list_count(&list), 2000);
     free(items);
@@ -614,8 +637,9 @@ TEST(sorted_list_iterate_partial) {
     sorted_list_type list;
     list.compare = int_compare;
     sorted_list_initialise(&list);
-    for (long i = 1; i <= 100; i++)
+    for (long i = 1; i <= 100; i++) {
         sorted_list_insert(&list, (void *)i);
+    }
     /* Read only first 10 */
     sorted_list_node *node = NULL;
     long last = 0;

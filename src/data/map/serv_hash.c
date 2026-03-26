@@ -17,19 +17,19 @@
 #define OTHER_HASH_SIZE 127
 
 static int other_compare(void *left, void *right) {
-    ip_service *a = (ip_service *) left;
-    ip_service *b = (ip_service *) right;
+    ip_service *a = (ip_service *)left;
+    ip_service *b = (ip_service *)right;
     return (a->port == b->port && a->protocol == b->protocol);
 }
 
 static int other_hash(void *key) {
-    ip_service *s = (ip_service *) key;
+    ip_service *s = (ip_service *)key;
     return (unsigned)((s->port * 31) + s->protocol) % OTHER_HASH_SIZE;
 }
 
 static void *other_copy_key(void *orig) {
     ip_service *copy = xmalloc(sizeof *copy);
-    *copy = *(ip_service *) orig;
+    *copy = *(ip_service *)orig;
     return copy;
 }
 
@@ -51,9 +51,15 @@ static hash_type *other_hash_create(void) {
 /* --- Direct-index slot helper --- */
 
 static inline char **serv_slot(serv_table *t, int port, int protocol) {
-    if (port < 0 || port >= SERV_NUM_PORTS) return NULL;
-    if (protocol == 6)  return &t->tcp[port];
-    if (protocol == 17) return &t->udp[port];
+    if (port < 0 || port >= SERV_NUM_PORTS) {
+        return NULL;
+    }
+    if (protocol == 6) {
+        return &t->tcp[port];
+    }
+    if (protocol == 17) {
+        return &t->udp[port];
+    }
     return NULL;
 }
 
@@ -84,19 +90,24 @@ void serv_table_insert(serv_table *t, int port, int protocol, const char *name) 
 
 const char *serv_table_lookup(serv_table *t, int port, int protocol) {
     char **slot = serv_slot(t, port, protocol);
-    if (slot) return *slot;
+    if (slot) {
+        return *slot;
+    }
 
     ip_service key = {port, protocol};
     void *rec = NULL;
-    if (hash_find(t->other, &key, &rec) == HASH_STATUS_OK)
-        return (const char *) rec;
+    if (hash_find(t->other, &key, &rec) == HASH_STATUS_OK) {
+        return (const char *)rec;
+    }
     return NULL;
 }
 
 int serv_table_delete(serv_table *t, int port, int protocol) {
     char **slot = serv_slot(t, port, protocol);
     if (slot) {
-        if (*slot == NULL) return 0;
+        if (*slot == NULL) {
+            return 0;
+        }
         free(*slot);
         *slot = NULL;
         t->count--;

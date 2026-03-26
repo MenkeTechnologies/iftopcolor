@@ -273,9 +273,8 @@ TEST(config_get_float_empty) {
 TEST(config_get_enum_valid) {
     config_init();
     config_set_string("sort", "source");
-    config_enumeration_type sort_enum[] = {
-        {"2s", 0}, {"10s", 1}, {"40s", 2}, {"source", 3}, {"destination", 4}, {NULL, -1}
-    };
+    config_enumeration_type sort_enum[] = {{"2s", 0},     {"10s", 1},         {"40s", 2},
+                                           {"source", 3}, {"destination", 4}, {NULL, -1}};
     int val = -1;
     ASSERT_EQ(config_get_enum("sort", sort_enum, &val), 1);
     ASSERT_EQ(val, 3);
@@ -284,9 +283,7 @@ TEST(config_get_enum_valid) {
 TEST(config_get_enum_first) {
     config_init();
     config_set_string("sort", "2s");
-    config_enumeration_type sort_enum[] = {
-        {"2s", 0}, {"10s", 1}, {NULL, -1}
-    };
+    config_enumeration_type sort_enum[] = {{"2s", 0}, {"10s", 1}, {NULL, -1}};
     int val = -1;
     ASSERT_EQ(config_get_enum("sort", sort_enum, &val), 1);
     ASSERT_EQ(val, 0);
@@ -296,8 +293,7 @@ TEST(config_get_enum_last) {
     config_init();
     config_set_string("sort", "destination");
     config_enumeration_type sort_enum[] = {
-        {"2s", 0}, {"source", 3}, {"destination", 4}, {NULL, -1}
-    };
+        {"2s", 0}, {"source", 3}, {"destination", 4}, {NULL, -1}};
     int val = -1;
     ASSERT_EQ(config_get_enum("sort", sort_enum, &val), 1);
     ASSERT_EQ(val, 4);
@@ -305,7 +301,7 @@ TEST(config_get_enum_last) {
 
 TEST(config_get_enum_missing) {
     config_init();
-    config_enumeration_type sort_enum[] = { {"2s", 0}, {NULL, -1} };
+    config_enumeration_type sort_enum[] = {{"2s", 0}, {NULL, -1}};
     int val = -1;
     ASSERT_EQ(config_get_enum("nonexistent", sort_enum, &val), 0);
 }
@@ -313,9 +309,7 @@ TEST(config_get_enum_missing) {
 TEST(config_get_enum_invalid_value) {
     config_init();
     config_set_string("sort", "invalid");
-    config_enumeration_type sort_enum[] = {
-        {"2s", 0}, {"10s", 1}, {NULL, -1}
-    };
+    config_enumeration_type sort_enum[] = {{"2s", 0}, {"10s", 1}, {NULL, -1}};
     int val = -1;
     ASSERT_EQ(config_get_enum("sort", sort_enum, &val), 0);
     ASSERT_EQ(val, -1); /* unchanged */
@@ -395,22 +389,20 @@ TEST(config_read_file_blank_lines) {
 
 TEST(config_read_file_all_directives) {
     config_init();
-    write_tmp_config(
-        "interface: eth0\n"
-        "dns-resolution: true\n"
-        "port-resolution: false\n"
-        "filter-code: tcp port 80\n"
-        "show-bars: true\n"
-        "promiscuous: false\n"
-        "use-bytes: true\n"
-        "sort: source\n"
-        "line-display: two-line\n"
-        "show-totals: true\n"
-        "log-scale: false\n"
-        "max-bandwidth: 100M\n"
-        "link-local: false\n"
-        "port-display: on\n"
-    );
+    write_tmp_config("interface: eth0\n"
+                     "dns-resolution: true\n"
+                     "port-resolution: false\n"
+                     "filter-code: tcp port 80\n"
+                     "show-bars: true\n"
+                     "promiscuous: false\n"
+                     "use-bytes: true\n"
+                     "sort: source\n"
+                     "line-display: two-line\n"
+                     "show-totals: true\n"
+                     "log-scale: false\n"
+                     "max-bandwidth: 100M\n"
+                     "link-local: false\n"
+                     "port-display: on\n");
     ASSERT_EQ(read_config(tmpfile_path, 0), 1);
     ASSERT_STR_EQ(config_get_string("interface"), "eth0");
     ASSERT_STR_EQ(config_get_string("dns-resolution"), "true");
@@ -652,9 +644,7 @@ TEST(config_get_float_large) {
 
 TEST(config_get_enum_missing_key) {
     config_init();
-    config_enumeration_type sort_enum[] = {
-        {"2s", 0}, {"10s", 1}, {NULL, -1}
-    };
+    config_enumeration_type sort_enum[] = {{"2s", 0}, {"10s", 1}, {NULL, -1}};
     int val = -1;
     /* Key not set, should return 0 */
     ASSERT_EQ(config_get_enum("nonexistent_key", sort_enum, &val), 0);
@@ -664,9 +654,7 @@ TEST(config_get_enum_missing_key) {
 TEST(config_get_enum_case_sensitive) {
     config_init();
     config_set_string("sort", "Source");
-    config_enumeration_type sort_enum[] = {
-        {"source", 3}, {"destination", 4}, {NULL, -1}
-    };
+    config_enumeration_type sort_enum[] = {{"source", 3}, {"destination", 4}, {NULL, -1}};
     int val = -1;
     ASSERT_EQ(config_get_enum("sort", sort_enum, &val), 0);
 }
@@ -689,23 +677,22 @@ TEST(config_read_file_many_entries) {
     char content[4096];
     int off = 0;
     off += snprintf(content + off, sizeof(content) - off,
-        "interface: eth0\n"
-        "dns-resolution: true\n"
-        "port-resolution: false\n"
-        "filter-code: tcp port 80\n"
-        "show-bars: true\n"
-        "promiscuous: false\n"
-        "hide-source: false\n"
-        "hide-destination: false\n"
-        "use-bytes: true\n"
-        "sort: source\n"
-        "line-display: two-line\n"
-        "show-totals: true\n"
-        "log-scale: false\n"
-        "max-bandwidth: 100M\n"
-        "link-local: false\n"
-        "port-display: on\n"
-    );
+                    "interface: eth0\n"
+                    "dns-resolution: true\n"
+                    "port-resolution: false\n"
+                    "filter-code: tcp port 80\n"
+                    "show-bars: true\n"
+                    "promiscuous: false\n"
+                    "hide-source: false\n"
+                    "hide-destination: false\n"
+                    "use-bytes: true\n"
+                    "sort: source\n"
+                    "line-display: two-line\n"
+                    "show-totals: true\n"
+                    "log-scale: false\n"
+                    "max-bandwidth: 100M\n"
+                    "link-local: false\n"
+                    "port-display: on\n");
     write_tmp_config(content);
     ASSERT_EQ(read_config(tmpfile_path, 0), 1);
     ASSERT_STR_EQ(config_get_string("interface"), "eth0");

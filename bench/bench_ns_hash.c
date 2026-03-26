@@ -17,8 +17,7 @@ static char names[MAX_ADDRS][64];
 static void generate_addrs(void) {
     for (int i = 0; i < MAX_ADDRS; i++) {
         char addr_str[64];
-        snprintf(addr_str, sizeof(addr_str), "2001:db8:%x::%x",
-                 (i / 256) + 1, (i % 256) + 1);
+        snprintf(addr_str, sizeof(addr_str), "2001:db8:%x::%x", (i / 256) + 1, (i % 256) + 1);
         memset(&addrs[i], 0, sizeof(struct in6_addr));
         inet_pton(AF_INET6, addr_str, &addrs[i]);
         snprintf(names[i], sizeof(names[i]), "host-%d.example.com", i);
@@ -28,7 +27,9 @@ static void generate_addrs(void) {
 static int ns_hash_count(hash_type *h) {
     int count = 0;
     hash_node_type *node = NULL;
-    while (hash_next_item(h, &node) == HASH_STATUS_OK) count++;
+    while (hash_next_item(h, &node) == HASH_STATUS_OK) {
+        count++;
+    }
     return count;
 }
 
@@ -44,8 +45,9 @@ static void bench_insert(void) {
         snprintf(label, sizeof(label), "insert %d IPv6 addresses", n);
         BENCH_RUN(label, 1000, {
             hash_type *h = ns_hash_create();
-            for (int j = 0; j < n; j++)
+            for (int j = 0; j < n; j++) {
                 hash_insert(h, &addrs[j], xstrdup(names[j]));
+            }
             hash_delete_all_free(h);
             hash_destroy(h);
             free(h);
@@ -62,8 +64,9 @@ static void bench_find_hit(void) {
     for (int s = 0; s < nsizes; s++) {
         int n = sizes[s];
         hash_type *h = ns_hash_create();
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             hash_insert(h, &addrs[i], xstrdup(names[i]));
+        }
 
         char label[64];
         snprintf(label, sizeof(label), "find hit (%d entries)", n);
@@ -83,8 +86,9 @@ static void bench_find_miss(void) {
 
     int n = 200;
     hash_type *h = ns_hash_create();
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         hash_insert(h, &addrs[i], xstrdup(names[i]));
+    }
 
     /* Miss addresses are from a different range */
     BENCH_RUN("find miss (200 entries)", 1000000, {
@@ -102,8 +106,9 @@ static void bench_delete(void) {
 
     BENCH_RUN("insert 200 + delete all", 1000, {
         hash_type *h = ns_hash_create();
-        for (int j = 0; j < 200; j++)
+        for (int j = 0; j < 200; j++) {
             hash_insert(h, &addrs[j], xstrdup(names[j]));
+        }
         hash_delete_all_free(h);
         hash_destroy(h);
         free(h);
@@ -111,10 +116,12 @@ static void bench_delete(void) {
 
     BENCH_RUN("insert 200 + delete individually", 1000, {
         hash_type *h = ns_hash_create();
-        for (int j = 0; j < 200; j++)
+        for (int j = 0; j < 200; j++) {
             hash_insert(h, &addrs[j], xstrdup(names[j]));
-        for (int j = 0; j < 200; j++)
+        }
+        for (int j = 0; j < 200; j++) {
             hash_delete(h, &addrs[j]);
+        }
         hash_destroy(h);
         free(h);
     });
@@ -125,14 +132,16 @@ static void bench_iteration(void) {
 
     int n = 500;
     hash_type *h = ns_hash_create();
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         hash_insert(h, &addrs[i], xstrdup(names[i]));
+    }
 
     BENCH_RUN("iterate 500 entries", 100000, {
         int count = 0;
         hash_node_type *node = NULL;
-        while (hash_next_item(h, &node) == HASH_STATUS_OK)
+        while (hash_next_item(h, &node) == HASH_STATUS_OK) {
             count++;
+        }
         bench_use(count);
     });
 
@@ -147,8 +156,9 @@ static void bench_churn(void) {
     BENCH_RUN("churn 100 insert/delete x 20 cycles", 100, {
         hash_type *h = ns_hash_create();
         for (int cycle = 0; cycle < 20; cycle++) {
-            for (int j = 0; j < 100; j++)
+            for (int j = 0; j < 100; j++) {
                 hash_insert(h, &addrs[j], xstrdup(names[j]));
+            }
             hash_delete_all_free(h);
         }
         hash_destroy(h);

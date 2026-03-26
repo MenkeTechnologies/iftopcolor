@@ -17,7 +17,9 @@ static int str_compare(void *left, void *right) {
 static int str_hash(void *key) {
     char *s = (char *)key;
     unsigned int h = 0;
-    while (*s) h = h * 31 + (unsigned char)*s++;
+    while (*s) {
+        h = h * 31 + (unsigned char)*s++;
+    }
     return h % 64;
 }
 
@@ -78,7 +80,10 @@ static hash_type *create_int_hash(void) {
 }
 
 /* Force all to bucket 0 */
-static int always_zero_hash(void *key) { (void)key; return 0; }
+static int always_zero_hash(void *key) {
+    (void)key;
+    return 0;
+}
 
 /* === Initialise / Destroy === */
 
@@ -94,8 +99,9 @@ TEST(hash_initialise_table_zeroed) {
     hash_type h;
     h.size = 16;
     hash_initialise(&h);
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < 16; i++) {
         ASSERT_NULL(h.table[i]);
+    }
     hash_destroy(&h);
 }
 
@@ -160,11 +166,11 @@ TEST(hash_insert_single_char_keys) {
     int vals[26];
     for (int i = 0; i < 26; i++) {
         vals[i] = i;
-        char key[2] = { 'a' + i, '\0' };
+        char key[2] = {'a' + i, '\0'};
         hash_insert(h, key, &vals[i]);
     }
     for (int i = 0; i < 26; i++) {
-        char key[2] = { 'a' + i, '\0' };
+        char key[2] = {'a' + i, '\0'};
         void *rec = NULL;
         ASSERT_EQ(hash_find(h, key, &rec), HASH_STATUS_OK);
         ASSERT_EQ(*(int *)rec, i);
@@ -331,7 +337,10 @@ TEST(hash_delete_node_by_pointer) {
     hash_node_type *target = NULL;
     hash_next_item(h, &node);
     while (node) {
-        if (str_compare(node->key, "b")) { target = node; break; }
+        if (str_compare(node->key, "b")) {
+            target = node;
+            break;
+        }
         hash_next_item(h, &node);
     }
     ASSERT_NOT_NULL(target);
@@ -508,12 +517,14 @@ TEST(hash_next_item_iterates_all) {
     hash_type *h = create_str_hash();
     int vals[5] = {0, 1, 2, 3, 4};
     char keys[][8] = {"k0", "k1", "k2", "k3", "k4"};
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++) {
         hash_insert(h, keys[i], &vals[i]);
+    }
     int count = 0;
     hash_node_type *node = NULL;
-    while (hash_next_item(h, &node) == HASH_STATUS_OK)
+    while (hash_next_item(h, &node) == HASH_STATUS_OK) {
         count++;
+    }
     ASSERT_EQ(count, 5);
     destroy_str_hash(h);
 }
@@ -552,8 +563,9 @@ TEST(hash_next_item_traverses_chain) {
     hash_insert(h, "c", &v3);
     int count = 0;
     hash_node_type *node = NULL;
-    while (hash_next_item(h, &node) == HASH_STATUS_OK)
+    while (hash_next_item(h, &node) == HASH_STATUS_OK) {
         count++;
+    }
     ASSERT_EQ(count, 3);
     hash_delete_all(h);
     hash_destroy(h);
@@ -572,8 +584,9 @@ TEST(hash_iteration_visits_all_buckets) {
     }
     int count = 0;
     hash_node_type *node = NULL;
-    while (hash_next_item(h, &node) == HASH_STATUS_OK)
+    while (hash_next_item(h, &node) == HASH_STATUS_OK) {
         count++;
+    }
     ASSERT_EQ(count, 64);
     destroy_str_hash(h);
 }
@@ -788,10 +801,11 @@ TEST(hash_alternating_insert_delete) {
         char key[16];
         void *rec = NULL;
         snprintf(key, sizeof(key), "alt_%d", i);
-        if (i % 2 == 0)
+        if (i % 2 == 0) {
             ASSERT_EQ(hash_find(h, key, &rec), HASH_STATUS_KEY_NOT_FOUND);
-        else
+        } else {
             ASSERT_EQ(hash_find(h, key, &rec), HASH_STATUS_OK);
+        }
     }
     destroy_str_hash(h);
 }
@@ -815,8 +829,9 @@ TEST(hash_collision_iterate_count) {
     }
     int count = 0;
     hash_node_type *node = NULL;
-    while (hash_next_item(h, &node) == HASH_STATUS_OK)
+    while (hash_next_item(h, &node) == HASH_STATUS_OK) {
         count++;
+    }
     ASSERT_EQ(count, 10);
     hash_delete_all(h);
     hash_destroy(h);
@@ -844,8 +859,9 @@ TEST(hash_5000_entries) {
     /* Iteration count */
     int count = 0;
     hash_node_type *node = NULL;
-    while (hash_next_item(h, &node) == HASH_STATUS_OK)
+    while (hash_next_item(h, &node) == HASH_STATUS_OK) {
         count++;
+    }
     ASSERT_EQ(count, 5000);
     destroy_str_hash(h);
 }
@@ -906,7 +922,9 @@ TEST(hash_int_key_collision) {
 static int str_hash_small(void *key) {
     char *s = (char *)key;
     unsigned int h = 0;
-    while (*s) h = h * 31 + (unsigned char)*s++;
+    while (*s) {
+        h = h * 31 + (unsigned char)*s++;
+    }
     return h % 4;
 }
 
@@ -959,8 +977,9 @@ TEST(hash_single_bucket_stress) {
     ASSERT_NOT_NULL(h->table[0]);
     int count = 0;
     hash_node_type *node = NULL;
-    while (hash_next_item(h, &node) == HASH_STATUS_OK)
+    while (hash_next_item(h, &node) == HASH_STATUS_OK) {
         count++;
+    }
     ASSERT_EQ(count, 50);
     /* Delete every other entry */
     for (int i = 0; i < 50; i += 2) {
@@ -970,8 +989,9 @@ TEST(hash_single_bucket_stress) {
     }
     count = 0;
     node = NULL;
-    while (hash_next_item(h, &node) == HASH_STATUS_OK)
+    while (hash_next_item(h, &node) == HASH_STATUS_OK) {
         count++;
+    }
     ASSERT_EQ(count, 25);
     hash_delete_all(h);
     hash_destroy(h);
@@ -1017,8 +1037,9 @@ TEST(hash_iterate_sum_records) {
     }
     int sum = 0;
     hash_node_type *node = NULL;
-    while (hash_next_item(h, &node) == HASH_STATUS_OK)
+    while (hash_next_item(h, &node) == HASH_STATUS_OK) {
         sum += *(int *)node->record;
+    }
     ASSERT_EQ(sum, 55); /* 1+2+...+10 */
     destroy_str_hash(h);
 }

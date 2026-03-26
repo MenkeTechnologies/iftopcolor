@@ -25,9 +25,8 @@ static void cleanup_tmp(void) {
     unlink(tmpfile_path);
 }
 
-static config_enumeration_type sort_enum[] = {
-    {"2s", 0}, {"10s", 1}, {"40s", 2}, {"source", 3}, {"destination", 4}, {NULL, -1}
-};
+static config_enumeration_type sort_enum[] = {{"2s", 0},     {"10s", 1},         {"40s", 2},
+                                              {"source", 3}, {"destination", 4}, {NULL, -1}};
 
 static void bench_set_get_string(void) {
     BENCH_SECTION("Config - set/get string");
@@ -122,22 +121,20 @@ static void bench_get_enum(void) {
 static void bench_read_file(void) {
     BENCH_SECTION("Config - read_config from file");
 
-    write_tmp_config(
-        "interface: eth0\n"
-        "dns-resolution: true\n"
-        "port-resolution: false\n"
-        "filter-code: tcp port 80\n"
-        "show-bars: true\n"
-        "promiscuous: false\n"
-        "use-bytes: true\n"
-        "sort: source\n"
-        "line-display: two-line\n"
-        "show-totals: true\n"
-        "log-scale: false\n"
-        "max-bandwidth: 100M\n"
-        "link-local: false\n"
-        "port-display: on\n"
-    );
+    write_tmp_config("interface: eth0\n"
+                     "dns-resolution: true\n"
+                     "port-resolution: false\n"
+                     "filter-code: tcp port 80\n"
+                     "show-bars: true\n"
+                     "promiscuous: false\n"
+                     "use-bytes: true\n"
+                     "sort: source\n"
+                     "line-display: two-line\n"
+                     "show-totals: true\n"
+                     "log-scale: false\n"
+                     "max-bandwidth: 100M\n"
+                     "link-local: false\n"
+                     "port-display: on\n");
 
     BENCH_RUN("read_config (14 directives)", 10000, {
         config_init();
@@ -167,14 +164,12 @@ static void bench_read_file(void) {
 static void bench_config_workload(void) {
     BENCH_SECTION("Config - Realistic Workload (init + set + read + query)");
 
-    write_tmp_config(
-        "interface: eth0\n"
-        "dns-resolution: true\n"
-        "promiscuous: false\n"
-        "show-bars: true\n"
-        "sort: source\n"
-        "max-bandwidth: 100M\n"
-    );
+    write_tmp_config("interface: eth0\n"
+                     "dns-resolution: true\n"
+                     "promiscuous: false\n"
+                     "show-bars: true\n"
+                     "sort: source\n"
+                     "max-bandwidth: 100M\n");
 
     BENCH_RUN("full config lifecycle", 10000, {
         config_init();

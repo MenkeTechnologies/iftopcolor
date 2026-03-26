@@ -44,8 +44,9 @@ static void bench_alloc_patterns(void) {
 
     BENCH_RUN("pool: insert 2000 + delete all", 1000, {
         hash_type *ht = addr_hash_create();
-        for (int j = 0; j < N_FLOWS; j++)
+        for (int j = 0; j < N_FLOWS; j++) {
             addr_hash_insert(ht, &flows[j], &dummy_recs[j]);
+        }
         clear_addr_nodes(ht);
         hash_destroy(ht);
         free(ht);
@@ -53,8 +54,9 @@ static void bench_alloc_patterns(void) {
 
     BENCH_RUN("malloc: insert 2000 + delete all", 1000, {
         hash_type *ht = addr_hash_create();
-        for (int j = 0; j < N_FLOWS; j++)
+        for (int j = 0; j < N_FLOWS; j++) {
             hash_insert(ht, &flows[j], &dummy_recs[j]);
+        }
         hash_delete_all(ht);
         hash_destroy(ht);
         free(ht);
@@ -63,8 +65,9 @@ static void bench_alloc_patterns(void) {
     BENCH_RUN("pool: churn 500 insert/delete x 10 cycles", 100, {
         hash_type *ht = addr_hash_create();
         for (int cycle = 0; cycle < 10; cycle++) {
-            for (int j = 0; j < 500; j++)
+            for (int j = 0; j < 500; j++) {
                 addr_hash_insert(ht, &flows[j], &dummy_recs[j]);
+            }
             clear_addr_nodes(ht);
         }
         hash_destroy(ht);
@@ -74,8 +77,9 @@ static void bench_alloc_patterns(void) {
     BENCH_RUN("malloc: churn 500 insert/delete x 10 cycles", 100, {
         hash_type *ht = addr_hash_create();
         for (int cycle = 0; cycle < 10; cycle++) {
-            for (int j = 0; j < 500; j++)
+            for (int j = 0; j < 500; j++) {
                 hash_insert(ht, &flows[j], &dummy_recs[j]);
+            }
             hash_delete_all(ht);
         }
         hash_destroy(ht);
@@ -88,8 +92,9 @@ static void bench_multi_block(void) {
 
     BENCH_RUN("pool: insert 1000 (4 blocks)", 1000, {
         hash_type *ht = addr_hash_create();
-        for (int j = 0; j < 1000; j++)
+        for (int j = 0; j < 1000; j++) {
             addr_hash_insert(ht, &flows[j % N_FLOWS], &dummy_recs[j % N_FLOWS]);
+        }
         clear_addr_nodes(ht);
         hash_destroy(ht);
         free(ht);
@@ -97,8 +102,9 @@ static void bench_multi_block(void) {
 
     BENCH_RUN("malloc: insert 1000", 1000, {
         hash_type *ht = addr_hash_create();
-        for (int j = 0; j < 1000; j++)
+        for (int j = 0; j < 1000; j++) {
             hash_insert(ht, &flows[j % N_FLOWS], &dummy_recs[j % N_FLOWS]);
+        }
         hash_delete_all(ht);
         hash_destroy(ht);
         free(ht);
@@ -111,8 +117,9 @@ static void bench_pool_reuse(void) {
     BENCH_RUN("pool: insert 500, clear, refill x 20", 100, {
         hash_type *ht = addr_hash_create();
         for (int r = 0; r < 20; r++) {
-            for (int j = 0; j < 500; j++)
+            for (int j = 0; j < 500; j++) {
                 addr_hash_insert(ht, &flows[j], &dummy_recs[j]);
+            }
             clear_addr_nodes(ht);
         }
         hash_destroy(ht);
@@ -125,8 +132,9 @@ static void bench_find_after_churn(void) {
 
     BENCH_RUN("insert 1000, delete 500, find remaining 500", 100, {
         hash_type *ht = addr_hash_create();
-        for (int j = 0; j < 1000; j++)
+        for (int j = 0; j < 1000; j++) {
             addr_hash_insert(ht, &flows[j], &dummy_recs[j]);
+        }
         /* Delete first 500 */
         for (int b = 0; b < ht->size; b++) {
             while (ht->table[b] != NULL) {

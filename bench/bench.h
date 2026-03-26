@@ -12,19 +12,19 @@
 #include <string.h>
 
 /* ANSI color codes */
-#define B_RESET   "\033[0m"
-#define B_BOLD    "\033[1m"
-#define B_DIM     "\033[2m"
-#define B_RED     "\033[31m"
-#define B_GREEN   "\033[32m"
-#define B_YELLOW  "\033[33m"
-#define B_BLUE    "\033[34m"
-#define B_MAGENTA "\033[35m"
-#define B_CYAN    "\033[36m"
-#define B_BRED    "\033[1;31m"
-#define B_BGREEN  "\033[1;32m"
-#define B_BYELLOW "\033[1;33m"
-#define B_BCYAN   "\033[1;36m"
+#define B_RESET    "\033[0m"
+#define B_BOLD     "\033[1m"
+#define B_DIM      "\033[2m"
+#define B_RED      "\033[31m"
+#define B_GREEN    "\033[32m"
+#define B_YELLOW   "\033[33m"
+#define B_BLUE     "\033[34m"
+#define B_MAGENTA  "\033[35m"
+#define B_CYAN     "\033[36m"
+#define B_BRED     "\033[1;31m"
+#define B_BGREEN   "\033[1;32m"
+#define B_BYELLOW  "\033[1;33m"
+#define B_BCYAN    "\033[1;36m"
 #define B_BMAGENTA "\033[1;35m"
 
 /* High-resolution timer */
@@ -36,87 +36,126 @@ static inline uint64_t bench_now_ns(void) {
 
 /* Prevent dead-code elimination */
 static volatile int bench_sink;
-static inline void bench_use(int x) { bench_sink = x; }
+static inline void bench_use(int x) {
+    bench_sink = x;
+}
 
 /* Classify performance tier by ns/op for color coding */
 static inline const char *bench_tier_color(double ns_per_op) {
-    if (ns_per_op < 10.0)     return B_BGREEN;   /* blazing */
-    if (ns_per_op < 100.0)    return B_GREEN;     /* fast */
-    if (ns_per_op < 1000.0)   return B_BYELLOW;   /* moderate */
-    if (ns_per_op < 100000.0) return B_YELLOW;    /* slow */
-    return B_RED;                                  /* critical */
+    if (ns_per_op < 10.0) {
+        return B_BGREEN; /* blazing */
+    }
+    if (ns_per_op < 100.0) {
+        return B_GREEN; /* fast */
+    }
+    if (ns_per_op < 1000.0) {
+        return B_BYELLOW; /* moderate */
+    }
+    if (ns_per_op < 100000.0) {
+        return B_YELLOW; /* slow */
+    }
+    return B_RED; /* critical */
 }
 
 static inline const char *bench_ops_color(double ops_sec) {
-    if (ops_sec > 100000000.0)  return B_BGREEN;
-    if (ops_sec > 10000000.0)   return B_GREEN;
-    if (ops_sec > 1000000.0)    return B_BYELLOW;
-    if (ops_sec > 10000.0)      return B_YELLOW;
+    if (ops_sec > 100000000.0) {
+        return B_BGREEN;
+    }
+    if (ops_sec > 10000000.0) {
+        return B_GREEN;
+    }
+    if (ops_sec > 1000000.0) {
+        return B_BYELLOW;
+    }
+    if (ops_sec > 10000.0) {
+        return B_YELLOW;
+    }
     return B_RED;
 }
 
-#define BENCH_RUN(name, iterations, body) do { \
-    uint64_t _iters = (iterations); \
-    /* warmup */ \
-    for (uint64_t _i = 0; _i < (_iters / 10 > 0 ? _iters / 10 : 1); _i++) { body; } \
-    uint64_t _t0 = bench_now_ns(); \
-    for (uint64_t _i = 0; _i < _iters; _i++) { body; } \
-    uint64_t _t1 = bench_now_ns(); \
-    double _total_ms = (double)(_t1 - _t0) / 1e6; \
-    double _per_op_ns = (double)(_t1 - _t0) / (double)_iters; \
-    double _ops_sec = _iters / (_total_ms / 1000.0); \
-    printf("  " B_DIM "\xE2\x96\x90" B_RESET " %-40s " \
-           B_CYAN "%10.2f ms" B_RESET "  " \
-           "%s%8.1f ns/op" B_RESET "  " \
-           "%s%12.0f ops/s" B_RESET "\n", \
-           (name), _total_ms, \
-           bench_tier_color(_per_op_ns), _per_op_ns, \
-           bench_ops_color(_ops_sec), _ops_sec); \
-} while(0)
+#define BENCH_RUN(name, iterations, body)                                                  \
+    do {                                                                                   \
+        uint64_t _iters = (iterations);                                                    \
+        /* warmup */                                                                       \
+        for (uint64_t _i = 0; _i < (_iters / 10 > 0 ? _iters / 10 : 1); _i++) {            \
+            body;                                                                          \
+        }                                                                                  \
+        uint64_t _t0 = bench_now_ns();                                                     \
+        for (uint64_t _i = 0; _i < _iters; _i++) {                                         \
+            body;                                                                          \
+        }                                                                                  \
+        uint64_t _t1 = bench_now_ns();                                                     \
+        double _total_ms = (double)(_t1 - _t0) / 1e6;                                      \
+        double _per_op_ns = (double)(_t1 - _t0) / (double)_iters;                          \
+        double _ops_sec = _iters / (_total_ms / 1000.0);                                   \
+        printf("  " B_DIM "\xE2\x96\x90" B_RESET " %-40s " B_CYAN "%10.2f ms" B_RESET "  " \
+               "%s%8.1f ns/op" B_RESET "  "                                                \
+               "%s%12.0f ops/s" B_RESET "\n",                                              \
+               (name), _total_ms, bench_tier_color(_per_op_ns), _per_op_ns,                \
+               bench_ops_color(_ops_sec), _ops_sec);                                       \
+    } while (0)
 
-#define BENCH_SECTION(name) \
-    printf("\n" B_BMAGENTA \
-           " \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93 " B_RESET \
-           B_BOLD "%s" B_RESET \
-           B_BMAGENTA " \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93" B_RESET "\n", (name))
+#define BENCH_SECTION(name)                                                              \
+    printf("\n" B_BMAGENTA " \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93 " B_RESET B_BOLD       \
+           "%s" B_RESET B_BMAGENTA " \xE2\x96\x93\xE2\x96\x93\xE2\x96\x93" B_RESET "\n", \
+           (name))
 
-#define BENCH_HEADER(name) do { \
-    printf(B_BCYAN \
-           "\n \xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           B_RESET "\n"); \
-    printf(B_BCYAN " \xE2\x96\x88\xE2\x96\x88" B_RESET \
-           "  " B_BOLD "%-57s" B_RESET \
-           B_BCYAN "  \xE2\x96\x88\xE2\x96\x88" B_RESET "\n", (name)); \
-    printf(B_BCYAN \
-           " \xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
-           B_RESET "\n"); \
-} while(0)
+#define BENCH_HEADER(name)                                                                         \
+    do {                                                                                           \
+        printf(B_BCYAN "\n "                                                                       \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88" B_RESET "\n");                                   \
+        printf(B_BCYAN " \xE2\x96\x88\xE2\x96\x88" B_RESET "  " B_BOLD "%-57s" B_RESET B_BCYAN     \
+                       "  \xE2\x96\x88\xE2\x96\x88" B_RESET "\n",                                  \
+               (name));                                                                            \
+        printf(B_BCYAN " \xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88" \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88"                                                  \
+                       "\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88\xE2\x96\x88"  \
+                       "\xE2\x96\x88\xE2\x96\x88" B_RESET "\n");                                   \
+    } while (0)
 
-#define BENCH_FOOTER() do { \
-    printf("\n" B_DIM \
-           " \xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80" \
-           "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80" \
-           "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80" \
-           "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80" \
-           "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80" \
-           "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80" \
-           B_RESET "\n"); \
-    printf(B_BGREEN " \xE2\x96\x88\xE2\x96\x88 PROFILING COMPLETE" B_RESET \
-           B_GREEN " // all cycles accounted for" B_RESET "\n"); \
-} while(0)
+#define BENCH_FOOTER()                                                                            \
+    do {                                                                                          \
+        printf("\n" B_DIM " \xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94" \
+                          "\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80"                  \
+               "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94" \
+               "\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80"                                         \
+               "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94" \
+               "\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80"                                         \
+               "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94" \
+               "\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80"                                         \
+               "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94" \
+               "\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80"                                         \
+               "\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94" \
+               "\x80\xE2\x94\x80\xE2\x94\x80\xE2\x94\x80" B_RESET "\n");                          \
+        printf(B_BGREEN " \xE2\x96\x88\xE2\x96\x88 PROFILING COMPLETE" B_RESET B_GREEN            \
+                        " // all cycles accounted for" B_RESET "\n");                             \
+    } while (0)
 
 #endif /* BENCH_H */

@@ -61,9 +61,15 @@ TEST(stringmap_insert_multiple) {
     stringmap_insert(s, "apple", item_long(1));
     stringmap_insert(s, "cherry", item_long(3));
     stringmap f;
-    f = stringmap_find(s, "banana"); ASSERT_NOT_NULL(f); ASSERT_EQ(f->data.num, 2);
-    f = stringmap_find(s, "apple");  ASSERT_NOT_NULL(f); ASSERT_EQ(f->data.num, 1);
-    f = stringmap_find(s, "cherry"); ASSERT_NOT_NULL(f); ASSERT_EQ(f->data.num, 3);
+    f = stringmap_find(s, "banana");
+    ASSERT_NOT_NULL(f);
+    ASSERT_EQ(f->data.num, 2);
+    f = stringmap_find(s, "apple");
+    ASSERT_NOT_NULL(f);
+    ASSERT_EQ(f->data.num, 1);
+    f = stringmap_find(s, "cherry");
+    ASSERT_NOT_NULL(f);
+    ASSERT_EQ(f->data.num, 3);
     stringmap_delete(s);
 }
 
@@ -122,8 +128,10 @@ TEST(stringmap_insert_numeric_keys) {
 TEST(stringmap_insert_long_keys) {
     stringmap s = stringmap_new();
     char key1[256], key2[256];
-    memset(key1, 'a', 255); key1[255] = '\0';
-    memset(key2, 'b', 255); key2[255] = '\0';
+    memset(key1, 'a', 255);
+    key1[255] = '\0';
+    memset(key2, 'b', 255);
+    key2[255] = '\0';
     stringmap_insert(s, key1, item_long(1));
     stringmap_insert(s, key2, item_long(2));
     stringmap f = stringmap_find(s, key1);

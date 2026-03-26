@@ -18,16 +18,16 @@
 #include <net/if.h>
 #include <netinet/in.h>
 
-#if defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__ \
-      || (defined __GNUC__ && !defined __linux__ )
+#if defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__ || \
+    (defined __GNUC__ && !defined __linux__)
 
-#include <sys/sysctl.h>
-#include <net/if_dl.h>
+#    include <sys/sysctl.h>
+#    include <net/if_dl.h>
 
 #endif
 
 #ifdef USE_GETIFADDRS
-#include <ifaddrs.h>
+#    include <ifaddrs.h>
 #endif
 
 /*
@@ -43,8 +43,8 @@
  * This function should return 3 if all information was found
  */
 
-int
-get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr, struct in6_addr *if_ip6_addr) {
+int get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr,
+                    struct in6_addr *if_ip6_addr) {
     int s;
     struct ifreq ifr = {};
     int got_hw_addr = 0;
@@ -70,16 +70,15 @@ get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr, 
 
 #ifdef SIOCGIFHWADDR
     if (ioctl(s, SIOCGIFHWADDR, &ifr) < 0) {
-      fprintf(stderr, "Error getting hardware address for interface: %s\n", interface);
-      perror("ioctl(SIOCGIFHWADDR)");
-    }
-    else {
-      memcpy(if_hw_addr, ifr.ifr_hwaddr.sa_data, 6);
-      got_hw_addr = 1;
+        fprintf(stderr, "Error getting hardware address for interface: %s\n", interface);
+        perror("ioctl(SIOCGIFHWADDR)");
+    } else {
+        memcpy(if_hw_addr, ifr.ifr_hwaddr.sa_data, 6);
+        got_hw_addr = 1;
     }
 #else
-#if defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__ \
-      || (defined __GNUC__ && !defined __linux__ )
+#    if defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__ || \
+        (defined __GNUC__ && !defined __linux__)
     {
         int sysctlparam[6] = {CTL_NET, PF_ROUTE, 0, 0, NET_RT_IFLIST, 0};
         size_t needed = 0;
@@ -103,69 +102,73 @@ get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr, 
             free(buf);
             goto ENDHWADDR;
         }
-        msghdr = (struct if_msghdr *) buf;
-        memcpy(if_hw_addr, LLADDR((struct sockaddr_dl *) (buf + sizeof(struct if_msghdr) - sizeof(struct if_data) +
-                                                          sizeof(struct if_data))), 6);
+        msghdr = (struct if_msghdr *)buf;
+        memcpy(if_hw_addr,
+               LLADDR((struct sockaddr_dl *)(buf + sizeof(struct if_msghdr) -
+                                             sizeof(struct if_data) + sizeof(struct if_data))),
+               6);
         free(buf);
         got_hw_addr = 1;
 
-        ENDHWADDR:
+    ENDHWADDR:
         (void)0;
     }
-#else
+#    else
     fprintf(stderr, "Cannot obtain hardware address on this platform\n");
-#endif
+#    endif
 #endif
 
     /* Get the IP address of the interface */
 #ifdef USE_GETIFADDRS
     if (getifaddrs(&ifas) == -1) {
-      fprintf(stderr, "Unable to get IP address for interface: %s\n", interface);
-      perror("getifaddrs()");
-    }
-    else {
-       for (ifa = ifas; ifa != NULL; ifa = ifa->ifa_next) {
-          if (got_ip_addr && got_ip6_addr)
-             break; /* Search is already complete. */
+        fprintf(stderr, "Unable to get IP address for interface: %s\n", interface);
+        perror("getifaddrs()");
+    } else {
+        for (ifa = ifas; ifa != NULL; ifa = ifa->ifa_next) {
+            if (got_ip_addr && got_ip6_addr) {
+                break; /* Search is already complete. */
+            }
 
-          if (strcmp(ifa->ifa_name, interface))
-             continue; /* Not our interface. */
+            if (strcmp(ifa->ifa_name, interface)) {
+                continue; /* Not our interface. */
+            }
 
-          if (ifa->ifa_addr == NULL)
-             continue; /* Skip NULL interface address. */
+            if (ifa->ifa_addr == NULL) {
+                continue; /* Skip NULL interface address. */
+            }
 
-          if ( (ifa->ifa_addr->sa_family != AF_INET)
-                && (ifa->ifa_addr->sa_family != AF_INET6) )
-             continue; /* AF_PACKET is beyond our scope. */
+            if ((ifa->ifa_addr->sa_family != AF_INET) && (ifa->ifa_addr->sa_family != AF_INET6)) {
+                continue; /* AF_PACKET is beyond our scope. */
+            }
 
-          if ( (ifa->ifa_addr->sa_family == AF_INET)
-                && !got_ip_addr ) {
-             got_ip_addr = 2;
-             memcpy(if_ip_addr,
-                   &(((struct sockaddr_in *) ifa->ifa_addr)->sin_addr),
-                   sizeof(*if_ip_addr));
-             continue;
-          }
-          /* Must be a IPv6 address at this point. */
-          struct sockaddr_in6 *sa6 = (struct sockaddr_in6 *) ifa->ifa_addr;
+            if ((ifa->ifa_addr->sa_family == AF_INET) && !got_ip_addr) {
+                got_ip_addr = 2;
+                memcpy(if_ip_addr, &(((struct sockaddr_in *)ifa->ifa_addr)->sin_addr),
+                       sizeof(*if_ip_addr));
+                continue;
+            }
+            /* Must be a IPv6 address at this point. */
+            struct sockaddr_in6 *sa6 = (struct sockaddr_in6 *)ifa->ifa_addr;
 
-          if ( IN6_IS_ADDR_LINKLOCAL(&(sa6->sin6_addr))
-                || IN6_IS_ADDR_SITELOCAL(&(sa6->sin6_addr)) )
-             continue;
+            if (IN6_IS_ADDR_LINKLOCAL(&(sa6->sin6_addr)) ||
+                IN6_IS_ADDR_SITELOCAL(&(sa6->sin6_addr))) {
+                continue;
+            }
 
-          /* A useful IPv6 address. */
-          memcpy(if_ip6_addr, &(sa6->sin6_addr), sizeof(*if_ip6_addr));
-          got_ip6_addr = 4;
-       }
-       freeifaddrs(ifas);
+            /* A useful IPv6 address. */
+            memcpy(if_ip6_addr, &(sa6->sin6_addr), sizeof(*if_ip6_addr));
+            got_ip6_addr = 4;
+        }
+        freeifaddrs(ifas);
     } /* getifaddrs() */
 #elif defined(SIOCGIFADDR)
-    (*(struct sockaddr_in *) &ifr.ifr_addr).sin_family = AF_INET;
+    (*(struct sockaddr_in *)&ifr.ifr_addr).sin_family = AF_INET;
     if (ioctl(s, SIOCGIFADDR, &ifr) < 0) {
         fprintf(stderr, "Unable to get IP address for interface: %s\n", interface);
         perror("ioctl(SIOCGIFADDR)");
     } else {
-        memcpy(if_ip_addr, &((*(struct sockaddr_in *) &ifr.ifr_addr).sin_addr), sizeof(struct in_addr));
+        memcpy(if_ip_addr, &((*(struct sockaddr_in *)&ifr.ifr_addr).sin_addr),
+               sizeof(struct in_addr));
         got_ip_addr = 2;
     }
 #else

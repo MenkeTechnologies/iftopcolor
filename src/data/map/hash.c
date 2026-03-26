@@ -43,7 +43,9 @@ hash_status_enum hash_delete(hash_type *hash_table, void *key) {
         prev = node;
         node = node->next;
     }
-    if (!node) return HASH_STATUS_KEY_NOT_FOUND;
+    if (!node) {
+        return HASH_STATUS_KEY_NOT_FOUND;
+    }
 
     /* node designates node to delete, remove it from list */
     if (prev) {
@@ -69,7 +71,9 @@ hash_status_enum __attribute__((hot)) hash_find(hash_type *hash_table, void *key
     while (node && !hash_table->compare(node->key, key)) {
         node = node->next;
     }
-    if (__builtin_expect(!node, 0)) return HASH_STATUS_KEY_NOT_FOUND;
+    if (__builtin_expect(!node, 0)) {
+        return HASH_STATUS_KEY_NOT_FOUND;
+    }
     *rec = node->record;
     return HASH_STATUS_OK;
 }
@@ -110,12 +114,15 @@ hash_status_enum hash_delete_node(hash_type *hash_table, hash_node_type *target)
         prev = node;
         node = node->next;
     }
-    if (!node) return HASH_STATUS_KEY_NOT_FOUND;
+    if (!node) {
+        return HASH_STATUS_KEY_NOT_FOUND;
+    }
 
-    if (prev)
+    if (prev) {
         prev->next = node->next;
-    else
+    } else {
         hash_table->table[bucket] = node->next;
+    }
 
     hash_table->delete_key(node->key);
     free(node);

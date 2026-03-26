@@ -12,8 +12,12 @@
 static int compare_long_desc(void *left, void *right) {
     long la = (long)(intptr_t)left;
     long lb = (long)(intptr_t)right;
-    if (la < lb) return 1;
-    if (la > lb) return -1;
+    if (la < lb) {
+        return 1;
+    }
+    if (la > lb) {
+        return -1;
+    }
     return 0;
 }
 
@@ -126,9 +130,8 @@ static void bench_single_vs_batch(void) {
     }
     uint64_t batch_ns = bench_now_ns() - t0;
 
-    printf("  %d items x100: single=%.2fms  batch=%.2fms  speedup=%.1fx\n",
-           n, single_ns / 1e6, batch_ns / 1e6,
-           (double)single_ns / (double)batch_ns);
+    printf("  %d items x100: single=%.2fms  batch=%.2fms  speedup=%.1fx\n", n, single_ns / 1e6,
+           batch_ns / 1e6, (double)single_ns / (double)batch_ns);
 }
 
 static void bench_destroy(void) {
@@ -186,8 +189,9 @@ static void bench_iteration_scaling(void) {
         BENCH_RUN(label, 10000, {
             sorted_list_node *node = NULL;
             int count = 0;
-            while ((node = sorted_list_next_item(&list, node)) != NULL)
+            while ((node = sorted_list_next_item(&list, node)) != NULL) {
                 count++;
+            }
             bench_use(count);
         });
 

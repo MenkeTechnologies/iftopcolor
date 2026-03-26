@@ -9,8 +9,8 @@
 #include "addr_hash.h"
 #include "iftop.h"
 
-static addr_pair make_ipv4_pair(const char *src, uint16_t sport,
-                                const char *dst, uint16_t dport, uint16_t proto) {
+static addr_pair make_ipv4_pair(const char *src, uint16_t sport, const char *dst, uint16_t dport,
+                                uint16_t proto) {
     addr_pair ap;
     memset(&ap, 0, sizeof(ap));
     ap.address_family = AF_INET;
@@ -22,8 +22,8 @@ static addr_pair make_ipv4_pair(const char *src, uint16_t sport,
     return ap;
 }
 
-static addr_pair make_ipv6_pair(const char *src, uint16_t sport,
-                                const char *dst, uint16_t dport, uint16_t proto) {
+static addr_pair make_ipv6_pair(const char *src, uint16_t sport, const char *dst, uint16_t dport,
+                                uint16_t proto) {
     addr_pair ap;
     memset(&ap, 0, sizeof(ap));
     ap.address_family = AF_INET6;
@@ -52,7 +52,9 @@ static void addr_hash_teardown(hash_type *h) {
 static int addr_hash_count(hash_type *h) {
     int count = 0;
     hash_node_type *node = NULL;
-    while (hash_next_item(h, &node) == HASH_STATUS_OK) count++;
+    while (hash_next_item(h, &node) == HASH_STATUS_OK) {
+        count++;
+    }
     return count;
 }
 
@@ -68,8 +70,9 @@ TEST(addr_hash_create_succeeds) {
 
 TEST(addr_hash_create_table_zeroed) {
     hash_type *h = addr_hash_create();
-    for (int i = 0; i < h->size; i++)
+    for (int i = 0; i < h->size; i++) {
         ASSERT_NULL(h->table[i]);
+    }
     addr_hash_teardown(h);
 }
 

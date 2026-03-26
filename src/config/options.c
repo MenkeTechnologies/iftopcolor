@@ -25,7 +25,7 @@
 #include "../include/integers.h"
 
 #if !defined(HAVE_INET_ATON) && defined(HAVE_INET_PTON)
-#   define inet_aton(a, b)  inet_pton(AF_INET, (a), (b))
+#    define inet_aton(a, b) inet_pton(AF_INET, (a), (b))
 #endif
 
 options_t options;
@@ -40,46 +40,38 @@ char optstr[] = "+i:f:nNF:G:lhpbBPm:c:";
  * that they don't refer to interfaces of external type on which we are
  * likely to want to listen. We also compare candidate interfaces to lo. */
 static char *bad_interface_names[] = {
-        "lo:",
-        "lo",
-        "stf",     /* pseudo-device 6to4 tunnel interface */
-        "gif",     /* psuedo-device generic tunnel interface */
-        "dummy",
-        "vmnet",
-        "wmaster", /* wmaster0 is an internal-use interface for mac80211, a Linux WiFi API. */
-        NULL       /* last entry must be NULL */
+    "lo:",     "lo",
+    "stf", /* pseudo-device 6to4 tunnel interface */
+    "gif", /* psuedo-device generic tunnel interface */
+    "dummy",   "vmnet",
+    "wmaster", /* wmaster0 is an internal-use interface for mac80211, a Linux WiFi API. */
+    NULL       /* last entry must be NULL */
 };
 
 config_enumeration_type sort_enumeration[] = {
-        {"2s",          OPTION_SORT_DIV1},
-        {"10s",         OPTION_SORT_DIV2},
-        {"40s",         OPTION_SORT_DIV3},
-        {"source",      OPTION_SORT_SRC},
-        {"destination", OPTION_SORT_DEST},
-        {NULL,          -1}
-};
+    {"2s", OPTION_SORT_DIV1},    {"10s", OPTION_SORT_DIV2},         {"40s", OPTION_SORT_DIV3},
+    {"source", OPTION_SORT_SRC}, {"destination", OPTION_SORT_DEST}, {NULL, -1}};
 
 config_enumeration_type linedisplay_enumeration[] = {
-        {"two-line",          OPTION_LINEDISPLAY_TWO_LINE},
-        {"one-line-both",     OPTION_LINEDISPLAY_ONE_LINE_BOTH},
-        {"one-line-sent",     OPTION_LINEDISPLAY_ONE_LINE_SENT},
-        {"one-line-received", OPTION_LINEDISPLAY_ONE_LINE_RECV},
-        {NULL,                -1}
-};
+    {"two-line", OPTION_LINEDISPLAY_TWO_LINE},
+    {"one-line-both", OPTION_LINEDISPLAY_ONE_LINE_BOTH},
+    {"one-line-sent", OPTION_LINEDISPLAY_ONE_LINE_SENT},
+    {"one-line-received", OPTION_LINEDISPLAY_ONE_LINE_RECV},
+    {NULL, -1}};
 
-config_enumeration_type showports_enumeration[] = {
-        {"off",              OPTION_PORTS_OFF},
-        {"source-only",      OPTION_PORTS_SRC},
-        {"destination-only", OPTION_PORTS_DEST},
-        {"on",               OPTION_PORTS_ON},
-        {NULL,               -1}
-};
+config_enumeration_type showports_enumeration[] = {{"off", OPTION_PORTS_OFF},
+                                                   {"source-only", OPTION_PORTS_SRC},
+                                                   {"destination-only", OPTION_PORTS_DEST},
+                                                   {"on", OPTION_PORTS_ON},
+                                                   {NULL, -1}};
 
 static int is_bad_interface_name(char *name) {
     char **prefix;
-    for (prefix = bad_interface_names; *prefix; ++prefix)
-        if (strncmp(name, *prefix, strlen(*prefix)) == 0)
+    for (prefix = bad_interface_names; *prefix; ++prefix) {
+        if (strncmp(name, *prefix, strlen(*prefix)) == 0) {
             return 1;
+        }
+    }
     return 0;
 }
 
@@ -101,17 +93,20 @@ static char *get_first_interface(void) {
     sock = socket(AF_INET, SOCK_DGRAM, 0); /* any sort of IP socket will do */
 
     while (nameindex[idx].if_index != 0) {
-        if (strcmp(nameindex[idx].if_name, "lo") != 0 && !is_bad_interface_name(nameindex[idx].if_name)) {
+        if (strcmp(nameindex[idx].if_name, "lo") != 0 &&
+            !is_bad_interface_name(nameindex[idx].if_name)) {
             strncpy(ifr.ifr_name, nameindex[idx].if_name, sizeof(ifr.ifr_name));
-            if ((sock == -1) || (ioctl(sock, SIOCGIFFLAGS, &ifr) == -1) || (ifr.ifr_flags & IFF_UP)) {
+            if ((sock == -1) || (ioctl(sock, SIOCGIFFLAGS, &ifr) == -1) ||
+                (ifr.ifr_flags & IFF_UP)) {
                 iface = xstrdup(nameindex[idx].if_name);
                 break;
             }
         }
         idx++;
     }
-    if (sock != -1)
+    if (sock != -1) {
         close(sock);
+    }
     if_freenameindex(nameindex);
     return iface;
 }
@@ -121,15 +116,16 @@ void options_set_defaults() {
     /* Should go through the list of interfaces, and find the first one which
      * is up and is not lo or dummy*. */
     options.interface = get_first_interface();
-    if (!options.interface)
+    if (!options.interface) {
         options.interface = xstrdup("eth0");
+    }
 
     options.filtercode = NULL;
     options.netfilter = 0;
     inet_aton("10.0.1.0", &options.netfilternet);
     inet_aton("255.255.255.0", &options.netfiltermask);
     options.netfilter6 = 0;
-    inet_pton(AF_INET6, "fe80::", &options.netfilter6net);    /* Link-local */
+    inet_pton(AF_INET6, "fe80::", &options.netfilter6net); /* Link-local */
     inet_pton(AF_INET6, "ffff::", &options.netfilter6mask);
     options.link_local = 0;
     options.dnsresolution = 1;
@@ -168,7 +164,6 @@ void options_set_defaults() {
         options.config_file = xstrdup("iftoprc");
     }
     options.config_file_specified = 0;
-
 }
 
 static void die(char *msg) {
@@ -209,8 +204,9 @@ static void set_net_filter(char *arg) {
     }
     *mask = '\0';
     mask++;
-    if (inet_aton(arg, &options.netfilternet) == 0)
+    if (inet_aton(arg, &options.netfilternet) == 0) {
         die("Invalid network address\n");
+    }
     /* Accept a netmask like /24 or /255.255.255.0. */
     if (mask[strspn(mask, "0123456789")] == '\0') {
         /* Whole string is numeric */
@@ -236,57 +232,55 @@ static void set_net_filter(char *arg) {
     options.netfilternet.s_addr = options.netfilternet.s_addr & options.netfiltermask.s_addr;
 
     options.netfilter = 1;
-
 }
 
 /* usage:
  * Print usage information. */
 static void usage(FILE *fp) {
-    fprintf(fp,
-            "\n"
-            "\033[36m  ██▓  █████▒▄▄▄█████▓ ▒█████   ██▓███  \033[0m\n"
-            "\033[36m ▓██▒▓██   ▒ ▓  ██▒ ▓▒▒██▒  ██▒▓██░  ██▒\033[0m\n"
-            "\033[35m ▒██▒▒████ ░ ▒ ▓██░ ▒░▒██░  ██▒▓██░ ██▓▒\033[0m\n"
-            "\033[35m ░██░░▓█▒  ░ ░ ▓██▓ ░ ▒██   ██░▒██▄█▓▒ ▒\033[0m\n"
-            "\033[31m ░██░░▒█░      ▒██▒ ░ ░ ████▓▒░▒██▒ ░  ░\033[0m\n"
-            "\033[31m ░▓   ▒ ░      ▒ ░░   ░ ▒░▒░▒░ ▒▓▒░ ░  ░\033[0m\n"
-            "\033[33m  ▒ ░ ░          ░      ░ ▒ ▒░ ░▒ ░     \033[0m\n"
-            "\033[33m  ▒ ░ ░ ░      ░      ░ ░ ░ ▒  ░░       \033[0m\n"
-            "\033[33m  ░                       ░ ░            \033[0m\n"
-            "\n"
-            "\033[36m  >> BANDWIDTH MONITOR v" IFTOP_VERSION " << \033[0m\n"
-            "\033[35m  [ jacking into the network stream ]\033[0m\n"
-            "\n"
-            "\033[33m  USAGE:\033[0m iftop -h | [-npblNBP] [-i interface] [-f filter code]\n"
-            "                                [-F net/mask] [-G net6/mask6]\n"
-            "\n"
-            "\033[36m  ── PROTOCOLS ──────────────────────────────────────\033[0m\n"
-            "\033[32m   -h              \033[0m display this transmission\n"
-            "\033[32m   -n              \033[0m skip hostname lookups\n"
-            "\033[32m   -N              \033[0m skip port-to-service resolution\n"
-            "\033[32m   -p              \033[0m promiscuous mode \033[35m(sniff all traffic\n"
-            "                   on the local net segment)\033[0m\n"
-            "\033[32m   -b              \033[0m disable bar graph rendering\n"
-            "\033[32m   -B              \033[0m display bandwidth in bytes\n"
-            "\n"
-            "\033[36m  ── INTERFACES ─────────────────────────────────────\033[0m\n"
-            "\033[32m   -i interface    \033[0m jack into named interface\n"
-            "\033[32m   -f filter code  \033[0m BPF filter for packet selection\n"
-            "                   \033[35m(default: none, only IP packets counted)\033[0m\n"
-            "\033[32m   -F net/mask     \033[0m scope to IPv4 network\n"
-            "\033[32m   -G net6/mask6   \033[0m scope to IPv6 network\n"
-            "\033[32m   -l              \033[0m include link-local IPv6 traffic\n"
-            "\n"
-            "\033[36m  ── DISPLAY ────────────────────────────────────────\033[0m\n"
-            "\033[32m   -P              \033[0m render ports alongside hosts\n"
-            "\033[32m   -m limit        \033[0m set upper bandwidth scale limit\n"
-            "\033[32m   -c config file  \033[0m load alternate config file\n"
-            "\n"
-            "\033[36m  ── SYSTEM ─────────────────────────────────────────\033[0m\n"
-            "\033[35m  v" IFTOP_VERSION " \033[0m// \033[33m(c) 2002 Jacob Menke and contributors\033[0m\n"
-            "\033[35m  The net is vast and infinite.\033[0m\n"
-            "\n"
-    );
+    fprintf(fp, "\n"
+                "\033[36m  ██▓  █████▒▄▄▄█████▓ ▒█████   ██▓███  \033[0m\n"
+                "\033[36m ▓██▒▓██   ▒ ▓  ██▒ ▓▒▒██▒  ██▒▓██░  ██▒\033[0m\n"
+                "\033[35m ▒██▒▒████ ░ ▒ ▓██░ ▒░▒██░  ██▒▓██░ ██▓▒\033[0m\n"
+                "\033[35m ░██░░▓█▒  ░ ░ ▓██▓ ░ ▒██   ██░▒██▄█▓▒ ▒\033[0m\n"
+                "\033[31m ░██░░▒█░      ▒██▒ ░ ░ ████▓▒░▒██▒ ░  ░\033[0m\n"
+                "\033[31m ░▓   ▒ ░      ▒ ░░   ░ ▒░▒░▒░ ▒▓▒░ ░  ░\033[0m\n"
+                "\033[33m  ▒ ░ ░          ░      ░ ▒ ▒░ ░▒ ░     \033[0m\n"
+                "\033[33m  ▒ ░ ░ ░      ░      ░ ░ ░ ▒  ░░       \033[0m\n"
+                "\033[33m  ░                       ░ ░            \033[0m\n"
+                "\n"
+                "\033[36m  >> BANDWIDTH MONITOR v" IFTOP_VERSION " << \033[0m\n"
+                "\033[35m  [ jacking into the network stream ]\033[0m\n"
+                "\n"
+                "\033[33m  USAGE:\033[0m iftop -h | [-npblNBP] [-i interface] [-f filter code]\n"
+                "                                [-F net/mask] [-G net6/mask6]\n"
+                "\n"
+                "\033[36m  ── PROTOCOLS ──────────────────────────────────────\033[0m\n"
+                "\033[32m   -h              \033[0m display this transmission\n"
+                "\033[32m   -n              \033[0m skip hostname lookups\n"
+                "\033[32m   -N              \033[0m skip port-to-service resolution\n"
+                "\033[32m   -p              \033[0m promiscuous mode \033[35m(sniff all traffic\n"
+                "                   on the local net segment)\033[0m\n"
+                "\033[32m   -b              \033[0m disable bar graph rendering\n"
+                "\033[32m   -B              \033[0m display bandwidth in bytes\n"
+                "\n"
+                "\033[36m  ── INTERFACES ─────────────────────────────────────\033[0m\n"
+                "\033[32m   -i interface    \033[0m jack into named interface\n"
+                "\033[32m   -f filter code  \033[0m BPF filter for packet selection\n"
+                "                   \033[35m(default: none, only IP packets counted)\033[0m\n"
+                "\033[32m   -F net/mask     \033[0m scope to IPv4 network\n"
+                "\033[32m   -G net6/mask6   \033[0m scope to IPv6 network\n"
+                "\033[32m   -l              \033[0m include link-local IPv6 traffic\n"
+                "\n"
+                "\033[36m  ── DISPLAY ────────────────────────────────────────\033[0m\n"
+                "\033[32m   -P              \033[0m render ports alongside hosts\n"
+                "\033[32m   -m limit        \033[0m set upper bandwidth scale limit\n"
+                "\033[32m   -c config file  \033[0m load alternate config file\n"
+                "\n"
+                "\033[36m  ── SYSTEM ─────────────────────────────────────────\033[0m\n"
+                "\033[35m  v" IFTOP_VERSION
+                " \033[0m// \033[33m(c) 2002 Jacob Menke and contributors\033[0m\n"
+                "\033[35m  The net is vast and infinite.\033[0m\n"
+                "\n");
 }
 
 void options_read_args(int argc, char **argv) {
@@ -295,73 +289,73 @@ void options_read_args(int argc, char **argv) {
     opterr = 0;
     while ((opt = getopt(argc, argv, optstr)) != -1) {
         switch (opt) {
-            case 'h':
-                usage(stdout);
-                exit(0);
+        case 'h':
+            usage(stdout);
+            exit(0);
 
-            case 'n':
-                config_set_string("dns-resolution", "false");
-                break;
+        case 'n':
+            config_set_string("dns-resolution", "false");
+            break;
 
-            case 'N':
-                config_set_string("port-resolution", "false");
-                break;
+        case 'N':
+            config_set_string("port-resolution", "false");
+            break;
 
-            case 'i':
-                config_set_string("interface", optarg);
-                break;
+        case 'i':
+            config_set_string("interface", optarg);
+            break;
 
-            case 'f':
-                config_set_string("filter-code", optarg);
-                break;
+        case 'f':
+            config_set_string("filter-code", optarg);
+            break;
 
-            case 'l':
-                config_set_string("link-local", "true");
-                break;
+        case 'l':
+            config_set_string("link-local", "true");
+            break;
 
-            case 'p':
-                config_set_string("promiscuous", "true");
-                break;
+        case 'p':
+            config_set_string("promiscuous", "true");
+            break;
 
-            case 'P':
-                config_set_string("port-display", "on");
-                break;
+        case 'P':
+            config_set_string("port-display", "on");
+            break;
 
-            case 'F':
-                config_set_string("net-filter", optarg);
-                break;
+        case 'F':
+            config_set_string("net-filter", optarg);
+            break;
 
-            case 'G':
-                config_set_string("net-filter6", optarg);
-                break;
+        case 'G':
+            config_set_string("net-filter6", optarg);
+            break;
 
-            case 'm':
-                config_set_string("max-bandwidth", optarg);
-                break;
+        case 'm':
+            config_set_string("max-bandwidth", optarg);
+            break;
 
-            case 'b':
-                config_set_string("show-bars", "false");
-                break;
+        case 'b':
+            config_set_string("show-bars", "false");
+            break;
 
-            case 'B':
-                config_set_string("use-bytes", "true");
-                break;
+        case 'B':
+            config_set_string("use-bytes", "true");
+            break;
 
-            case 'c':
-                xfree(options.config_file);
-                options.config_file = xstrdup(optarg);
-                options.config_file_specified = 1;
-                break;
+        case 'c':
+            xfree(options.config_file);
+            options.config_file = xstrdup(optarg);
+            options.config_file_specified = 1;
+            break;
 
-            case '?':
-                fprintf(stderr, "iftop: unknown option -%c\n", optopt);
-                usage(stderr);
-                exit(1);
+        case '?':
+            fprintf(stderr, "iftop: unknown option -%c\n", optopt);
+            usage(stderr);
+            exit(1);
 
-            case ':':
-                fprintf(stderr, "iftop: option -%c requires an argument\n", optopt);
-                usage(stderr);
-                exit(1);
+        case ':':
+            fprintf(stderr, "iftop: option -%c requires an argument\n", optopt);
+            usage(stderr);
+            exit(1);
         }
     }
 
@@ -506,9 +500,9 @@ int options_config_get_net_filter() {
             }
             options.netfilter = 1;
         } else {
-            if (inet_aton(mask, &options.netfiltermask) != 0)
+            if (inet_aton(mask, &options.netfiltermask) != 0) {
                 options.netfilter = 1;
-            else {
+            } else {
                 fprintf(stderr, "Invalid netmask: %s\n", str);
                 return 0;
             }
@@ -559,24 +553,27 @@ int options_config_get_net_filter6() {
                 full_bytes = prefix_len / 8;
                 remainder = prefix_len % 8;
                 partial <<= 8 - remainder;
-                for (j = 0; j < full_bytes; ++j)
+                for (j = 0; j < full_bytes; ++j) {
                     options.netfilter6mask.s6_addr[j] = all_ones;
+                }
 
-                if (remainder > 0)
+                if (remainder > 0) {
                     options.netfilter6mask.s6_addr[full_bytes] = partial;
+                }
                 options.netfilter6 = 1;
             }
         } else {
-            if (inet_pton(AF_INET6, mask, &options.netfilter6mask) != 0)
+            if (inet_pton(AF_INET6, mask, &options.netfilter6mask) != 0) {
                 options.netfilter6 = 1;
-            else {
+            } else {
                 fprintf(stderr, "Invalid IPv6 netmask: %s\n", str);
                 return 0;
             }
         }
         /* Prepare any comparison by masking the provided filtered net. */
-        for (j = 0; j < 16; ++j)
+        for (j = 0; j < 16; ++j) {
             options.netfilter6net.s6_addr[j] &= options.netfilter6mask.s6_addr[j];
+        }
 
         return 1;
     }
@@ -597,12 +594,12 @@ void options_make() {
     options_config_get_bool("hide-source", &options.aggregate_src);
     options_config_get_bool("hide-destination", &options.aggregate_dest);
     options_config_get_bool("use-bytes", &options.bandwidth_in_bytes);
-    options_config_get_enum("sort", sort_enumeration, (int *) &options.sort);
-    options_config_get_enum("line-display", linedisplay_enumeration, (int *) &options.linedisplay);
+    options_config_get_enum("sort", sort_enumeration, (int *)&options.sort);
+    options_config_get_enum("line-display", linedisplay_enumeration, (int *)&options.linedisplay);
     options_config_get_bool("show-totals", &options.show_totals);
     options_config_get_bool("log-scale", &options.log_scale);
     options_config_get_bw_rate("max-bandwidth", &options.max_bandwidth);
-    options_config_get_enum("port-display", showports_enumeration, (int *) &options.showports);
+    options_config_get_enum("port-display", showports_enumeration, (int *)&options.showports);
     xfree(options.screenfilter);
     options.screenfilter = NULL;
     options_config_get_string("screen-filter", &options.screenfilter);

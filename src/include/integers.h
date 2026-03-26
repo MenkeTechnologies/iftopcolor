@@ -15,66 +15,66 @@
 
 #if SIZEOF_U_INT8_T != 1 || SIZEOF_U_INT16_T != 2 || SIZEOF_U_INT32_T != 4
 
-#   if defined(HAVE_C99_INTS)
+#    if defined(HAVE_C99_INTS)
 
 /*
  * Use the C99 standard-width integers, defined in some appropriate
  * header file.
  */
 
-#       if defined(HAVE_STDINT_H)
+#        if defined(HAVE_STDINT_H)
 
-#           include <stdint.h>
+#            include <stdint.h>
 
-#       elif defined(HAVE_SYS_INTTYPES_H)
-#           include <sys/inttypes.h>
-#       endif
+#        elif defined(HAVE_SYS_INTTYPES_H)
+#            include <sys/inttypes.h>
+#        endif
 
 /* Don't replace existing u_int<n>_t types. */
-#       if SIZEOF_U_INT8_T != 1
+#        if SIZEOF_U_INT8_T != 1
 typedef uint8_t u_int8_t;
-#       endif
+#        endif
 
-#       if SIZEOF_U_INT16_T != 2
+#        if SIZEOF_U_INT16_T != 2
 typedef uint16_t u_int16_t;
-#       endif
+#        endif
 
-#       if SIZEOF_U_INT32_T != 4
+#        if SIZEOF_U_INT32_T != 4
 typedef uint32_t u_int32_t;
-#       endif
+#        endif
 
-#   elif (SIZEOF_UNSIGNED_SHORT_INT == 2 || SIZEOF_UNSIGNED_INT == 2)    \
- && (SIZEOF_UNSIGNED_INT == 4 || SIZEOF_UNSIGNED_LONG_INT == 4)
+#    elif (SIZEOF_UNSIGNED_SHORT_INT == 2 || SIZEOF_UNSIGNED_INT == 2) && \
+        (SIZEOF_UNSIGNED_INT == 4 || SIZEOF_UNSIGNED_LONG_INT == 4)
 
 /*
  * Use an appropriately-sized basic type.
  */
 
-#       if SIZEOF_U_INT8_T != 1
-    typedef unsigned char u_int8_t;         /* By definition. */
-#       endif
+#        if SIZEOF_U_INT8_T != 1
+typedef unsigned char u_int8_t; /* By definition. */
+#        endif
 
-#       if SIZEOF_U_INT16_T != 2
-#           if SIZEOF_UNSIGNED_SHORT_INT == 2
-        typedef unsigned short int u_int16_t;
-#           elif SIZEOF_UNSIGNED_INT == 2
-        typedef unsigned int u_int16_t;     /* Not likely. */
-#           endif
-#       endif
+#        if SIZEOF_U_INT16_T != 2
+#            if SIZEOF_UNSIGNED_SHORT_INT == 2
+typedef unsigned short int u_int16_t;
+#            elif SIZEOF_UNSIGNED_INT == 2
+typedef unsigned int u_int16_t; /* Not likely. */
+#            endif
+#        endif
 
-#       if SIZEOF_U_INT32_T != 4
-#           if SIZEOF_UNSIGNED_INT == 4
-        typedef unsigned int u_int32_t;
-#           elif SIZEOF_UNSIGNED_LONG_INT == 4
-        typedef unsigned long int u_int32_t;
-#           endif
-#       endif
+#        if SIZEOF_U_INT32_T != 4
+#            if SIZEOF_UNSIGNED_INT == 4
+typedef unsigned int u_int32_t;
+#            elif SIZEOF_UNSIGNED_LONG_INT == 4
+typedef unsigned long int u_int32_t;
+#            endif
+#        endif
 
 /* Whew. */
 
-#   else
-#       error "Your C compiler seems to lack 16 and 32 bit unsigned integer types"
-#   endif
+#    else
+#        error "Your C compiler seems to lack 16 and 32 bit unsigned integer types"
+#    endif
 
 #endif /* No existing u_int<n>_t types. */
 

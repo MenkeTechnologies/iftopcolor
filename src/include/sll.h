@@ -4,7 +4,7 @@
  *
  * This code is derived from the Stanford/CMU enet packet filter,
  * (net/enet.c) distributed as part of 4.3BSD, and code contributed
- * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence 
+ * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence
  * Berkeley Laboratory.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,15 +74,15 @@
 /*
  * A DLT_LINUX_SLL fake link-layer header.
  */
-#define SLL_HDR_LEN    16        /* total header length */
-#define SLL_ADDRLEN    8        /* length of address field */
+#define SLL_HDR_LEN 16 /* total header length */
+#define SLL_ADDRLEN 8  /* length of address field */
 
 struct sll_header {
-    u_int16_t sll_pkttype;        /* packet type */
-    u_int16_t sll_hatype;        /* link-layer address type */
-    u_int16_t sll_halen;        /* link-layer address length */
-    u_int8_t sll_addr[SLL_ADDRLEN];    /* link-layer address */
-    u_int16_t sll_protocol;        /* protocol */
+    u_int16_t sll_pkttype;          /* packet type */
+    u_int16_t sll_hatype;           /* link-layer address type */
+    u_int16_t sll_halen;            /* link-layer address length */
+    u_int8_t sll_addr[SLL_ADDRLEN]; /* link-layer address */
+    u_int16_t sll_protocol;         /* protocol */
 };
 
 /*
@@ -91,11 +91,11 @@ struct sll_header {
  * available even on systems other than Linux, and so that they
  * don't change even if the PACKET_ values change.
  */
-#define LINUX_SLL_HOST        0
-#define LINUX_SLL_BROADCAST    1
-#define LINUX_SLL_MULTICAST    2
-#define LINUX_SLL_OTHERHOST    3
-#define LINUX_SLL_OUTGOING    4
+#define LINUX_SLL_HOST      0
+#define LINUX_SLL_BROADCAST 1
+#define LINUX_SLL_MULTICAST 2
+#define LINUX_SLL_OTHERHOST 3
+#define LINUX_SLL_OUTGOING  4
 
 /*
  * The LINUX_SLL_ values for "sll_protocol"; these correspond to the
@@ -118,5 +118,5 @@ struct sll_header {
  * in the Linux "if_ether.h" will, I suspect, actually show up in
  * captures.)
  */
-#define LINUX_SLL_P_802_3    0x0001    /* Novell 802.3 frames without 802.2 LLC header */
-#define LINUX_SLL_P_802_2    0x0004    /* 802.2 frames (not D/I/X Ethernet) */
+#define LINUX_SLL_P_802_3 0x0001 /* Novell 802.3 frames without 802.2 LLC header */
+#define LINUX_SLL_P_802_2 0x0004 /* 802.2 frames (not D/I/X Ethernet) */

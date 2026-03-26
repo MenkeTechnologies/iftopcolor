@@ -36,83 +36,93 @@ char *edline(int linenum, const char *prompt, const char *initial) {
     do {
         c = getch();
         switch (c) {
-            case KEY_DL:
-            case 21:    /* ^U */
-                *str = 0;
+        case KEY_DL:
+        case 21: /* ^U */
+            *str = 0;
+            pos = 0;
+            break;
+
+        case KEY_LEFT:
+            --pos;
+            if (pos < 0) {
+                beep();
                 pos = 0;
-                break;
+            }
+            break;
 
-            case KEY_LEFT:
-                --pos;
-                if (pos < 0) {
-                    beep();
-                    pos = 0;
-                }
-                break;
-
-            case KEY_RIGHT:
-                ++pos;
-                if (pos > strlen(str)) {
-                    beep();
-                    pos = strlen(str);
-                }
-                break;
-
-            case KEY_HOME:
-            case 1:         /* ^A */
-                pos = 0;
-                break;
-
-            case KEY_END:
-            case 5:         /* ^E */
+        case KEY_RIGHT:
+            ++pos;
+            if (pos > strlen(str)) {
+                beep();
                 pos = strlen(str);
-                break;
+            }
+            break;
 
-            case KEY_DC:
-                if (pos == strlen(str))
-                    beep();
-                else
-                    memmove(str + pos, str + pos + 1, strlen(str + pos + 1) + 1);
-                break;
+        case KEY_HOME:
+        case 1: /* ^A */
+            pos = 0;
+            break;
 
-            case KEY_BACKSPACE:
-                if (pos == 0)
-                    beep();
-                else {
-                    memmove(str + pos - 1, str + pos, strlen(str + pos) + 1);
-                    --pos;
+        case KEY_END:
+        case 5: /* ^E */
+            pos = strlen(str);
+            break;
+
+        case KEY_DC:
+            if (pos == strlen(str)) {
+                beep();
+            } else {
+                memmove(str + pos, str + pos + 1, strlen(str + pos + 1) + 1);
+            }
+            break;
+
+        case KEY_BACKSPACE:
+            if (pos == 0) {
+                beep();
+            } else {
+                memmove(str + pos - 1, str + pos, strlen(str + pos) + 1);
+                --pos;
+            }
+            break;
+
+        case 23: /* ^W */
+            for (i = pos; i > 0; --i) {
+                if (!isspace((int)str[i])) {
+                    break;
                 }
-                break;
-
-            case 23:    /* ^W */
-                for (i = pos; i > 0; --i)
-                    if (!isspace((int) str[i])) break;
-                for (; i > 0; --i)
-                    if (isspace((int) str[i])) break;
-                if (i != pos) {
-                    memmove(str + i, str + pos, strlen(str + pos) + 1);
-                    pos = i;
+            }
+            for (; i > 0; --i) {
+                if (isspace((int)str[i])) {
+                    break;
                 }
-                break;
+            }
+            if (i != pos) {
+                memmove(str + i, str + pos, strlen(str + pos) + 1);
+                pos = i;
+            }
+            break;
 
-            case ERR:
-                break;
+        case ERR:
+            break;
 
-            default:
-                if (isprint(c) && c != '\t') {
-                    if (strlen(str) == slen - 1)
-                        str = xrealloc(str, slen *= 2);
-                    memmove(str + pos + 1, str + pos, strlen(str + pos) + 1);
-                    str[pos++] = (char) c;
-                } else
-                    beep();
-                break;
+        default:
+            if (isprint(c) && c != '\t') {
+                if (strlen(str) == slen - 1) {
+                    str = xrealloc(str, slen *= 2);
+                }
+                memmove(str + pos + 1, str + pos, strlen(str + pos) + 1);
+                str[pos++] = (char)c;
+            } else {
+                beep();
+            }
+            break;
         }
 
         /* figure out the offset to use for the string */
         off = 0;
-        if (pos > COLS - xstart - 1)
+        if (pos > COLS - xstart - 1) {
             off = pos - (COLS - xstart - 1);
+        }
 
         /* display the string */
         mvaddstr(linenum, 0, prompt);
@@ -123,10 +133,10 @@ char *edline(int linenum, const char *prompt, const char *initial) {
         refresh();
     } while (c != KEY_ENTER && c != '\r' && c != '\x1b' && c != 7 /* ^G */);
 
-    if (c == KEY_ENTER || c == '\r')
+    if (c == KEY_ENTER || c == '\r') {
         /* Success */
         return str;
-    else {
+    } else {
         xfree(str);
         return NULL;
     }

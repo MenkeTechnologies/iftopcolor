@@ -15,7 +15,9 @@
  * Malloc, and abort if malloc fails. */
 void *xmalloc(size_t size) {
     void *ptr = malloc(size);
-    if (!ptr) abort();
+    if (!ptr) {
+        abort();
+    }
     return ptr;
 }
 
@@ -23,7 +25,9 @@ void *xmalloc(size_t size) {
  * As above. */
 void *xcalloc(size_t count, size_t size) {
     void *ptr = calloc(count, size);
-    if (!ptr) abort();
+    if (!ptr) {
+        abort();
+    }
     return ptr;
 }
 
@@ -31,7 +35,9 @@ void *xcalloc(size_t count, size_t size) {
  * As above. */
 void *xrealloc(void *orig, size_t size) {
     void *ptr = realloc(orig, size);
-    if (size != 0 && !ptr) abort();
+    if (size != 0 && !ptr) {
+        abort();
+    }
     return ptr;
 }
 
@@ -39,13 +45,16 @@ void *xrealloc(void *orig, size_t size) {
  * As above. */
 char *xstrdup(const char *str) {
     char *ptr = strdup(str);
-    if (!ptr) abort();
+    if (!ptr) {
+        abort();
+    }
     return ptr;
 }
 
 /* xfree:
  * Free, ignoring a passed NULL value. */
 void xfree(void *ptr) {
-    if (ptr) free(ptr);
+    if (ptr) {
+        free(ptr);
+    }
 }
-

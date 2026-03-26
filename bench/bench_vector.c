@@ -108,10 +108,12 @@ static void bench_remove_back(void) {
         snprintf(label, sizeof(label), "remove from back (%d items)", n);
         BENCH_RUN(label, 1000, {
             vector v = vector_new();
-            for (int j = 0; j < n; j++)
+            for (int j = 0; j < n; j++) {
                 vector_push_back(v, item_long(j));
-            while (v->n_used > 0)
+            }
+            while (v->n_used > 0) {
                 vector_remove(v, &v->items[v->n_used - 1]);
+            }
             vector_delete(v);
         });
     }
@@ -129,8 +131,9 @@ static void bench_reallocate(void) {
 
     BENCH_RUN("push 100 then reallocate to 10000", 10000, {
         vector v = vector_new();
-        for (int j = 0; j < 100; j++)
+        for (int j = 0; j < 100; j++) {
             vector_push_back(v, item_long(j));
+        }
         vector_reallocate(v, 10000);
         bench_use((int)v->items[99].num);
         vector_delete(v);
@@ -142,8 +145,9 @@ static void bench_pointer_storage(void) {
 
     BENCH_RUN("push 1000 string pointers", 1000, {
         vector v = vector_new();
-        for (int j = 0; j < 1000; j++)
+        for (int j = 0; j < 1000; j++) {
             vector_push_back(v, item_ptr(xstrdup("bench_string")));
+        }
         vector_delete_free(v);
     });
 }
@@ -153,10 +157,12 @@ static void bench_remove_middle(void) {
 
     BENCH_RUN("remove from middle (1000 items)", 100, {
         vector v = vector_new();
-        for (int j = 0; j < 1000; j++)
+        for (int j = 0; j < 1000; j++) {
             vector_push_back(v, item_long(j));
-        while (v->n_used > 0)
+        }
+        while (v->n_used > 0) {
             vector_remove(v, &v->items[v->n_used / 2]);
+        }
         vector_delete(v);
     });
 }

@@ -22,9 +22,9 @@ typedef struct {
 } ip_service;
 
 typedef struct {
-    char *tcp[SERV_NUM_PORTS];   /* protocol 6: port -> name */
-    char *udp[SERV_NUM_PORTS];   /* protocol 17: port -> name */
-    hash_type *other;            /* fallback for other protocols */
+    char *tcp[SERV_NUM_PORTS]; /* protocol 6: port -> name */
+    char *udp[SERV_NUM_PORTS]; /* protocol 17: port -> name */
+    hash_type *other;          /* fallback for other protocols */
     int count;
 } serv_table;
 

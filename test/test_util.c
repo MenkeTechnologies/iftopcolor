@@ -46,9 +46,9 @@ TEST(xmalloc_large_allocation) {
 }
 
 TEST(xmalloc_various_sizes) {
-    size_t sizes[] = {1, 7, 15, 16, 17, 31, 32, 33, 63, 64, 65, 127, 128,
-                      255, 256, 512, 1024, 4096, 65536};
-    for (int i = 0; i < (int)(sizeof(sizes)/sizeof(sizes[0])); i++) {
+    size_t sizes[] = {1,  7,   15,  16,  17,  31,  32,   33,   63,   64,
+                      65, 127, 128, 255, 256, 512, 1024, 4096, 65536};
+    for (int i = 0; i < (int)(sizeof(sizes) / sizeof(sizes[0])); i++) {
         void *p = xmalloc(sizes[i]);
         ASSERT_NOT_NULL(p);
         memset(p, 0xFF, sizes[i]);
@@ -90,16 +90,18 @@ TEST(xcalloc_returns_nonnull) {
 TEST(xcalloc_returns_zeroed) {
     char *p = xcalloc(64, 1);
     ASSERT_NOT_NULL(p);
-    for (int i = 0; i < 64; i++)
+    for (int i = 0; i < 64; i++) {
         ASSERT_EQ(p[i], 0);
+    }
     free(p);
 }
 
 TEST(xcalloc_correct_size) {
     int *p = xcalloc(10, sizeof(int));
     ASSERT_NOT_NULL(p);
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 10; i++) {
         ASSERT_EQ(p[i], 0);
+    }
     free(p);
 }
 
@@ -121,7 +123,11 @@ TEST(xcalloc_large) {
 }
 
 TEST(xcalloc_struct_array) {
-    typedef struct { int a; long b; char c[16]; } test_struct;
+    typedef struct {
+        int a;
+        long b;
+        char c[16];
+    } test_struct;
     test_struct *arr = xcalloc(50, sizeof(test_struct));
     for (int i = 0; i < 50; i++) {
         ASSERT_EQ(arr[i].a, 0);
@@ -138,8 +144,9 @@ TEST(xrealloc_grow) {
     memset(p, 'B', 16);
     p = xrealloc(p, 64);
     ASSERT_NOT_NULL(p);
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < 16; i++) {
         ASSERT_EQ(p[i], 'B');
+    }
     free(p);
 }
 
@@ -148,8 +155,9 @@ TEST(xrealloc_shrink) {
     memset(p, 'C', 64);
     p = xrealloc(p, 8);
     ASSERT_NOT_NULL(p);
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 8; i++) {
         ASSERT_EQ(p[i], 'C');
+    }
     free(p);
 }
 
@@ -158,8 +166,9 @@ TEST(xrealloc_same_size) {
     memset(p, 'D', 32);
     p = xrealloc(p, 32);
     ASSERT_NOT_NULL(p);
-    for (int i = 0; i < 32; i++)
+    for (int i = 0; i < 32; i++) {
         ASSERT_EQ(p[i], 'D');
+    }
     free(p);
 }
 
@@ -177,17 +186,21 @@ TEST(xrealloc_grow_large) {
     memset(p, 'F', 16);
     p = xrealloc(p, 65536);
     ASSERT_NOT_NULL(p);
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < 16; i++) {
         ASSERT_EQ(p[i], 'F');
+    }
     free(p);
 }
 
 TEST(xrealloc_preserves_all_data) {
     int *p = xmalloc(100 * sizeof(int));
-    for (int i = 0; i < 100; i++) p[i] = i * 7;
+    for (int i = 0; i < 100; i++) {
+        p[i] = i * 7;
+    }
     p = xrealloc(p, 200 * sizeof(int));
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 100; i++) {
         ASSERT_EQ(p[i], i * 7);
+    }
     free(p);
 }
 
@@ -304,8 +317,9 @@ TEST(xmalloc_realloc_chain) {
 TEST(xcalloc_large_zeroed) {
     size_t n = 4096;
     char *p = xcalloc(n, 1);
-    for (size_t i = 0; i < n; i++)
+    for (size_t i = 0; i < n; i++) {
         ASSERT_EQ(p[i], 0);
+    }
     free(p);
 }
 
@@ -326,11 +340,13 @@ TEST(xstrdup_multiple_independent) {
 
 TEST(xmalloc_write_pattern) {
     unsigned char *p = xmalloc(256);
-    for (int i = 0; i < 256; i++)
+    for (int i = 0; i < 256; i++) {
         p[i] = (unsigned char)i;
+    }
     p = xrealloc(p, 512);
-    for (int i = 0; i < 256; i++)
+    for (int i = 0; i < 256; i++) {
         ASSERT_EQ(p[i], (unsigned char)i);
+    }
     free(p);
 }
 
@@ -338,16 +354,18 @@ TEST(xmalloc_write_pattern) {
 
 TEST(xcalloc_pointer_array) {
     void **ptrs = xcalloc(100, sizeof(void *));
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 100; i++) {
         ASSERT_NULL(ptrs[i]);
+    }
     free(ptrs);
 }
 
 /* === xfree multiple nulls === */
 
 TEST(xfree_multiple_nulls) {
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 100; i++) {
         xfree(NULL);
+    }
 }
 
 /* === xstrdup very long === */

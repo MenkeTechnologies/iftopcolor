@@ -29,17 +29,19 @@ static node_key_pair *pool_alloc(void) {
     node_key_pair *nkp;
     if (__builtin_expect(free_list != NULL, 1)) {
         nkp = free_list;
-        free_list = (node_key_pair *) nkp->node.next;
+        free_list = (node_key_pair *)nkp->node.next;
         return nkp;
     }
     /* Allocate a new block */
     pool_block *block = malloc(sizeof(pool_block));
-    if (!block) abort();
+    if (!block) {
+        abort();
+    }
     block->next = pool_blocks;
     pool_blocks = block;
     /* Chain all items onto free list except the first (which we return) */
     for (int i = 1; i < POOL_BLOCK_SIZE - 1; i++) {
-        block->items[i].node.next = (hash_node_type *) &block->items[i + 1];
+        block->items[i].node.next = (hash_node_type *)&block->items[i + 1];
     }
     block->items[POOL_BLOCK_SIZE - 1].node.next = NULL;
     free_list = &block->items[1];
@@ -47,7 +49,7 @@ static node_key_pair *pool_alloc(void) {
 }
 
 static void pool_free(node_key_pair *nkp) {
-    nkp->node.next = (hash_node_type *) free_list;
+    nkp->node.next = (hash_node_type *)free_list;
     free_list = nkp;
 }
 
@@ -64,14 +66,14 @@ static inline int addr_hash_bucket(const addr_pair *pair) {
     uint32_t hash_val = 0;
 
     if (pair->address_family == AF_INET6) {
-        const uint32_t *addr6 = (const uint32_t *) pair->src6.s6_addr;
+        const uint32_t *addr6 = (const uint32_t *)pair->src6.s6_addr;
         hash_val = hash_mix(hash_val, addr6[0]);
         hash_val = hash_mix(hash_val, addr6[1]);
         hash_val = hash_mix(hash_val, addr6[2]);
         hash_val = hash_mix(hash_val, addr6[3]);
         hash_val = hash_mix(hash_val, pair->src_port);
 
-        addr6 = (const uint32_t *) pair->dst6.s6_addr;
+        addr6 = (const uint32_t *)pair->dst6.s6_addr;
         hash_val = hash_mix(hash_val, addr6[0]);
         hash_val = hash_mix(hash_val, addr6[1]);
         hash_val = hash_mix(hash_val, addr6[2]);
@@ -98,14 +100,14 @@ int compare(void *lhs, void *rhs) {
 }
 
 int hash(void *key) {
-    return addr_hash_bucket((const addr_pair *) key);
+    return addr_hash_bucket((const addr_pair *)key);
 }
 
 void *copy_key(void *orig) {
     /* Unused in the fast path - pool_alloc embeds the key */
     addr_pair *copy;
     copy = xmalloc(sizeof *copy);
-    *copy = *(addr_pair *) orig;
+    *copy = *(addr_pair *)orig;
     return copy;
 }
 
@@ -116,8 +118,8 @@ void delete_key(void *key) {
 
 /* ---- Specialized fast-path operations ---- */
 
-hash_status_enum __attribute__((hot))
-addr_hash_find(hash_type *hash_table, addr_pair *key, void **rec) {
+hash_status_enum __attribute__((hot)) addr_hash_find(hash_type *hash_table, addr_pair *key,
+                                                     void **rec) {
     int bucket = addr_hash_bucket(key);
     hash_node_type *node = hash_table->table[bucket];
 
@@ -131,8 +133,8 @@ addr_hash_find(hash_type *hash_table, addr_pair *key, void **rec) {
     return HASH_STATUS_KEY_NOT_FOUND;
 }
 
-hash_status_enum __attribute__((hot))
-addr_hash_insert(hash_type *hash_table, addr_pair *key, void *rec) {
+hash_status_enum __attribute__((hot)) addr_hash_insert(hash_type *hash_table, addr_pair *key,
+                                                       void *rec) {
     int bucket = addr_hash_bucket(key);
     node_key_pair *nkp = pool_alloc();
     hash_node_type *node = &nkp->node;
@@ -147,8 +149,7 @@ addr_hash_insert(hash_type *hash_table, addr_pair *key, void *rec) {
     return HASH_STATUS_OK;
 }
 
-void __attribute__((hot))
-addr_hash_delete_node(hash_type *hash_table, hash_node_type *target) {
+void __attribute__((hot)) addr_hash_delete_node(hash_type *hash_table, hash_node_type *target) {
     int bucket = target->bucket;
     hash_node_type *prev = NULL, *node = hash_table->table[bucket];
 
@@ -156,15 +157,18 @@ addr_hash_delete_node(hash_type *hash_table, hash_node_type *target) {
         prev = node;
         node = node->next;
     }
-    if (!node) return;
+    if (!node) {
+        return;
+    }
 
-    if (prev)
+    if (prev) {
         prev->next = node->next;
-    else
+    } else {
         hash_table->table[bucket] = node->next;
+    }
 
     /* Node+key is a single pool allocation */
-    node_key_pair *nkp = (node_key_pair *) node;
+    node_key_pair *nkp = (node_key_pair *)node;
     pool_free(nkp);
 }
 
@@ -176,7 +180,7 @@ void addr_hash_delete_all_free(hash_type *hash_table) {
         while (node != NULL) {
             next_node = node->next;
             free(node->record);
-            pool_free((node_key_pair *) node);
+            pool_free((node_key_pair *)node);
             node = next_node;
         }
     }

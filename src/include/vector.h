@@ -48,6 +48,6 @@ item *vector_remove(vector, item *t);
 void vector_reallocate(vector, const size_t capacity);
 
 /* A macro to iterate over a vector */
-#define vector_iterate(_v, _t)  for ((_t) = (_v)->items; (_t) < (_v)->items + (_v)->n_used; ++(_t))
+#define vector_iterate(_v, _t) for ((_t) = (_v)->items; (_t) < (_v)->items + (_v)->n_used; ++(_t))
 
 #endif /* __VECTOR_H_ */

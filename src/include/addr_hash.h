@@ -26,7 +26,7 @@ typedef struct {
     };
 } addr_pair;
 
-typedef addr_pair key_type;      /* index into hash table */
+typedef addr_pair key_type; /* index into hash table */
 
 hash_type *addr_hash_create(void);
 
@@ -36,10 +36,9 @@ hash_status_enum addr_hash_insert(hash_type *hash_table, addr_pair *key, void *r
 void addr_hash_delete_node(hash_type *hash_table, hash_node_type *node);
 void addr_hash_delete_all_free(hash_type *hash_table);
 
-int
-get_addrs_dlpi(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr);
+int get_addrs_dlpi(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr);
 
-int
-get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr, struct in6_addr *if_ip6_addr);
+int get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_addr,
+                    struct in6_addr *if_ip6_addr);
 
 #endif /* __ADDR_HASH_H_ */

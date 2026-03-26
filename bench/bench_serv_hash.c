@@ -52,8 +52,7 @@ static void bench_lookup_hit(void) {
         snprintf(label, sizeof(label), "lookup hit (%d entries)", n);
         BENCH_RUN(label, 1000000, {
             int idx = _i % n;
-            bench_use((int)(intptr_t)serv_table_lookup(t, 1024 + idx,
-                (idx % 2 == 0) ? 6 : 17));
+            bench_use((int)(intptr_t)serv_table_lookup(t, 1024 + idx, (idx % 2 == 0) ? 6 : 17));
         });
 
         serv_table_destroy(t);
@@ -71,9 +70,8 @@ static void bench_lookup_miss(void) {
         serv_table_insert(t, 1024 + i, 6, name);
     }
 
-    BENCH_RUN("lookup miss (200 entries)", 1000000, {
-        bench_use((int)(intptr_t)serv_table_lookup(t, 50000 + (_i % 1000), 6));
-    });
+    BENCH_RUN("lookup miss (200 entries)", 1000000,
+              { bench_use((int)(intptr_t)serv_table_lookup(t, 50000 + (_i % 1000), 6)); });
 
     serv_table_destroy(t);
 }
@@ -98,8 +96,9 @@ static void bench_delete(void) {
             snprintf(name, sizeof(name), "svc_%d", j);
             serv_table_insert(t, 1024 + j, 6, name);
         }
-        for (int j = 0; j < 200; j++)
+        for (int j = 0; j < 200; j++) {
             serv_table_delete(t, 1024 + j, 6);
+        }
         serv_table_destroy(t);
     });
 }

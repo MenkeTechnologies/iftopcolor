@@ -32,10 +32,12 @@ TEST(leak_vector_create_destroy) {
 
 TEST(leak_vector_push_pop_destroy) {
     vector v = vector_new();
-    for (int i = 0; i < 200; i++)
+    for (int i = 0; i < 200; i++) {
         vector_push_back(v, item_long(i));
-    for (int i = 0; i < 100; i++)
+    }
+    for (int i = 0; i < 100; i++) {
         vector_pop_back(v);
+    }
     vector_delete(v);
 }
 
@@ -51,8 +53,9 @@ TEST(leak_vector_with_heap_pointers) {
 
 TEST(leak_vector_remove_pointers) {
     vector v = vector_new();
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 20; i++) {
         vector_push_back(v, item_ptr(xstrdup("data")));
+    }
     /* Remove half, freeing their pointers */
     for (int i = 0; i < 10; i++) {
         xfree(v->items[0].ptr);
@@ -64,10 +67,12 @@ TEST(leak_vector_remove_pointers) {
 TEST(leak_vector_resize_cycles) {
     vector v = vector_new();
     for (int round = 0; round < 5; round++) {
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 100; i++) {
             vector_push_back(v, item_long(i));
-        while (v->n_used > 0)
+        }
+        while (v->n_used > 0) {
             vector_pop_back(v);
+        }
     }
     vector_delete(v);
 }
@@ -76,15 +81,23 @@ TEST(leak_vector_resize_cycles) {
  *  Generic Hash Table
  * ================================================================ */
 
-static int str_compare(void *l, void *r) { return strcmp((char *)l, (char *)r) == 0; }
+static int str_compare(void *l, void *r) {
+    return strcmp((char *)l, (char *)r) == 0;
+}
 static int str_hash(void *key) {
     char *s = (char *)key;
     unsigned int h = 0;
-    while (*s) h = h * 31 + (unsigned char)*s++;
+    while (*s) {
+        h = h * 31 + (unsigned char)*s++;
+    }
     return h % 64;
 }
-static void *str_copy_key(void *key) { return xstrdup((char *)key); }
-static void str_delete_key(void *key) { free(key); }
+static void *str_copy_key(void *key) {
+    return xstrdup((char *)key);
+}
+static void str_delete_key(void *key) {
+    free(key);
+}
 
 static hash_type *create_str_hash(void) {
     hash_type *h = xcalloc(1, sizeof(hash_type));
@@ -178,8 +191,7 @@ TEST(leak_hash_repeated_insert_overwrite) {
  *  Address Hash (pool allocator)
  * ================================================================ */
 
-static addr_pair make_ipv4(const char *src, uint16_t sport,
-                           const char *dst, uint16_t dport) {
+static addr_pair make_ipv4(const char *src, uint16_t sport, const char *dst, uint16_t dport) {
     addr_pair ap;
     memset(&ap, 0, sizeof(ap));
     ap.address_family = AF_INET;
@@ -191,8 +203,7 @@ static addr_pair make_ipv4(const char *src, uint16_t sport,
     return ap;
 }
 
-static addr_pair make_ipv6(const char *src, uint16_t sport,
-                           const char *dst, uint16_t dport) {
+static addr_pair make_ipv6(const char *src, uint16_t sport, const char *dst, uint16_t dport) {
     addr_pair ap;
     memset(&ap, 0, sizeof(ap));
     ap.address_family = AF_INET6;
@@ -358,8 +369,9 @@ TEST(leak_sorted_list_single_inserts) {
     sorted_list_type list;
     list.compare = int_compare;
     sorted_list_initialise(&list);
-    for (long i = 0; i < 200; i++)
+    for (long i = 0; i < 200; i++) {
         sorted_list_insert(&list, (void *)i);
+    }
     sorted_list_destroy(&list);
 }
 
@@ -368,8 +380,9 @@ TEST(leak_sorted_list_batch_insert) {
     list.compare = int_compare;
     sorted_list_initialise(&list);
     void *items[500];
-    for (int i = 0; i < 500; i++)
+    for (int i = 0; i < 500; i++) {
         items[i] = (void *)(long)(500 - i);
+    }
     sorted_list_insert_batch(&list, items, 500);
     sorted_list_destroy(&list);
 }
@@ -380,8 +393,9 @@ TEST(leak_sorted_list_destroy_reinit) {
     for (int round = 0; round < 5; round++) {
         sorted_list_initialise(&list);
         void *items[100];
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 100; i++) {
             items[i] = (void *)(long)(100 - i);
+        }
         sorted_list_insert_batch(&list, items, 100);
         sorted_list_destroy(&list);
     }
@@ -431,7 +445,9 @@ TEST(leak_stringmap_duplicate_insert) {
         snprintf(key, sizeof(key), "key_%d", i);
         char *new_val = xstrdup("second");
         item *existing = stringmap_insert(s, key, item_ptr(new_val));
-        if (existing) xfree(new_val);
+        if (existing) {
+            xfree(new_val);
+        }
     }
     stringmap_delete_free(s);
 }
@@ -464,12 +480,11 @@ TEST(leak_config_read_file) {
     char path[256];
     snprintf(path, sizeof(path), "/tmp/iftop_leak_test_XXXXXX");
     int fd = mkstemp(path);
-    const char *content =
-        "interface: eth0\n"
-        "dns-resolution: true\n"
-        "port-resolution: false\n"
-        "show-bars: true\n"
-        "sort: source\n";
+    const char *content = "interface: eth0\n"
+                          "dns-resolution: true\n"
+                          "port-resolution: false\n"
+                          "show-bars: true\n"
+                          "sort: source\n";
     write(fd, content, strlen(content));
     close(fd);
 

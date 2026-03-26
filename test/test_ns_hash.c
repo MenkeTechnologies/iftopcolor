@@ -19,7 +19,9 @@ static struct in6_addr make_addr6(const char *str) {
 static int ns_hash_count(hash_type *h) {
     int count = 0;
     hash_node_type *node = NULL;
-    while (hash_next_item(h, &node) == HASH_STATUS_OK) count++;
+    while (hash_next_item(h, &node) == HASH_STATUS_OK) {
+        count++;
+    }
     return count;
 }
 
@@ -456,8 +458,7 @@ TEST(ns_hash_500_entries) {
     struct in6_addr addrs[500];
     for (int i = 0; i < 500; i++) {
         char addr_str[64];
-        snprintf(addr_str, sizeof(addr_str), "2001:db8:%x::%x",
-                 i / 256, i % 256 + 1);
+        snprintf(addr_str, sizeof(addr_str), "2001:db8:%x::%x", i / 256, i % 256 + 1);
         addrs[i] = make_addr6(addr_str);
         char name[64];
         snprintf(name, sizeof(name), "host-%d.test.com", i);
@@ -628,7 +629,7 @@ TEST(ns_hash_evict_counter_tracks_external_deletes) {
         char addr_str[64];
         snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
         struct in6_addr addr = make_addr6(addr_str);
-        hash_insert(h, &addr, xstrdup("1.2.3.4"));  /* numeric placeholder */
+        hash_insert(h, &addr, xstrdup("1.2.3.4")); /* numeric placeholder */
         count++;
     }
     /* Replace some entries (delete + insert, no count change) */

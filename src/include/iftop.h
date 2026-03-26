@@ -10,7 +10,7 @@
 
 /* 40 / 2  */
 #define HISTORY_LENGTH  20
-#define RESOLUTION 2
+#define RESOLUTION      2
 #define DUMP_RESOLUTION 300
 
 typedef struct {

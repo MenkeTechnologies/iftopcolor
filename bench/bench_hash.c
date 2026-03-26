@@ -17,8 +17,7 @@ extern int hash(void *key);
 
 /* --- Helpers --- */
 
-static addr_pair make_pair_v4(uint32_t src, uint16_t sport,
-                              uint32_t dst, uint16_t dport) {
+static addr_pair make_pair_v4(uint32_t src, uint16_t sport, uint32_t dst, uint16_t dport) {
     addr_pair ap;
     memset(&ap, 0, sizeof(ap));
     ap.address_family = AF_INET;
@@ -57,12 +56,8 @@ static int dummy_recs[MAX_FLOWS];
 
 static void generate_flows(void) {
     for (int i = 0; i < MAX_FLOWS; i++) {
-        flows_v4[i] = make_pair_v4(
-            0x0a000001 + (i / 256),
-            1024 + (i % 60000),
-            0xc0a80001 + (i % 256),
-            80 + (i % 10)
-        );
+        flows_v4[i] = make_pair_v4(0x0a000001 + (i / 256), 1024 + (i % 60000),
+                                   0xc0a80001 + (i % 256), 80 + (i % 10));
         flows_v6[i] = make_pair_v6(i);
         dummy_recs[i] = i;
     }
@@ -105,36 +100,48 @@ static void bench_hash_distribution(void) {
     int buckets[2048];
 
     memset(buckets, 0, sizeof(buckets));
-    for (int i = 0; i < MAX_FLOWS; i++)
+    for (int i = 0; i < MAX_FLOWS; i++) {
         buckets[hash(&flows_v4[i])]++;
+    }
 
     int max_chain = 0, empty = 0;
     double avg = (double)MAX_FLOWS / 2048;
     double variance = 0;
     for (int i = 0; i < 2048; i++) {
-        if (buckets[i] > max_chain) max_chain = buckets[i];
-        if (buckets[i] == 0) empty++;
+        if (buckets[i] > max_chain) {
+            max_chain = buckets[i];
+        }
+        if (buckets[i] == 0) {
+            empty++;
+        }
         double diff = buckets[i] - avg;
         variance += diff * diff;
     }
     variance /= 2048;
-    printf("  IPv4: %d flows -> max_chain=%d, empty=%d/2048, stddev=%.2f (ideal=%.2f)\n",
-           MAX_FLOWS, max_chain, empty, sqrt(variance), sqrt(avg));
+    printf("  IPv4: %d flows -> max_chain=%d, empty=%d/2048, stddev=%.2f (ideal=%.2f)\n", MAX_FLOWS,
+           max_chain, empty, sqrt(variance), sqrt(avg));
 
     memset(buckets, 0, sizeof(buckets));
-    for (int i = 0; i < MAX_FLOWS; i++)
+    for (int i = 0; i < MAX_FLOWS; i++) {
         buckets[hash(&flows_v6[i])]++;
+    }
 
-    max_chain = 0; empty = 0; variance = 0;
+    max_chain = 0;
+    empty = 0;
+    variance = 0;
     for (int i = 0; i < 2048; i++) {
-        if (buckets[i] > max_chain) max_chain = buckets[i];
-        if (buckets[i] == 0) empty++;
+        if (buckets[i] > max_chain) {
+            max_chain = buckets[i];
+        }
+        if (buckets[i] == 0) {
+            empty++;
+        }
         double diff = buckets[i] - avg;
         variance += diff * diff;
     }
     variance /= 2048;
-    printf("  IPv6: %d flows -> max_chain=%d, empty=%d/2048, stddev=%.2f (ideal=%.2f)\n",
-           MAX_FLOWS, max_chain, empty, sqrt(variance), sqrt(avg));
+    printf("  IPv6: %d flows -> max_chain=%d, empty=%d/2048, stddev=%.2f (ideal=%.2f)\n", MAX_FLOWS,
+           max_chain, empty, sqrt(variance), sqrt(avg));
 }
 
 /* --- Core operations --- */
@@ -144,22 +151,25 @@ static void bench_insert(void) {
 
     BENCH_RUN("addr_hash_insert (1000 IPv4 flows)", 100, {
         hash_type *ht = addr_hash_create();
-        for (int j = 0; j < 1000; j++)
+        for (int j = 0; j < 1000; j++) {
             addr_hash_insert(ht, &flows_v4[j], &dummy_recs[j]);
+        }
         destroy_addr_hash(ht);
     });
 
     BENCH_RUN("hash_insert (1000 IPv4 flows, generic)", 100, {
         hash_type *ht = addr_hash_create();
-        for (int j = 0; j < 1000; j++)
+        for (int j = 0; j < 1000; j++) {
             hash_insert(ht, &flows_v4[j], &dummy_recs[j]);
+        }
         destroy_generic_hash(ht);
     });
 
     BENCH_RUN("addr_hash_insert (1000 IPv6 flows)", 100, {
         hash_type *ht = addr_hash_create();
-        for (int j = 0; j < 1000; j++)
+        for (int j = 0; j < 1000; j++) {
             addr_hash_insert(ht, &flows_v6[j], &dummy_recs[j]);
+        }
         destroy_addr_hash(ht);
     });
 }
@@ -169,8 +179,9 @@ static void bench_find(void) {
 
     hash_type *ht = addr_hash_create();
     int n = 1000;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         addr_hash_insert(ht, &flows_v4[i], &dummy_recs[i]);
+    }
 
     BENCH_RUN("addr_hash_find hit (1000 entries, IPv4)", 1000000, {
         void *rec;
@@ -191,8 +202,9 @@ static void bench_find(void) {
 
     /* IPv6 */
     ht = addr_hash_create();
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         addr_hash_insert(ht, &flows_v6[i], &dummy_recs[i]);
+    }
 
     BENCH_RUN("addr_hash_find hit (1000 entries, IPv6)", 1000000, {
         void *rec;
@@ -211,8 +223,9 @@ static void bench_find_scaling(void) {
     for (int s = 0; s < nsizes; s++) {
         int n = sizes[s];
         hash_type *ht = addr_hash_create();
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             addr_hash_insert(ht, &flows_v4[i], &dummy_recs[i]);
+        }
 
         char label[64];
         snprintf(label, sizeof(label), "find hit (%d entries)", n);
@@ -230,14 +243,17 @@ static void bench_delete(void) {
 
     BENCH_RUN("insert+delete 1000 flows (addr_hash)", 100, {
         hash_type *ht = addr_hash_create();
-        for (int j = 0; j < 1000; j++)
+        for (int j = 0; j < 1000; j++) {
             addr_hash_insert(ht, &flows_v4[j], &dummy_recs[j]);
+        }
         hash_node_type *node = NULL;
         while (hash_next_item(ht, &node) == HASH_STATUS_OK) {
             hash_node_type *to_delete = node;
             hash_next_item(ht, &node);
             addr_hash_delete_node(ht, to_delete);
-            if (node == NULL) break;
+            if (node == NULL) {
+                break;
+            }
         }
         hash_destroy(ht);
         free(ht);
@@ -248,14 +264,16 @@ static void bench_iteration(void) {
     BENCH_SECTION("Hash Iteration");
 
     hash_type *ht = addr_hash_create();
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 1000; i++) {
         addr_hash_insert(ht, &flows_v4[i], &dummy_recs[i]);
+    }
 
     BENCH_RUN("iterate 1000 entries (hash_next_item)", 10000, {
         hash_node_type *node = NULL;
         int count = 0;
-        while (hash_next_item(ht, &node) == HASH_STATUS_OK)
+        while (hash_next_item(ht, &node) == HASH_STATUS_OK) {
             count++;
+        }
         bench_use(count);
     });
 
@@ -270,8 +288,9 @@ static void bench_mixed_workload(void) {
         for (int j = 0; j < 10000; j++) {
             int idx = j % 2000;
             void *rec;
-            if (addr_hash_find(ht, &flows_v4[idx], &rec) != HASH_STATUS_OK)
+            if (addr_hash_find(ht, &flows_v4[idx], &rec) != HASH_STATUS_OK) {
                 addr_hash_insert(ht, &flows_v4[idx], &dummy_recs[idx]);
+            }
         }
         destroy_addr_hash(ht);
     });
@@ -281,8 +300,9 @@ static void bench_mixed_workload(void) {
         for (int j = 0; j < 10000; j++) {
             int idx = j % 200;
             void *rec;
-            if (addr_hash_find(ht, &flows_v4[idx], &rec) != HASH_STATUS_OK)
+            if (addr_hash_find(ht, &flows_v4[idx], &rec) != HASH_STATUS_OK) {
                 addr_hash_insert(ht, &flows_v4[idx], &dummy_recs[idx]);
+            }
         }
         destroy_addr_hash(ht);
     });

@@ -27,8 +27,8 @@
 
 /* === Helpers === */
 
-static addr_pair make_ipv4(const char *src, uint16_t sport,
-                           const char *dst, uint16_t dport, uint16_t proto) {
+static addr_pair make_ipv4(const char *src, uint16_t sport, const char *dst, uint16_t dport,
+                           uint16_t proto) {
     addr_pair ap;
     memset(&ap, 0, sizeof(ap));
     ap.address_family = AF_INET;
@@ -40,8 +40,8 @@ static addr_pair make_ipv4(const char *src, uint16_t sport,
     return ap;
 }
 
-static addr_pair make_ipv6(const char *src, uint16_t sport,
-                           const char *dst, uint16_t dport, uint16_t proto) {
+static addr_pair make_ipv6(const char *src, uint16_t sport, const char *dst, uint16_t dport,
+                           uint16_t proto) {
     addr_pair ap;
     memset(&ap, 0, sizeof(ap));
     ap.address_family = AF_INET6;
@@ -100,20 +100,25 @@ TEST(flow_track_insert_and_sort) {
     slist.compare = compare_bandwidth_desc;
 
     /* Simulate 5 flows with different bandwidths */
-    struct { const char *src; const char *dst; uint16_t sport; uint16_t dport; long bw; } data[] = {
-        {"10.0.0.1", "192.168.1.1",  12345, 80,   5000},
-        {"10.0.0.2", "192.168.1.2",  23456, 443,  1000},
-        {"10.0.0.3", "192.168.1.3",  34567, 8080, 9000},
-        {"10.0.0.4", "192.168.1.4",  45678, 22,   3000},
-        {"10.0.0.5", "192.168.1.5",  56789, 53,   7000},
+    struct {
+        const char *src;
+        const char *dst;
+        uint16_t sport;
+        uint16_t dport;
+        long bw;
+    } data[] = {
+        {"10.0.0.1", "192.168.1.1", 12345, 80, 5000},
+        {"10.0.0.2", "192.168.1.2", 23456, 443, 1000},
+        {"10.0.0.3", "192.168.1.3", 34567, 8080, 9000},
+        {"10.0.0.4", "192.168.1.4", 45678, 22, 3000},
+        {"10.0.0.5", "192.168.1.5", 56789, 53, 7000},
     };
     int n = sizeof(data) / sizeof(data[0]);
 
     /* Insert flows into addr_hash */
     long *bw_records = xmalloc(n * sizeof(long));
     for (int i = 0; i < n; i++) {
-        addr_pair ap = make_ipv4(data[i].src, data[i].sport,
-                                 data[i].dst, data[i].dport, 6);
+        addr_pair ap = make_ipv4(data[i].src, data[i].sport, data[i].dst, data[i].dport, 6);
         bw_records[i] = data[i].bw;
         ASSERT_EQ(addr_hash_insert(flows, &ap, &bw_records[i]), HASH_STATUS_OK);
     }
@@ -285,9 +290,13 @@ TEST(resolve_tcp_flow_ports) {
         const char *svc = serv_table_lookup(services, key->dst_port, key->protocol);
         ASSERT_NOT_NULL(svc);
 
-        if (key->dst_port == 80) ASSERT_STR_EQ(svc, "http");
-        else if (key->dst_port == 443) ASSERT_STR_EQ(svc, "https");
-        else if (key->dst_port == 22) ASSERT_STR_EQ(svc, "ssh");
+        if (key->dst_port == 80) {
+            ASSERT_STR_EQ(svc, "http");
+        } else if (key->dst_port == 443) {
+            ASSERT_STR_EQ(svc, "https");
+        } else if (key->dst_port == 22) {
+            ASSERT_STR_EQ(svc, "ssh");
+        }
     }
 
     serv_table_destroy(services);
@@ -404,16 +413,14 @@ TEST(resolve_full_pipeline) {
 
 TEST(config_pipeline_full_config) {
     config_init();
-    write_tmp_config(
-        "interface: eth0\n"
-        "dns-resolution: true\n"
-        "port-resolution: true\n"
-        "show-bars: yes\n"
-        "promiscuous: false\n"
-        "use-bytes: true\n"
-        "max-bandwidth: 1000\n"
-        "log-scale: false\n"
-    );
+    write_tmp_config("interface: eth0\n"
+                     "dns-resolution: true\n"
+                     "port-resolution: true\n"
+                     "show-bars: yes\n"
+                     "promiscuous: false\n"
+                     "use-bytes: true\n"
+                     "max-bandwidth: 1000\n"
+                     "log-scale: false\n");
     ASSERT_EQ(read_config(tmpfile_path, 0), 1);
 
     /* String access */
@@ -441,11 +448,9 @@ TEST(config_pipeline_cli_overrides_file) {
     config_set_string("interface", "wlan0");
     config_set_string("promiscuous", "true");
 
-    write_tmp_config(
-        "interface: eth0\n"
-        "promiscuous: false\n"
-        "dns-resolution: true\n"
-    );
+    write_tmp_config("interface: eth0\n"
+                     "promiscuous: false\n"
+                     "dns-resolution: true\n");
     read_config(tmpfile_path, 0);
 
     /* CLI values take precedence */
@@ -463,10 +468,8 @@ TEST(config_pipeline_enum_from_file) {
     write_tmp_config("sort: source\n");
     read_config(tmpfile_path, 0);
 
-    config_enumeration_type sort_enum[] = {
-        {"2s", 0}, {"10s", 1}, {"40s", 2}, {"source", 3}, {"destination", 4},
-        {NULL, -1}
-    };
+    config_enumeration_type sort_enum[] = {{"2s", 0},     {"10s", 1},         {"40s", 2},
+                                           {"source", 3}, {"destination", 4}, {NULL, -1}};
     int val = -1;
     ASSERT_EQ(config_get_enum("sort", sort_enum, &val), 1);
     ASSERT_EQ(val, 3);
@@ -519,11 +522,17 @@ static int str_compare(void *left, void *right) {
 static int str_hash(void *key) {
     char *s = (char *)key;
     unsigned int h = 0;
-    while (*s) h = h * 31 + (unsigned char)*s++;
+    while (*s) {
+        h = h * 31 + (unsigned char)*s++;
+    }
     return h % 64;
 }
-static void *str_copy_key(void *key) { return xstrdup((char *)key); }
-static void str_delete_key(void *key) { free(key); }
+static void *str_copy_key(void *key) {
+    return xstrdup((char *)key);
+}
+static void str_delete_key(void *key) {
+    free(key);
+}
 
 static hash_type *create_str_hash(void) {
     hash_type *h = xcalloc(1, sizeof(hash_type));
@@ -557,10 +566,15 @@ TEST(hash_to_vector_collect) {
     item *it;
     vector_iterate(v, it) {
         char *val = (char *)it->ptr;
-        if (strcmp(val, "first") == 0) found_first = 1;
-        else if (strcmp(val, "second") == 0) found_second = 1;
-        else if (strcmp(val, "third") == 0) found_third = 1;
-        else if (strcmp(val, "fourth") == 0) found_fourth = 1;
+        if (strcmp(val, "first") == 0) {
+            found_first = 1;
+        } else if (strcmp(val, "second") == 0) {
+            found_second = 1;
+        } else if (strcmp(val, "third") == 0) {
+            found_third = 1;
+        } else if (strcmp(val, "fourth") == 0) {
+            found_fourth = 1;
+        }
     }
     ASSERT(found_first && found_second && found_third && found_fourth);
 
@@ -662,9 +676,18 @@ TEST(history_accumulate_and_sort) {
     history_type *h3 = xcalloc(1, sizeof(history_type));
 
     /* Simulate packet accumulation */
-    h1->recv[0] = 5000; h1->sent[0] = 3000; h1->total_recv = 5000; h1->total_sent = 3000;
-    h2->recv[0] = 1000; h2->sent[0] = 500;  h2->total_recv = 1000; h2->total_sent = 500;
-    h3->recv[0] = 9000; h3->sent[0] = 7000; h3->total_recv = 9000; h3->total_sent = 7000;
+    h1->recv[0] = 5000;
+    h1->sent[0] = 3000;
+    h1->total_recv = 5000;
+    h1->total_sent = 3000;
+    h2->recv[0] = 1000;
+    h2->sent[0] = 500;
+    h2->total_recv = 1000;
+    h2->total_sent = 500;
+    h3->recv[0] = 9000;
+    h3->sent[0] = 7000;
+    h3->total_recv = 9000;
+    h3->total_sent = 7000;
 
     addr_pair ap1 = make_ipv4("10.0.0.1", 5000, "10.0.0.2", 80, 6);
     addr_pair ap2 = make_ipv4("10.0.0.3", 5001, "10.0.0.4", 443, 6);
@@ -683,8 +706,10 @@ TEST(history_accumulate_and_sort) {
     ASSERT_EQ(((history_type *)rec)->total_recv, 9000);
 
     /* Accumulate more packets into h1 */
-    h1->recv[1] = 3000; h1->total_recv += 3000;
-    h1->sent[1] = 2000; h1->total_sent += 2000;
+    h1->recv[1] = 3000;
+    h1->total_recv += 3000;
+    h1->sent[1] = 2000;
+    h1->total_sent += 2000;
 
     ASSERT_EQ(addr_hash_find(flows, &ap1, &rec), HASH_STATUS_OK);
     ASSERT_EQ(((history_type *)rec)->total_recv, 8000);
@@ -814,11 +839,17 @@ TEST(mixed_af_flow_table) {
         const char *svc = serv_table_lookup(services, key->dst_port, key->protocol);
         ASSERT_NOT_NULL(svc);
 
-        if (key->address_family == AF_INET) v4_count++;
-        else if (key->address_family == AF_INET6) v6_count++;
+        if (key->address_family == AF_INET) {
+            v4_count++;
+        } else if (key->address_family == AF_INET6) {
+            v6_count++;
+        }
 
-        if (key->dst_port == 80) ASSERT_STR_EQ(svc, "http");
-        else ASSERT_STR_EQ(svc, "https");
+        if (key->dst_port == 80) {
+            ASSERT_STR_EQ(svc, "http");
+        } else {
+            ASSERT_STR_EQ(svc, "https");
+        }
     }
     ASSERT_EQ(v4_count, 2);
     ASSERT_EQ(v6_count, 2);
@@ -935,12 +966,10 @@ TEST(config_disabled_port_resolution) {
 TEST(end_to_end_flow_lifecycle) {
     /* 1. Load config */
     config_init();
-    write_tmp_config(
-        "dns-resolution: true\n"
-        "port-resolution: true\n"
-        "use-bytes: true\n"
-        "sort: source\n"
-    );
+    write_tmp_config("dns-resolution: true\n"
+                     "port-resolution: true\n"
+                     "use-bytes: true\n"
+                     "sort: source\n");
     read_config(tmpfile_path, 0);
 
     /* 2. Set up service table based on config */
@@ -963,9 +992,18 @@ TEST(end_to_end_flow_lifecycle) {
     history_type *h_tls = xcalloc(1, sizeof(history_type));
     history_type *h_dns = xcalloc(1, sizeof(history_type));
 
-    h_web->recv[0] = 5000; h_web->sent[0] = 500; h_web->total_recv = 5000; h_web->total_sent = 500;
-    h_tls->recv[0] = 8000; h_tls->sent[0] = 1000; h_tls->total_recv = 8000; h_tls->total_sent = 1000;
-    h_dns->recv[0] = 200;  h_dns->sent[0] = 100;  h_dns->total_recv = 200;  h_dns->total_sent = 100;
+    h_web->recv[0] = 5000;
+    h_web->sent[0] = 500;
+    h_web->total_recv = 5000;
+    h_web->total_sent = 500;
+    h_tls->recv[0] = 8000;
+    h_tls->sent[0] = 1000;
+    h_tls->total_recv = 8000;
+    h_tls->total_sent = 1000;
+    h_dns->recv[0] = 200;
+    h_dns->sent[0] = 100;
+    h_dns->total_recv = 200;
+    h_dns->total_sent = 100;
 
     addr_hash_insert(flows, &web, h_web);
     addr_hash_insert(flows, &tls, h_tls);
@@ -1061,7 +1099,9 @@ TEST(flow_churn_delete_and_reinsert) {
     /* Verify 10 remain */
     int count = 0;
     hash_node_type *node = NULL;
-    while (hash_next_item(flows, &node) == HASH_STATUS_OK) count++;
+    while (hash_next_item(flows, &node) == HASH_STATUS_OK) {
+        count++;
+    }
     ASSERT_EQ(count, 10);
 
     /* Reinsert deleted flows with new bandwidth */
@@ -1074,7 +1114,9 @@ TEST(flow_churn_delete_and_reinsert) {
     /* Verify all 20 present again */
     count = 0;
     node = NULL;
-    while (hash_next_item(flows, &node) == HASH_STATUS_OK) count++;
+    while (hash_next_item(flows, &node) == HASH_STATUS_OK) {
+        count++;
+    }
     ASSERT_EQ(count, 20);
 
     /* Verify reinserted flows have new bandwidth */
@@ -1149,23 +1191,27 @@ TEST(vector_filter_low_bandwidth) {
     /* Collect bandwidth values into vector */
     vector v = vector_new();
     hash_node_type *node = NULL;
-    while (hash_next_item(flows, &node) == HASH_STATUS_OK)
+    while (hash_next_item(flows, &node) == HASH_STATUS_OK) {
         vector_push_back(v, item_long(*(long *)node->record));
+    }
     ASSERT_EQ(v->n_used, 7);
 
     /* Filter: remove entries below 1000 */
     item *it = v->items;
     while (it < v->items + v->n_used) {
-        if (it->num < 1000)
+        if (it->num < 1000) {
             it = vector_remove(v, it);
-        else
+        } else {
             it++;
+        }
     }
 
     /* Should have 3 entries: 5000, 8000, 12000 */
     ASSERT_EQ(v->n_used, 3);
     long sum = 0;
-    vector_iterate(v, it) { sum += it->num; }
+    vector_iterate(v, it) {
+        sum += it->num;
+    }
     ASSERT_EQ(sum, 5000 + 8000 + 12000);
 
     vector_delete(v);
@@ -1190,8 +1236,9 @@ TEST(vector_filter_by_protocol) {
     /* Collect flow nodes into vector */
     vector v = vector_new();
     hash_node_type *node = NULL;
-    while (hash_next_item(flows, &node) == HASH_STATUS_OK)
+    while (hash_next_item(flows, &node) == HASH_STATUS_OK) {
         vector_push_back(v, item_ptr(node));
+    }
 
     ASSERT_EQ(v->n_used, 4);
 
@@ -1200,10 +1247,11 @@ TEST(vector_filter_by_protocol) {
     while (it < v->items + v->n_used) {
         hash_node_type *n = (hash_node_type *)it->ptr;
         addr_pair *key = (addr_pair *)n->key;
-        if (key->protocol != 6)
+        if (key->protocol != 6) {
             it = vector_remove(v, it);
-        else
+        } else {
             it++;
+        }
     }
 
     ASSERT_EQ(v->n_used, 2);
@@ -1243,8 +1291,9 @@ TEST(top_n_from_config) {
     sorted_list_initialise(&slist);
     slist.compare = compare_bandwidth_desc;
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         sorted_list_insert(&slist, &bw_vals[i]);
+    }
 
     /* Take top-N into vector */
     vector top = vector_new();
@@ -1280,8 +1329,9 @@ TEST(top_n_more_than_available) {
     slist.compare = compare_bandwidth_desc;
 
     hash_node_type *node = NULL;
-    while (hash_next_item(flows, &node) == HASH_STATUS_OK)
+    while (hash_next_item(flows, &node) == HASH_STATUS_OK) {
         sorted_list_insert(&slist, node->record);
+    }
 
     /* Try to take top 10 but only 2 exist */
     vector top = vector_new();
@@ -1351,8 +1401,11 @@ TEST(resolve_hostname_and_service_together) {
         ASSERT_EQ(hash_find(ns_cache, &key->dst6, &dst_name), HASH_STATUS_OK);
         ASSERT_STR_EQ((char *)dst_name, "cdn.example.com");
 
-        if (key->dst_port == 443) ASSERT_STR_EQ(svc, "https");
-        else ASSERT_STR_EQ(svc, "http");
+        if (key->dst_port == 443) {
+            ASSERT_STR_EQ(svc, "https");
+        } else {
+            ASSERT_STR_EQ(svc, "http");
+        }
 
         resolved++;
     }
@@ -1411,11 +1464,9 @@ TEST(resolve_partial_hostname_cache) {
 
 TEST(config_overlay_cli_wins) {
     config_init();
-    write_tmp_config(
-        "interface: eth0\n"
-        "dns-resolution: true\n"
-        "port-resolution: true\n"
-    );
+    write_tmp_config("interface: eth0\n"
+                     "dns-resolution: true\n"
+                     "port-resolution: true\n");
     read_config(tmpfile_path, 0);
 
     /* CLI overrides stored in stringmap */
@@ -1454,10 +1505,8 @@ TEST(config_overlay_multiple_layers) {
     stringmap_insert(defaults, "promiscuous", item_ptr(xstrdup("false")));
 
     config_init();
-    write_tmp_config(
-        "interface: eth0\n"
-        "dns-resolution: true\n"
-    );
+    write_tmp_config("interface: eth0\n"
+                     "dns-resolution: true\n");
     read_config(tmpfile_path, 0);
 
     stringmap cli = stringmap_new();
@@ -1513,8 +1562,9 @@ TEST(stress_500_flows_through_pipeline) {
     void **items = xmalloc(n * sizeof(void *));
     hash_node_type *node = NULL;
     int count = 0;
-    while (hash_next_item(flows, &node) == HASH_STATUS_OK)
+    while (hash_next_item(flows, &node) == HASH_STATUS_OK) {
         items[count++] = node->record;
+    }
     ASSERT_EQ(count, n);
 
     sorted_list_type slist;
@@ -1581,8 +1631,11 @@ TEST(stress_mixed_af_200_flows) {
     hash_node_type *node = NULL;
     while (hash_next_item(flows, &node) == HASH_STATUS_OK) {
         addr_pair *key = (addr_pair *)node->key;
-        if (key->address_family == AF_INET) v4++;
-        else v6++;
+        if (key->address_family == AF_INET) {
+            v4++;
+        } else {
+            v6++;
+        }
     }
     ASSERT_EQ(v4, 100);
     ASSERT_EQ(v6, 100);
@@ -1640,8 +1693,9 @@ TEST(history_multi_slot_accumulation) {
     sorted_list_initialise(&slist);
     slist.compare = compare_bandwidth_desc;
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) {
         sorted_list_insert(&slist, &recent_bw[i]);
+    }
 
     sorted_list_node *snode = sorted_list_next_item(&slist, NULL);
     ASSERT_EQ(*(long *)snode->data, 5000); /* h1 highest recently */
@@ -1801,8 +1855,9 @@ TEST(vector_to_sorted_list_round_trip) {
     vector v = vector_new();
     long vals[] = {42, 7, 99, 1, 55, 23, 88, 3, 67, 15};
     int n = sizeof(vals) / sizeof(vals[0]);
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         vector_push_back(v, item_long(vals[i]));
+    }
 
     /* Transfer to sorted list */
     sorted_list_type slist;
@@ -1818,14 +1873,16 @@ TEST(vector_to_sorted_list_round_trip) {
     /* Collect back into new vector in sorted order */
     vector sorted_v = vector_new();
     sorted_list_node *snode = NULL;
-    while ((snode = sorted_list_next_item(&slist, snode)) != NULL)
+    while ((snode = sorted_list_next_item(&slist, snode)) != NULL) {
         vector_push_back(sorted_v, item_long(*(long *)snode->data));
+    }
 
     ASSERT_EQ(sorted_v->n_used, n);
 
     /* Verify descending order */
-    for (size_t i = 1; i < sorted_v->n_used; i++)
+    for (size_t i = 1; i < sorted_v->n_used; i++) {
         ASSERT(sorted_v->items[i - 1].num >= sorted_v->items[i].num);
+    }
 
     /* First and last */
     ASSERT_EQ(sorted_v->items[0].num, 99);
@@ -1844,13 +1901,15 @@ TEST(vector_sorted_list_with_duplicates) {
     sorted_list_initialise(&slist);
     slist.compare = compare_bandwidth_desc;
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         sorted_list_insert(&slist, &vals[i]);
+    }
 
     vector v = vector_new();
     sorted_list_node *snode = NULL;
-    while ((snode = sorted_list_next_item(&slist, snode)) != NULL)
+    while ((snode = sorted_list_next_item(&slist, snode)) != NULL) {
         vector_push_back(v, item_long(*(long *)snode->data));
+    }
 
     ASSERT_EQ(v->n_used, n);
 
@@ -1877,9 +1936,7 @@ TEST(config_enum_protocol_filter) {
     config_init();
     config_set_string("protocol-filter", "tcp");
 
-    config_enumeration_type proto_enum[] = {
-        {"tcp", 6}, {"udp", 17}, {"all", 0}, {NULL, -1}
-    };
+    config_enumeration_type proto_enum[] = {{"tcp", 6}, {"udp", 17}, {"all", 0}, {NULL, -1}};
     int proto = -1;
     ASSERT_EQ(config_get_enum("protocol-filter", proto_enum, &proto), 1);
     ASSERT_EQ(proto, 6);
@@ -1899,8 +1956,9 @@ TEST(config_enum_protocol_filter) {
     hash_node_type *node = NULL;
     while (hash_next_item(flows, &node) == HASH_STATUS_OK) {
         addr_pair *key = (addr_pair *)node->key;
-        if (proto == 0 || key->protocol == proto)
+        if (proto == 0 || key->protocol == proto) {
             vector_push_back(display, item_ptr(node));
+        }
     }
 
     ASSERT_EQ(display->n_used, 2); /* only TCP flows */
@@ -1920,9 +1978,7 @@ TEST(config_enum_all_protocols) {
     config_init();
     config_set_string("protocol-filter", "all");
 
-    config_enumeration_type proto_enum[] = {
-        {"tcp", 6}, {"udp", 17}, {"all", 0}, {NULL, -1}
-    };
+    config_enumeration_type proto_enum[] = {{"tcp", 6}, {"udp", 17}, {"all", 0}, {NULL, -1}};
     int proto = -1;
     ASSERT_EQ(config_get_enum("protocol-filter", proto_enum, &proto), 1);
     ASSERT_EQ(proto, 0);
@@ -1939,8 +1995,9 @@ TEST(config_enum_all_protocols) {
     hash_node_type *node = NULL;
     while (hash_next_item(flows, &node) == HASH_STATUS_OK) {
         addr_pair *key = (addr_pair *)node->key;
-        if (proto == 0 || key->protocol == proto)
+        if (proto == 0 || key->protocol == proto) {
             vector_push_back(display, item_ptr(node));
+        }
     }
 
     ASSERT_EQ(display->n_used, 2);
@@ -1961,8 +2018,8 @@ TEST(stringmap_indexes_vector) {
     stringmap index = stringmap_new();
 
     /* Build a list of host entries */
-    const char *hosts[] = {"alpha.local", "beta.local", "gamma.local",
-                           "delta.local", "epsilon.local"};
+    const char *hosts[] = {"alpha.local", "beta.local", "gamma.local", "delta.local",
+                           "epsilon.local"};
     long bw[] = {5000, 1200, 8000, 300, 4500};
 
     for (int i = 0; i < 5; i++) {

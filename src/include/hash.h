@@ -14,10 +14,10 @@ typedef enum {
 } hash_status_enum;
 
 typedef struct node_tag {
-    struct node_tag *next;       /* next node */
-    void *key;                /* key */
-    void *record;             /* user data */
-    int bucket;               /* cached bucket index */
+    struct node_tag *next; /* next node */
+    void *key;             /* key */
+    void *record;          /* user data */
+    int bucket;            /* cached bucket index */
 } hash_node_type;
 
 typedef struct {

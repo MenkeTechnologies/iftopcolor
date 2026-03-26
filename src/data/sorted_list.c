@@ -41,7 +41,9 @@ void sorted_list_insert_batch(sorted_list_type *list, void **items, int count) {
     sorted_list_node *nodes, *prev;
     int i;
 
-    if (count == 0) return;
+    if (count == 0) {
+        return;
+    }
 
     qsort_compare_fn = list->compare;
     qsort(items, count, sizeof(void *), qsort_compare_wrapper);
@@ -69,7 +71,9 @@ sorted_list_node *sorted_list_next_item(sorted_list_type *list, sorted_list_node
 }
 
 void sorted_list_destroy(sorted_list_type *list) {
-    if (list->root.next == NULL) return;
+    if (list->root.next == NULL) {
+        return;
+    }
 
     if (list->batch_allocated) {
         /* Batch-allocated: first node is the base of the contiguous block */
@@ -91,6 +95,3 @@ void sorted_list_initialise(sorted_list_type *list) {
     list->root.next = NULL;
     list->batch_allocated = 0;
 }
-
-
-

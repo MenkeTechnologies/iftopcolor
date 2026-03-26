@@ -19,29 +19,15 @@
 #define CONFIG_TYPE_BOOL   1
 #define CONFIG_TYPE_INT    2
 
-#define MAX_CONFIG_LINE     2048
+#define MAX_CONFIG_LINE 2048
 
-char *config_directives[] = {
-        "interface",
-        "dns-resolution",
-        "port-resolution",
-        "filter-code",
-        "show-bars",
-        "promiscuous",
-        "hide-source",
-        "hide-destination",
-        "use-bytes",
-        "sort",
-        "line-display",
-        "show-totals",
-        "log-scale",
-        "max-bandwidth",
-        "net-filter",
-        "net-filter6",
-        "link-local",
-        "port-display",
-        NULL
-};
+char *config_directives[] = {"interface",   "dns-resolution",   "port-resolution",
+                             "filter-code", "show-bars",        "promiscuous",
+                             "hide-source", "hide-destination", "use-bytes",
+                             "sort",        "line-display",     "show-totals",
+                             "log-scale",   "max-bandwidth",    "net-filter",
+                             "net-filter6", "link-local",       "port-display",
+                             NULL};
 
 stringmap config;
 
@@ -49,13 +35,18 @@ extern options_t options;
 
 int is_cfgdirective_valid(const char *directive) {
     int idx;
-    for (idx = 0; config_directives[idx] != NULL; idx++)
-        if (strcmp(directive, config_directives[idx]) == 0) return 1;
+    for (idx = 0; config_directives[idx] != NULL; idx++) {
+        if (strcmp(directive, config_directives[idx]) == 0) {
+            return 1;
+        }
+    }
     return 0;
 }
 
 int config_init() {
-    if (config) stringmap_delete_free(config);
+    if (config) {
+        stringmap_delete_free(config);
+    }
     config = stringmap_new();
     return config != NULL;
 }
@@ -75,25 +66,32 @@ int read_config_file(const char *filepath, int whinge) {
 
     fp = fopen(filepath, "rt");
     if (!fp) {
-        if (whinge) fprintf(stderr, "%s: %s\n", filepath, strerror(errno));
+        if (whinge) {
+            fprintf(stderr, "%s: %s\n", filepath, strerror(errno));
+        }
         goto fail;
     }
 
     while (fgets(line, MAX_CONFIG_LINE, fp)) {
         char *key, *value, *end;
 
-        for (end = line + strlen(line) - 1; end > line && *end == '\n'; *(end--) = 0);
+        for (end = line + strlen(line) - 1; end > line && *end == '\n'; *(end--) = 0)
+            ;
 
         /* Get continuation lines. Ugly. */
         while (*(line + strlen(line) - 1) == '\\') {
-            if (!fgets(line + strlen(line) - 1, MAX_CONFIG_LINE - strlen(line), fp))
+            if (!fgets(line + strlen(line) - 1, MAX_CONFIG_LINE - strlen(line), fp)) {
                 break;
-            for (end = line + strlen(line) - 1; end > line && *end == '\n'; *(end--) = 0);
+            }
+            for (end = line + strlen(line) - 1; end > line && *end == '\n'; *(end--) = 0)
+                ;
         }
 
         /* Strip comment. */
         key = strpbrk(line, "#\n");
-        if (key) *key = 0;
+        if (key) {
+            *key = 0;
+        }
 
         /*    foo  : bar baz quux
          * key^    ^value          */
@@ -114,15 +112,18 @@ int read_config_file(const char *filepath, int whinge) {
                  * key^      ^value      ^end */
                 value += strspn(value, " \t");
                 end = value + strlen(value) - 1;
-                while (strchr(" \t", *end) && end > value) --end;
+                while (strchr(" \t", *end) && end > value) {
+                    --end;
+                }
                 *(end + 1) = 0;
 
                 /* (Removed check for zero length value.) */
 
                 /* Check that this is a valid key. */
-                if (!is_cfgdirective_valid(key))
-                    fprintf(stderr, "%s:%d: warning: unknown directive \"%s\"\n", filepath, line_num, key);
-                else {
+                if (!is_cfgdirective_valid(key)) {
+                    fprintf(stderr, "%s:%d: warning: unknown directive \"%s\"\n", filepath,
+                            line_num, key);
+                } else {
                     char *dup = xstrdup(value);
                     if ((existing = stringmap_insert(config, key, item_ptr(dup)))) {
                         /* Don't warn of repeated directives, because they
@@ -142,9 +143,13 @@ int read_config_file(const char *filepath, int whinge) {
 
     ret = 1;
 
-    fail:
-    if (fp) fclose(fp);
-    if (line) xfree(line);
+fail:
+    if (fp) {
+        fclose(fp);
+    }
+    if (line) {
+        xfree(line);
+    }
 
     return ret;
 }
@@ -153,16 +158,24 @@ int config_get_int(const char *directive, int *value) {
     stringmap entry;
     char *str, *endptr;
 
-    if (!value) return -1;
+    if (!value) {
+        return -1;
+    }
 
     entry = stringmap_find(config, directive);
-    if (!entry) return 0;
+    if (!entry) {
+        return 0;
+    }
 
-    str = (char *) entry->data.ptr;
-    if (!*str) return -1;
+    str = (char *)entry->data.ptr;
+    if (!*str) {
+        return -1;
+    }
     errno = 0;
     *value = strtol(str, &endptr, 10);
-    if (*endptr) return -1;
+    if (*endptr) {
+        return -1;
+    }
 
     return errno == ERANGE ? -1 : 1;
 }
@@ -174,16 +187,23 @@ int config_get_float(const char *directive, float *value) {
     stringmap entry;
     char *str, *endptr;
 
-    if (!value) return -1;
+    if (!value) {
+        return -1;
+    }
 
-    if (!(entry = stringmap_find(config, directive)))
+    if (!(entry = stringmap_find(config, directive))) {
         return 0;
+    }
 
-    str = (char *) entry->data.ptr;
-    if (!*str) return -1;
+    str = (char *)entry->data.ptr;
+    if (!*str) {
+        return -1;
+    }
     errno = 0;
     *value = strtod(str, &endptr);
-    if (*endptr) return -1;
+    if (*endptr) {
+        return -1;
+    }
 
     return errno == ERANGE ? -1 : 1;
 }
@@ -195,8 +215,11 @@ char *config_get_string(const char *directive) {
     stringmap entry;
 
     entry = stringmap_find(config, directive);
-    if (entry) return (char *) entry->data.ptr;
-    else return NULL;
+    if (entry) {
+        return (char *)entry->data.ptr;
+    } else {
+        return NULL;
+    }
 }
 
 /* config_get_bool:
@@ -205,10 +228,11 @@ int config_get_bool(const char *directive) {
     char *str;
 
     str = config_get_string(directive);
-    if (str && (strcmp(str, "yes") == 0 || strcmp(str, "true") == 0))
+    if (str && (strcmp(str, "yes") == 0 || strcmp(str, "true") == 0)) {
         return 1;
-    else
+    } else {
         return 0;
+    }
 }
 
 /* config_get_enum:
