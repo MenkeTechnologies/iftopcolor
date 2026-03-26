@@ -305,6 +305,27 @@ TEST(leak_ns_hash_insert_cleanup) {
     free(h);
 }
 
+TEST(leak_ns_hash_evict_cycles) {
+    hash_type *h = ns_hash_create();
+    int count = 0;
+    int limit = 50;
+    for (int cycle = 0; cycle < 10; cycle++) {
+        for (int i = 0; i < limit; i++) {
+            ns_hash_evict_if_full(h, &count, limit);
+            struct in6_addr addr;
+            char str[64];
+            snprintf(str, sizeof(str), "2001:db8:%x::%x", cycle, i + 1);
+            inet_pton(AF_INET6, str, &addr);
+            hash_insert(h, &addr, xstrdup("hostname"));
+            count++;
+        }
+    }
+    /* Final eviction to clean up */
+    ns_hash_evict_if_full(h, &count, limit);
+    hash_destroy(h);
+    free(h);
+}
+
 /* ================================================================
  *  Service Hash (port+proto to name)
  * ================================================================ */
@@ -491,6 +512,7 @@ int main(void) {
     /* NS Hash */
     RUN(leak_ns_hash_create_destroy);
     RUN(leak_ns_hash_insert_cleanup);
+    RUN(leak_ns_hash_evict_cycles);
 
     /* Service Hash */
     RUN(leak_serv_table_create_destroy);

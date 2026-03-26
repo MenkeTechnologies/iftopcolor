@@ -474,6 +474,209 @@ TEST(ns_hash_500_entries) {
     free(h);
 }
 
+/* === Cache eviction === */
+
+TEST(ns_hash_evict_no_op_when_under_limit) {
+    hash_type *h = ns_hash_create();
+    int count = 0;
+    for (int i = 0; i < 10; i++) {
+        char addr_str[64];
+        snprintf(addr_str, sizeof(addr_str), "2001:db8::%d", i + 1);
+        struct in6_addr addr = make_addr6(addr_str);
+        hash_insert(h, &addr, xstrdup("name"));
+        count++;
+    }
+    int evicted = ns_hash_evict_if_full(h, &count, 100);
+    ASSERT_EQ(evicted, 0);
+    ASSERT_EQ(count, 10);
+    ASSERT_EQ(ns_hash_count(h), 10);
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+TEST(ns_hash_evict_clears_at_limit) {
+    hash_type *h = ns_hash_create();
+    int count = 0;
+    int limit = 50;
+    for (int i = 0; i < limit; i++) {
+        char addr_str[64];
+        snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
+        struct in6_addr addr = make_addr6(addr_str);
+        hash_insert(h, &addr, xstrdup("name"));
+        count++;
+    }
+    ASSERT_EQ(count, limit);
+    int evicted = ns_hash_evict_if_full(h, &count, limit);
+    ASSERT_EQ(evicted, 1);
+    ASSERT_EQ(count, 0);
+    ASSERT_EQ(ns_hash_count(h), 0);
+    hash_destroy(h);
+    free(h);
+}
+
+TEST(ns_hash_evict_clears_above_limit) {
+    hash_type *h = ns_hash_create();
+    int count = 0;
+    int limit = 30;
+    /* Insert more than the limit */
+    for (int i = 0; i < limit + 10; i++) {
+        char addr_str[64];
+        snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
+        struct in6_addr addr = make_addr6(addr_str);
+        hash_insert(h, &addr, xstrdup("name"));
+        count++;
+    }
+    int evicted = ns_hash_evict_if_full(h, &count, limit);
+    ASSERT_EQ(evicted, 1);
+    ASSERT_EQ(count, 0);
+    ASSERT_EQ(ns_hash_count(h), 0);
+    hash_destroy(h);
+    free(h);
+}
+
+TEST(ns_hash_evict_one_below_limit) {
+    hash_type *h = ns_hash_create();
+    int count = 0;
+    int limit = 50;
+    for (int i = 0; i < limit - 1; i++) {
+        char addr_str[64];
+        snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
+        struct in6_addr addr = make_addr6(addr_str);
+        hash_insert(h, &addr, xstrdup("name"));
+        count++;
+    }
+    int evicted = ns_hash_evict_if_full(h, &count, limit);
+    ASSERT_EQ(evicted, 0);
+    ASSERT_EQ(count, limit - 1);
+    ASSERT_EQ(ns_hash_count(h), limit - 1);
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+TEST(ns_hash_evict_repopulate_after_eviction) {
+    hash_type *h = ns_hash_create();
+    int count = 0;
+    int limit = 20;
+    /* Fill to limit and evict */
+    for (int i = 0; i < limit; i++) {
+        char addr_str[64];
+        snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
+        struct in6_addr addr = make_addr6(addr_str);
+        hash_insert(h, &addr, xstrdup("old"));
+        count++;
+    }
+    ns_hash_evict_if_full(h, &count, limit);
+    ASSERT_EQ(count, 0);
+    /* Re-populate with new entries */
+    for (int i = 0; i < 5; i++) {
+        char addr_str[64];
+        snprintf(addr_str, sizeof(addr_str), "2001:db8:1::%x", i + 1);
+        struct in6_addr addr = make_addr6(addr_str);
+        hash_insert(h, &addr, xstrdup("new"));
+        count++;
+    }
+    ASSERT_EQ(count, 5);
+    ASSERT_EQ(ns_hash_count(h), 5);
+    /* Old entries should be gone */
+    struct in6_addr old_addr = make_addr6("2001:db8::1");
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &old_addr, &rec), HASH_STATUS_KEY_NOT_FOUND);
+    /* New entries should be findable */
+    struct in6_addr new_addr = make_addr6("2001:db8:1::1");
+    ASSERT_EQ(hash_find(h, &new_addr, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "new");
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+TEST(ns_hash_evict_multiple_cycles) {
+    hash_type *h = ns_hash_create();
+    int count = 0;
+    int limit = 25;
+    for (int cycle = 0; cycle < 5; cycle++) {
+        for (int i = 0; i < limit; i++) {
+            ns_hash_evict_if_full(h, &count, limit);
+            char addr_str[64];
+            snprintf(addr_str, sizeof(addr_str), "2001:db8:%x::%x", cycle, i + 1);
+            struct in6_addr addr = make_addr6(addr_str);
+            hash_insert(h, &addr, xstrdup("name"));
+            count++;
+        }
+        /* At this point count == limit, next evict call should clear */
+        ASSERT_EQ(count, limit);
+        ASSERT_EQ(ns_hash_count(h), limit);
+    }
+    /* One final eviction */
+    int evicted = ns_hash_evict_if_full(h, &count, limit);
+    ASSERT_EQ(evicted, 1);
+    ASSERT_EQ(count, 0);
+    hash_destroy(h);
+    free(h);
+}
+
+TEST(ns_hash_evict_counter_tracks_external_deletes) {
+    /* Simulates resolver_worker pattern: find+delete+insert (replace) doesn't change count,
+       but insert after eviction (find miss) increments count */
+    hash_type *h = ns_hash_create();
+    int count = 0;
+    int limit = 20;
+    /* Insert entries with placeholder values */
+    for (int i = 0; i < 10; i++) {
+        char addr_str[64];
+        snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
+        struct in6_addr addr = make_addr6(addr_str);
+        hash_insert(h, &addr, xstrdup("1.2.3.4"));  /* numeric placeholder */
+        count++;
+    }
+    /* Replace some entries (delete + insert, no count change) */
+    for (int i = 0; i < 5; i++) {
+        char addr_str[64];
+        snprintf(addr_str, sizeof(addr_str), "2001:db8::%x", i + 1);
+        struct in6_addr addr = make_addr6(addr_str);
+        void *old = NULL;
+        ASSERT_EQ(hash_find(h, &addr, &old), HASH_STATUS_OK);
+        hash_delete(h, &addr);
+        xfree(old);
+        hash_insert(h, &addr, xstrdup("resolved.example.com"));
+        /* count stays the same for a replace */
+    }
+    ASSERT_EQ(count, 10);
+    ASSERT_EQ(ns_hash_count(h), 10);
+    /* Now evict should not trigger (10 < 20) */
+    ASSERT_EQ(ns_hash_evict_if_full(h, &count, limit), 0);
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
+TEST(ns_hash_evict_with_limit_1) {
+    hash_type *h = ns_hash_create();
+    int count = 0;
+    /* Limit of 1: every insert triggers eviction of previous */
+    struct in6_addr addr1 = make_addr6("2001:db8::1");
+    hash_insert(h, &addr1, xstrdup("first"));
+    count++;
+    /* count is now 1, eviction should trigger */
+    int evicted = ns_hash_evict_if_full(h, &count, 1);
+    ASSERT_EQ(evicted, 1);
+    ASSERT_EQ(count, 0);
+    ASSERT_EQ(ns_hash_count(h), 0);
+    /* Insert again */
+    struct in6_addr addr2 = make_addr6("2001:db8::2");
+    hash_insert(h, &addr2, xstrdup("second"));
+    count++;
+    ASSERT_EQ(ns_hash_count(h), 1);
+    void *rec = NULL;
+    ASSERT_EQ(hash_find(h, &addr2, &rec), HASH_STATUS_OK);
+    ASSERT_STR_EQ((char *)rec, "second");
+    hash_delete_all_free(h);
+    hash_destroy(h);
+    free(h);
+}
+
 /* === Delete all then reuse === */
 
 TEST(ns_hash_reuse_after_clear) {
@@ -526,6 +729,14 @@ int main(void) {
     RUN(ns_hash_long_hostname);
     RUN(ns_hash_empty_name);
     RUN(ns_hash_500_entries);
+    RUN(ns_hash_evict_no_op_when_under_limit);
+    RUN(ns_hash_evict_clears_at_limit);
+    RUN(ns_hash_evict_clears_above_limit);
+    RUN(ns_hash_evict_one_below_limit);
+    RUN(ns_hash_evict_repopulate_after_eviction);
+    RUN(ns_hash_evict_multiple_cycles);
+    RUN(ns_hash_evict_counter_tracks_external_deletes);
+    RUN(ns_hash_evict_with_limit_1);
     RUN(ns_hash_reuse_after_clear);
 
     TEST_REPORT();

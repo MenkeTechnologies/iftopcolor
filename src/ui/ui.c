@@ -63,8 +63,8 @@ char *unit_bytes[UNIT_DIVISIONS] = {"B", "kB", "MB", "GB"};
 
 typedef struct host_pair_line_tag {
     addr_pair ap;
-    double long total_recv;
-    double long total_sent;
+    unsigned long long total_recv;
+    unsigned long long total_sent;
     double long recv[HISTORY_DIVISIONS];
     double long sent[HISTORY_DIVISIONS];
     char cached_hostname[HOSTNAME_LENGTH]; /* pre-resolved for sort */

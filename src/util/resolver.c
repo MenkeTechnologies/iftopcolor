@@ -39,6 +39,7 @@ pthread_cond_t resolver_queue_cond;
 pthread_mutex_t resolver_queue_mutex;
 
 hash_type *ns_hash;
+static int ns_hash_n_entries;
 
 int head;
 int tail;
@@ -449,6 +450,8 @@ void resolver_worker(void *ptr) {
                 if (hash_find(ns_hash, &addr, u_old.void_pp) == HASH_STATUS_OK) {
                     hash_delete(ns_hash, &addr);
                     xfree(old);
+                } else {
+                    ns_hash_n_entries++;
                 }
                 hash_insert(ns_hash, &addr, (void *) hostname);
             }
@@ -463,6 +466,7 @@ void resolver_initialise() {
     head = tail = 0;
 
     ns_hash = ns_hash_create();
+    ns_hash_n_entries = 0;
 
     pthread_mutex_init(&resolver_queue_mutex, NULL);
     pthread_cond_init(&resolver_queue_cond, NULL);
@@ -496,10 +500,13 @@ void resolve(int af, void *addr, char *result, int buflen) {
         if (hash_find(ns_hash, raddr, u_hostname.void_pp) == HASH_STATUS_OK) {
             /* Found => already resolved, or on the queue */
         } else {
+            ns_hash_evict_if_full(ns_hash, &ns_hash_n_entries, NS_HASH_MAX_ENTRIES);
+
             hostname = xmalloc(INET6_ADDRSTRLEN);
             inet_ntop(af, &raddr->addr, hostname, INET6_ADDRSTRLEN);
 
             hash_insert(ns_hash, raddr, hostname);
+            ns_hash_n_entries++;
 
             if (((head + 1) % RESOLVE_QUEUE_LENGTH) == tail) {
                 /* queue full */

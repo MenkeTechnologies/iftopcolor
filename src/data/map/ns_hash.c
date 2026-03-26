@@ -62,3 +62,12 @@ hash_type *ns_hash_create() {
     return hash_table;
 }
 
+int ns_hash_evict_if_full(hash_type *h, int *n_entries, int max_entries) {
+    if (*n_entries >= max_entries) {
+        hash_delete_all_free(h);
+        *n_entries = 0;
+        return 1;
+    }
+    return 0;
+}
+
