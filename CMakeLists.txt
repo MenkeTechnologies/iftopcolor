@@ -117,18 +117,20 @@ set(TEST_COMMON_SRCS
     ${PROJECT_SOURCE_DIR}/src/util/util.c
 )
 
-set(TEST_NAMES vector hash addr_hash sorted_list stringmap ns_hash serv_hash cfgfile util leaks integration)
+set(TEST_NAMES vector hash addr_hash sorted_list stringmap ns_hash serv_hash cfgfile util leaks integration options)
 
 foreach(t IN LISTS TEST_NAMES)
     add_executable(check_${t} EXCLUDE_FROM_ALL test/test_${t}.c ${TEST_COMMON_SRCS})
     target_compile_options(check_${t} PRIVATE -Wall -Wextra -Wno-unused-parameter)
 endforeach()
 
+target_sources(check_options PRIVATE ${PROJECT_SOURCE_DIR}/src/config/options.c)
+
 # "make check" builds and runs all tests
 add_custom_target(check
     DEPENDS check_vector check_hash check_addr_hash check_sorted_list
             check_stringmap check_ns_hash check_serv_hash check_cfgfile check_util
-            check_integration
+            check_integration check_options
     COMMAND ${PROJECT_SOURCE_DIR}/test/banner.sh start
     COMMAND $<TARGET_FILE:check_util>
     COMMAND $<TARGET_FILE:check_vector>
@@ -139,6 +141,7 @@ add_custom_target(check
     COMMAND $<TARGET_FILE:check_sorted_list>
     COMMAND $<TARGET_FILE:check_stringmap>
     COMMAND $<TARGET_FILE:check_cfgfile>
+    COMMAND $<TARGET_FILE:check_options>
     COMMAND $<TARGET_FILE:check_integration>
     COMMAND ${PROJECT_SOURCE_DIR}/test/banner.sh end
 )
