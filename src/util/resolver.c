@@ -513,15 +513,16 @@ void resolve(int af, void *addr, char *result, int buflen) {
                 added = 1;
             }
         }
-        pthread_mutex_unlock(&resolver_queue_mutex);
-
-        if (added == 1) {
-            pthread_cond_signal(&resolver_queue_cond);
-        }
 
         if (result != NULL && buflen > 1) {
             strncpy(result, hostname, buflen - 1);
             result[buflen - 1] = '\0';
+        }
+
+        pthread_mutex_unlock(&resolver_queue_mutex);
+
+        if (added == 1) {
+            pthread_cond_signal(&resolver_queue_cond);
         }
     }
 }
