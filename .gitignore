@@ -1,19 +1,36 @@
-config.status
+# Build artifacts
+build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+Makefile
+*.o
+
+# Binaries
+iftop
+iftop.spec
 check_*
 benchmark_*
-config.log
-iftop
-*.o
+
+# CMake / IDE
 cmake-build-debug/
-.deps/
+.idea/
 *.cache
+
+# OS
+.DS_Store
+
+# Tags
 tags
 GPATH
 GRTAGS
 GTAGS
 
-iftop
-iftop.spec
+# Autotools
+config.status
+config.log
+.deps/
 
 Makefile.in
 ar-lib
