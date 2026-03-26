@@ -79,7 +79,7 @@ int get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_ad
 #else
 #    if defined __FreeBSD__ || defined __OpenBSD__ || defined __APPLE__ || \
         (defined __GNUC__ && !defined __linux__)
-    {
+    do {
         int sysctlparam[6] = {CTL_NET, PF_ROUTE, 0, 0, NET_RT_IFLIST, 0};
         size_t needed = 0;
         char *buf = NULL;
@@ -87,20 +87,20 @@ int get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_ad
         sysctlparam[5] = if_nametoindex(interface);
         if (sysctlparam[5] == 0) {
             fprintf(stderr, "Error getting hardware address for interface: %s\n", interface);
-            goto ENDHWADDR;
+            break;
         }
         if (sysctl(sysctlparam, 6, NULL, &needed, NULL, 0) < 0) {
             fprintf(stderr, "Error getting hardware address for interface: %s\n", interface);
-            goto ENDHWADDR;
+            break;
         }
         if ((buf = malloc(needed)) == NULL) {
             fprintf(stderr, "Error getting hardware address for interface: %s\n", interface);
-            goto ENDHWADDR;
+            break;
         }
         if (sysctl(sysctlparam, 6, buf, &needed, NULL, 0) < 0) {
             fprintf(stderr, "Error getting hardware address for interface: %s\n", interface);
             free(buf);
-            goto ENDHWADDR;
+            break;
         }
         msghdr = (struct if_msghdr *)buf;
         memcpy(if_hw_addr,
@@ -109,10 +109,7 @@ int get_addrs_ioctl(char *interface, char if_hw_addr[], struct in_addr *if_ip_ad
                6);
         free(buf);
         got_hw_addr = 1;
-
-    ENDHWADDR:
-        (void)0;
-    }
+    } while (0);
 #    else
     fprintf(stderr, "Cannot obtain hardware address on this platform\n");
 #    endif

@@ -96,76 +96,76 @@ int get_addrs_dlpi(char *interface, char if_hw_addr[], struct in_addr *if_ip_add
 
     cp = split_dname(devname2, &unit_num);
 
-    if (cp == NULL) {
-        free(devname2);
-        goto get_ip_address;
-    } else {
-        *cp = '\0'; /* null terminate devname2 right before numeric extension */
-    }
-
-    // devname2 should now be something akin to /dev/ge.  Try to open
-    // it, and if it fails, fall back to the full /dev/ge0.
-
-    if ((fd = open(devname2, O_RDWR)) < 0) {
-        if (errno != ENOENT) {
-            fprintf(stderr, "Couldn't open %s\n", devname2);
+    do {
+        if (cp == NULL) {
             free(devname2);
-            goto get_ip_address;
-        } else {
-            if ((fd = open(fulldevpath, O_RDWR)) < 0) {
-                fprintf(stderr, "Couldn't open %s\n", fulldevpath);
+            break;
+        }
+
+        *cp = '\0'; /* null terminate devname2 right before numeric extension */
+
+        // devname2 should now be something akin to /dev/ge.  Try to open
+        // it, and if it fails, fall back to the full /dev/ge0.
+
+        if ((fd = open(devname2, O_RDWR)) < 0) {
+            if (errno != ENOENT) {
+                fprintf(stderr, "Couldn't open %s\n", devname2);
                 free(devname2);
-                goto get_ip_address;
+                break;
+            } else {
+                if ((fd = open(fulldevpath, O_RDWR)) < 0) {
+                    fprintf(stderr, "Couldn't open %s\n", fulldevpath);
+                    free(devname2);
+                    break;
+                }
             }
         }
-    }
 
-    free(devname2);
-    devname2 = NULL;
+        free(devname2);
+        devname2 = NULL;
 
-    /* Use the dlcommon functions to get access to the DLPI information for this
-     * interface.  All of these functions exit() out on failure
-     */
+        /* Use the dlcommon functions to get access to the DLPI information for this
+         * interface.  All of these functions exit() out on failure
+         */
 
-    dlp = (union DL_primitives *)buf;
+        dlp = (union DL_primitives *)buf;
 
-    /*
-     * DLPI attach to our low-level device
-     */
+        /*
+         * DLPI attach to our low-level device
+         */
 
-    dlattachreq(fd, unit_num);
-    dlokack(fd, buf);
+        dlattachreq(fd, unit_num);
+        dlokack(fd, buf);
 
-    /*
-     * DLPI bind
-     */
+        /*
+         * DLPI bind
+         */
 
-    dlbindreq(fd, sap, 0, DL_CLDLS, 0, 0);
-    dlbindack(fd, buf);
+        dlbindreq(fd, sap, 0, DL_CLDLS, 0, 0);
+        dlbindack(fd, buf);
 
-    /*
-     * DLPI DL_INFO_REQ
-     */
+        /*
+         * DLPI DL_INFO_REQ
+         */
 
-    dlinforeq(fd);
-    dlinfoack(fd, buf);
+        dlinforeq(fd);
+        dlinfoack(fd, buf);
 
-    /*
-       printdlprim(dlp);  // uncomment this to dump out info from DLPI
-    */
+        /*
+           printdlprim(dlp);  // uncomment this to dump out info from DLPI
+        */
 
-    if (dlp->info_ack.dl_addr_length + dlp->info_ack.dl_sap_length == 6) {
-        memcpy(if_hw_addr, OFFADDR(dlp, dlp->info_ack.dl_addr_offset),
-               dlp->info_ack.dl_addr_length);
-        got_hw_addr = 1;
-    } else {
-        fprintf(stderr, "Error, bad length for hardware interface %s -- %d\n", interface,
-                dlp->info_ack.dl_addr_length);
-    }
+        if (dlp->info_ack.dl_addr_length + dlp->info_ack.dl_sap_length == 6) {
+            memcpy(if_hw_addr, OFFADDR(dlp, dlp->info_ack.dl_addr_offset),
+                   dlp->info_ack.dl_addr_length);
+            got_hw_addr = 1;
+        } else {
+            fprintf(stderr, "Error, bad length for hardware interface %s -- %d\n", interface,
+                    dlp->info_ack.dl_addr_length);
+        }
 
-    close(fd);
-
-get_ip_address:
+        close(fd);
+    } while (0);
 
     /* Get the IP address of the interface */
 

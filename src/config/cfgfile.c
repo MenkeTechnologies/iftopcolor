@@ -69,7 +69,8 @@ int read_config_file(const char *filepath, int whinge) {
         if (whinge) {
             fprintf(stderr, "%s: %s\n", filepath, strerror(errno));
         }
-        goto fail;
+        xfree(line);
+        return 0;
     }
 
     while (fgets(line, MAX_CONFIG_LINE, fp)) {
@@ -141,17 +142,10 @@ int read_config_file(const char *filepath, int whinge) {
         ++line_num;
     }
 
-    ret = 1;
+    fclose(fp);
+    xfree(line);
 
-fail:
-    if (fp) {
-        fclose(fp);
-    }
-    if (line) {
-        xfree(line);
-    }
-
-    return ret;
+    return 1;
 }
 
 int config_get_int(const char *directive, int *value) {
