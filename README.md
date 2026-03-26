@@ -186,7 +186,7 @@ VALIDATING MEMORY SUBSYSTEMS...
 INTEGRITY CHECK IN PROGRESS...
 ```
 
-A test suite covers core data structures and utilities: hash tables, address/namespace hashes, service lookup table, sorted lists, vectors, string maps, config file parsing, and utility functions.
+A test suite covers core data structures, utilities, packet parsing, UI logic, and screen filtering: hash tables, address/namespace hashes, service lookup table, sorted lists, vectors, string maps, config file parsing, utility functions, IPv4/IPv6 packet address extraction, bandwidth formatting, sort comparators, and regex-based display filtering.
 
 ### Running tests
 
@@ -218,10 +218,13 @@ make check_hash
  │ check_stringmap       │ Binary tree insert, find, special chars, deep chains        │    46 │
  │ check_cfgfile         │ Config parsing: string, bool, int, float, enum, file IO     │    77 │
  │ check_options         │ options_make interface fallback, default interface safety    │     5 │
+ │ check_packet          │ assign_addr_pair IPv4/IPv6 TCP/UDP/ICMP, flip, net filter  │    19 │
+ │ check_ui_format       │ readable_size, color/bold parse, sort comparators, history │    38 │
+ │ check_screenfilter    │ Regex screen filter: set, match, case-insensitive, anchors │    12 │
  │ check_integration     │ Cross-module: flows, resolution, config overlay, stress     │    50 │
  │ check_leaks           │ Full lifecycle leak tests for all data structures (macOS)   │    30 │
  └───────────────────────┴──────────────────────────────────────────────────────────────┴───────┘
-                                                                                TOTAL:    537
+                                                                                TOTAL:    606
 ```
 
 ### Memory leak analysis
