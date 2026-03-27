@@ -31,6 +31,8 @@
 
 ![screenshot of iftopcolor](/screenshot1.png)
 
+![help output](/screenshot_help.png)
+
 ---
 
 ## `[0x01]` SYSTEM REQUIREMENTS
@@ -117,6 +119,8 @@ sudo iftop
  -P                  show ports as well as hosts
  -m limit            set upper limit for bandwidth scale
  -c config file      use alternative configuration file
+ -o json|csv         output in JSON or CSV format (non-interactive)
+ -t seconds          capture duration for export mode
 ```
 
 ### Interactive keymap
@@ -138,6 +142,33 @@ sudo iftop
  │  o    Freeze current order      │  q    Quit                      │
  └─────────────────────────────────┴─────────────────────────────────┘
 ```
+
+### Export mode (JSON/CSV)
+
+```
+ENGAGING DATA EXFILTRATION PROTOCOL...
+SERIALIZING FLOW TELEMETRY...
+ROUTING OUTPUT TO STDOUT...
+```
+
+Export mode bypasses the interactive TUI and writes machine-readable output to stdout. Use `-o` to select the format and `-t` to set the capture duration.
+
+```sh
+# JSON snapshots every 2 seconds for 10 seconds
+sudo iftop -i en0 -o json -t 10
+
+# CSV with header + data rows
+sudo iftop -i en0 -o csv -t 10
+
+# Pipe to jq for live filtering
+sudo iftop -i en0 -o json -t 30 | jq '.flows[] | select(.sent_2s > 1000)'
+```
+
+![JSON export output](/screenshot_export.png)
+
+JSON output includes a `flows` array with per-host-pair bandwidth rates (2s, 10s, 40s averages) and cumulative totals, plus a `totals` section with aggregate stats, peak rates, and cumulative byte counts. All bandwidth values are raw bytes for easy machine parsing.
+
+CSV output prints a header row on first tick, then one row per flow per tick with the same fields.
 
 ---
 
@@ -186,7 +217,7 @@ VALIDATING MEMORY SUBSYSTEMS...
 INTEGRITY CHECK IN PROGRESS...
 ```
 
-A test suite covers core data structures, utilities, packet parsing, UI logic, and screen filtering: hash tables, address/namespace hashes, service lookup table, sorted lists, vectors, string maps, config file parsing, utility functions, IPv4/IPv6 packet address extraction, bandwidth formatting, sort comparators, and regex-based display filtering.
+A test suite covers core data structures, utilities, packet parsing, UI logic, screen filtering, and export mode: hash tables, address/namespace hashes, service lookup table, sorted lists, vectors, string maps, config file parsing, utility functions, IPv4/IPv6 packet address extraction, bandwidth formatting, sort comparators, regex-based display filtering, and JSON/CSV export output.
 
 ### Running tests
 
@@ -221,10 +252,11 @@ make check_hash
  │ check_packet          │ assign_addr_pair IPv4/IPv6 TCP/UDP/ICMP, flip, net filter  │    19 │
  │ check_ui_format       │ readable_size, color/bold parse, sort comparators, history │    38 │
  │ check_screenfilter    │ Regex screen filter: set, match, case-insensitive, anchors │    12 │
+ │ check_export          │ JSON/CSV export: protocol names, addr fmt, escaping, output │    32 │
  │ check_integration     │ Cross-module: flows, resolution, config overlay, stress     │    50 │
  │ check_leaks           │ Full lifecycle leak tests for all data structures (macOS)   │    30 │
  └───────────────────────┴──────────────────────────────────────────────────────────────┴───────┘
-                                                                                TOTAL:    606
+                                                                                TOTAL:    638
 ```
 
 ### Memory leak analysis

@@ -30,7 +30,7 @@
 
 options_t options;
 
-char optstr[] = "+i:f:nNF:G:lhpbBPm:c:";
+char optstr[] = "+i:f:nNF:G:lhpbBPm:c:o:t:";
 
 /* Global options. */
 
@@ -164,6 +164,9 @@ void options_set_defaults() {
         options.config_file = xstrdup("iftoprc");
     }
     options.config_file_specified = 0;
+
+    options.export_mode = 0;
+    options.export_duration = 0;
 }
 
 static void die(char *msg) {
@@ -253,6 +256,7 @@ static void usage(FILE *fp) {
                 "\n"
                 "\033[33m  USAGE:\033[0m iftop -h | [-npblNBP] [-i interface] [-f filter code]\n"
                 "                                [-F net/mask] [-G net6/mask6]\n"
+                "                                [-o json|csv] [-t seconds]\n"
                 "\n"
                 "\033[36m  ── PROTOCOLS ──────────────────────────────────────\033[0m\n"
                 "\033[32m   -h              \033[0m display this transmission\n"
@@ -275,6 +279,11 @@ static void usage(FILE *fp) {
                 "\033[32m   -P              \033[0m render ports alongside hosts\n"
                 "\033[32m   -m limit        \033[0m set upper bandwidth scale limit\n"
                 "\033[32m   -c config file  \033[0m load alternate config file\n"
+                "\n"
+                "\033[36m  ── EXPORT ─────────────────────────────────────────\033[0m\n"
+                "\033[32m   -o json|csv     \033[0m output in JSON or CSV format\n"
+                "                   \033[35m(non-interactive, writes to stdout)\033[0m\n"
+                "\033[32m   -t seconds      \033[0m capture duration for export mode\n"
                 "\n"
                 "\033[36m  ── SYSTEM ─────────────────────────────────────────\033[0m\n"
                 "\033[35m  v" IFTOP_VERSION
@@ -345,6 +354,25 @@ void options_read_args(int argc, char **argv) {
             xfree(options.config_file);
             options.config_file = xstrdup(optarg);
             options.config_file_specified = 1;
+            break;
+
+        case 'o':
+            if (strcmp(optarg, "json") == 0) {
+                options.export_mode = 1;
+            } else if (strcmp(optarg, "csv") == 0) {
+                options.export_mode = 2;
+            } else {
+                fprintf(stderr, "iftop: unknown export format '%s' (use 'json' or 'csv')\n", optarg);
+                exit(1);
+            }
+            break;
+
+        case 't':
+            options.export_duration = atoi(optarg);
+            if (options.export_duration <= 0) {
+                fprintf(stderr, "iftop: -t requires a positive number of seconds\n");
+                exit(1);
+            }
             break;
 
         case '?':

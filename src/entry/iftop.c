@@ -30,6 +30,7 @@
 #include "../include/addr_hash.h"
 #include "../include/resolver.h"
 #include "../include/ui.h"
+#include "../include/export.h"
 #include "../include/options.h"
 
 #ifdef DLT_LINUX_SLL
@@ -172,7 +173,11 @@ void tick(int print) {
     now = time(NULL);
     if (now - last_timestamp >= RESOLUTION) {
         analyse_data();
-        ui_print();
+        if (options.export_mode) {
+            export_print();
+        } else {
+            ui_print();
+        }
         history_rotate();
         last_timestamp = now;
     } else {
@@ -793,19 +798,34 @@ int main(int argc, char **argv) {
 
     init_history();
 
-    ui_init();
+    if (options.export_mode) {
+        export_init();
 
-    if (pthread_create(&thread, NULL, (void *)&packet_loop, NULL) != 0) {
-        perror("pthread_create");
+        if (pthread_create(&thread, NULL, (void *)&packet_loop, NULL) != 0) {
+            perror("pthread_create");
+            exit(1);
+        }
+
+        export_loop();
+
+        pthread_cancel(thread);
+
+        export_finish();
+    } else {
+        ui_init();
+
+        if (pthread_create(&thread, NULL, (void *)&packet_loop, NULL) != 0) {
+            perror("pthread_create");
+            ui_finish();
+            exit(1);
+        }
+
+        ui_loop();
+
+        pthread_cancel(thread);
+
         ui_finish();
-        exit(1);
     }
-
-    ui_loop();
-
-    pthread_cancel(thread);
-
-    ui_finish();
 
 
     return 0;

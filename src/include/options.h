@@ -88,6 +88,10 @@ typedef struct {
     char *config_file;
     int config_file_specified;
 
+    /* Export mode: 0=off (TUI), 1=json, 2=csv */
+    int export_mode;
+    int export_duration; /* seconds to capture before exiting */
+
 } options_t;
 
 
