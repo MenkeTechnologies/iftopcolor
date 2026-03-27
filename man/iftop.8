@@ -1,4 +1,4 @@
-.TH IFTOP 8 "2026-03-26" "iftopcolor 1.1" "System Administration"
+.TH IFTOP 8 "2026-03-27" "iftopcolor 1.5.0" "System Administration"
 .\"
 .\" iftop.8:
 .\" Manual page for iftopcolor (iftop fork with full-spectrum color).
@@ -11,7 +11,7 @@ iftop \- display bandwidth usage on an interface by host
 \fBiftop\fP \fB\-h\fP
 .br
 \fBiftop\fP
-[\fB\-nNpblBP\fP]
+[\fB\-nNpblBPZ\fP]
 [\fB\-i\fP \fIinterface\fP]
 [\fB\-f\fP \fIfilter\ code\fP]
 [\fB\-F\fP \fInet\fP/\fImask\fP]
@@ -153,6 +153,12 @@ Specifies an alternate config file.  If not specified, iftop will use
 \fB~/.iftoprc\fP if it exists.  See
 .B CONFIG FILE
 below for a description of config file directives.
+.TP
+\fB\-Z\fP
+Enable per-process bandwidth attribution.  Each flow is annotated with the
+name of the process that owns the local socket.  On macOS this uses
+\fBlibproc\fP; on Linux it reads \fB/proc\fP.  If the platform is unsupported
+or permissions are insufficient, process names are silently omitted.
 
 .SH DISPLAY
 
@@ -255,6 +261,11 @@ not affect the totals at the bottom of the screen.
 .B L
 Toggle between linear and logarithmic bar graph scales.
 .TP
+.B Z
+Toggle per-process bandwidth attribution.  When enabled, the process name
+owning each flow's local socket is shown in brackets after the destination
+host.  Equivalent to the \fB\-Z\fP command-line option.
+.TP
 .B !
 Run a shell command.
 .TP
@@ -326,6 +337,9 @@ Controls the appearance of each item in the display.
 .TP
 \fBshow-totals:\fP \fI(yes|no)\fP
 Shows cumulative total for each item.
+.TP
+\fBshow-processes:\fP \fI(yes|no)\fP
+Enables per-process bandwidth attribution.
 .TP
 \fBlog-scale:\fP \fI(yes|no)\fP
 Use a logarithmic scale for bar graphs.

@@ -30,7 +30,7 @@
 
 options_t options;
 
-char optstr[] = "+i:f:nNF:G:lhpbBPm:c:o:t:";
+char optstr[] = "+i:f:nNF:G:lhpbBPm:c:o:t:Z";
 
 /* Global options. */
 
@@ -167,6 +167,7 @@ void options_set_defaults() {
 
     options.export_mode = 0;
     options.export_duration = 0;
+    options.show_processes = 1;
 }
 
 static void die(char *msg) {
@@ -277,6 +278,7 @@ static void usage(FILE *fp) {
                 "\n"
                 "\033[36m  ── DISPLAY ────────────────────────────────────────\033[0m\n"
                 "\033[32m   -P              \033[0m render ports alongside hosts\n"
+                "\033[32m   -Z              \033[0m show owning process per flow\n"
                 "\033[32m   -m limit        \033[0m set upper bandwidth scale limit\n"
                 "\033[32m   -c config file  \033[0m load alternate config file\n"
                 "\n"
@@ -373,6 +375,10 @@ void options_read_args(int argc, char **argv) {
                 fprintf(stderr, "iftop: -t requires a positive number of seconds\n");
                 exit(1);
             }
+            break;
+
+        case 'Z':
+            config_set_string("show-processes", "true");
             break;
 
         case '?':
@@ -638,6 +644,7 @@ void options_make() {
     options.screenfilter = NULL;
     options_config_get_string("screen-filter", &options.screenfilter);
     options_config_get_bool("link-local", &options.link_local);
+    options_config_get_bool("show-processes", &options.show_processes);
     options_config_get_net_filter();
     options_config_get_net_filter6();
 };

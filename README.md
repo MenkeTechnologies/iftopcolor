@@ -117,6 +117,7 @@ sudo iftop
  -G net6/mask6       show traffic in/out of IPv6 network
  -l                  display and count link-local IPv6 traffic
  -P                  show ports as well as hosts
+ -Z                  show owning process per flow
  -m limit            set upper limit for bandwidth scale
  -c config file      use alternative configuration file
  -o json|csv         output in JSON or CSV format (non-interactive)
@@ -137,7 +138,8 @@ sudo iftop
  │  S    Toggle source port        │ j/k   Scroll display            │
  │  D    Toggle destination port   │  f    Edit filter code          │
  │  p    Toggle port display       │  l    Set screen filter         │
- │ 1/2/3 Sort by column            │  L    Lin/log scales            │
+ │  Z    Toggle process display   │  L    Lin/log scales            │
+ │ 1/2/3 Sort by column            │                                 │
  │ < / > Sort by src/dst name      │  !    Shell command             │
  │  o    Freeze current order      │  q    Quit                      │
  └─────────────────────────────────┴─────────────────────────────────┘
@@ -169,6 +171,36 @@ sudo iftop -i en0 -o json -t 30 | jq '.flows[] | select(.sent_2s > 1000)'
 JSON output includes a `flows` array with per-host-pair bandwidth rates (2s, 10s, 40s averages) and cumulative totals, plus a `totals` section with aggregate stats, peak rates, and cumulative byte counts. All bandwidth values are raw bytes for easy machine parsing.
 
 CSV output prints a header row on first tick, then one row per flow per tick with the same fields.
+
+### Process attribution (`-Z`)
+
+```
+SCANNING PROCESS TABLE...
+MAPPING SOCKETS TO PIDS...
+IDENTIFYING NETWORK OWNERS...
+```
+
+The `-Z` flag enables per-process bandwidth attribution: each flow is annotated with the process name that owns the local socket. Press `Z` in the TUI to toggle at runtime.
+
+```sh
+# Show which processes are using bandwidth
+sudo iftop -Z
+
+# Include process info in JSON export
+sudo iftop -Z -o json -t 10
+
+# Include process info in CSV export
+sudo iftop -Z -o csv -t 10
+```
+
+The process name appears in `[brackets]` next to the destination host in the TUI. In JSON export, flows include `"pid"` and `"process_name"` fields. In CSV, `pid` and `process_name` columns are added.
+
+**Platform support:**
+- **macOS**: Uses `libproc` (`proc_pidinfo` / `proc_pidfdinfo`) -- no extra dependencies
+- **Linux**: Reads `/proc/net/tcp*` + `/proc/[pid]/fd/` symlinks -- no extra dependencies
+- **Other**: Gracefully degrades (process names are empty)
+
+The process name color is configurable via `~/.iftopcolors` with the key `PROC_NAME_COLOR` (default: green bold).
 
 ---
 
@@ -205,6 +237,7 @@ CUM_TRANSFER_COLUMN_COLOR   magenta nonbold
 PEAK_TRANSFER_COLUMN_COLOR  magenta nonbold
 RECEIVE_BAR_COLOR           yellow  nonbold
 SENT_BAR_COLOR              yellow  nonbold
+PROC_NAME_COLOR             green   bold
 ```
 
 ---
@@ -253,10 +286,11 @@ make check_hash
  │ check_ui_format       │ readable_size, color/bold parse, sort comparators, history │    38 │
  │ check_screenfilter    │ Regex screen filter: set, match, case-insensitive, anchors │    12 │
  │ check_export          │ JSON/CSV export: protocol names, addr fmt, escaping, output │    32 │
+ │ check_procinfo        │ Socket-to-PID mapping: TCP/UDP, IPv4/IPv6, refresh, destroy │     9 │
  │ check_integration     │ Cross-module: flows, resolution, config overlay, stress     │    50 │
  │ check_leaks           │ Full lifecycle leak tests for all data structures (macOS)   │    30 │
  └───────────────────────┴──────────────────────────────────────────────────────────────┴───────┘
-                                                                                TOTAL:    638
+                                                                                TOTAL:    647
 ```
 
 ### Memory leak analysis
@@ -420,6 +454,10 @@ PATCHING SYSTEM VULNERABILITIES...
 HARDENING MEMORY SUBSYSTEMS...
 STABILIZING CORE ROUTINES...
 ```
+
+### Per-process bandwidth attribution (`-Z`)
+
+New `-Z` flag maps each network flow to the owning process using platform-native APIs (macOS `libproc`, Linux `/proc` filesystem). Process names are displayed inline in the TUI and included in JSON/CSV exports. Toggle with `Z` key at runtime. Gracefully degrades on unsupported platforms or when running without sufficient permissions.
 
 ### `ns_hash` cache eviction policy
 

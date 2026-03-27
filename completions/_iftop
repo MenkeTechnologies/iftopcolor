@@ -19,6 +19,7 @@ arguments=(
   '-c[load alternate configuration file]:config file:_files'
   '-o[output in JSON or CSV format (non-interactive)]:format:(json csv)'
   '-t[capture duration in seconds for export mode]:seconds:'
+  '-Z[show owning process per flow]'
   '*:filename:_files'
 )
 

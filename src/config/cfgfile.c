@@ -27,7 +27,7 @@ char *config_directives[] = {"interface",   "dns-resolution",   "port-resolution
                              "sort",        "line-display",     "show-totals",
                              "log-scale",   "max-bandwidth",    "net-filter",
                              "net-filter6", "link-local",       "port-display",
-                             NULL};
+                             "show-processes", NULL};
 
 stringmap config;
 

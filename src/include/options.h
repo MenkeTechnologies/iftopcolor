@@ -92,6 +92,8 @@ typedef struct {
     int export_mode;
     int export_duration; /* seconds to capture before exiting */
 
+    int show_processes; /* -Z flag: show per-process bandwidth attribution */
+
 } options_t;
 
 

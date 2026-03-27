@@ -17,20 +17,7 @@
 #include "../include/iftop.h"
 #include "../include/sorted_list.h"
 #include "../include/options.h"
-
-#define HISTORY_DIVISIONS 3
-#define HOSTNAME_LENGTH 256
-
-/* host_pair_line is defined in ui.c — redeclare the struct here since
- * it's not in a shared header.  Must match the definition in ui.c exactly. */
-typedef struct host_pair_line_tag {
-    addr_pair ap;
-    unsigned long long total_recv;
-    unsigned long long total_sent;
-    double long recv[HISTORY_DIVISIONS];
-    double long sent[HISTORY_DIVISIONS];
-    char cached_hostname[HOSTNAME_LENGTH];
-} host_pair_line;
+#include "../include/host_pair_line.h"
 
 /* Globals defined in ui.c */
 extern hash_type *screen_hash;
@@ -108,6 +95,12 @@ static void export_print_json(void) {
         printf("      \"destination\": \"%s\",\n", dst);
         printf("      \"destination_port\": %u,\n", line->ap.dst_port);
         printf("      \"protocol\": \"%s\",\n", protocol_name(line->ap.protocol));
+        if (options.show_processes) {
+            printf("      \"pid\": %d,\n", line->pid);
+            printf("      \"process_name\": ");
+            json_escape_string(stdout, line->process_name[0] ? line->process_name : "");
+            printf(",\n");
+        }
         printf("      \"sent_2s\": %.0Lf,\n", line->sent[0]);
         printf("      \"sent_10s\": %.0Lf,\n", line->sent[1]);
         printf("      \"sent_40s\": %.0Lf,\n", line->sent[2]);
@@ -147,7 +140,10 @@ static void export_print_csv(void) {
 
     if (!csv_header_printed) {
         printf("timestamp,source,source_port,destination,destination_port,"
-               "protocol,sent_2s,sent_10s,sent_40s,recv_2s,recv_10s,recv_40s,"
+               "protocol,");
+        if (options.show_processes)
+            printf("pid,process_name,");
+        printf("sent_2s,sent_10s,sent_40s,recv_2s,recv_10s,recv_40s,"
                "total_sent,total_recv\n");
         csv_header_printed = 1;
     }
@@ -158,9 +154,13 @@ static void export_print_csv(void) {
         sprint_addr(src, sizeof(src), line->ap.address_family, &line->ap.src6);
         sprint_addr(dst, sizeof(dst), line->ap.address_family, &line->ap.dst6);
 
-        printf("%s,%s,%u,%s,%u,%s,%.0Lf,%.0Lf,%.0Lf,%.0Lf,%.0Lf,%.0Lf,%llu,%llu\n",
+        printf("%s,%s,%u,%s,%u,%s,",
                timebuf, src, line->ap.src_port, dst, line->ap.dst_port,
-               protocol_name(line->ap.protocol),
+               protocol_name(line->ap.protocol));
+        if (options.show_processes)
+            printf("%d,%s,", line->pid,
+                   line->process_name[0] ? line->process_name : "");
+        printf("%.0Lf,%.0Lf,%.0Lf,%.0Lf,%.0Lf,%.0Lf,%llu,%llu\n",
                line->sent[0], line->sent[1], line->sent[2],
                line->recv[0], line->recv[1], line->recv[2],
                line->total_sent, line->total_recv);

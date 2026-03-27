@@ -63,6 +63,8 @@ struct in6_addr if_ip6_addr;
 
 extern options_t options;
 
+#include "../include/procinfo.h"
+
 hash_type *history;
 history_type history_totals;
 time_t last_timestamp;
@@ -172,6 +174,9 @@ void tick(int print) {
 
     now = time(NULL);
     if (now - last_timestamp >= RESOLUTION) {
+        if (options.show_processes) {
+            procinfo_refresh();
+        }
         analyse_data();
         if (options.export_mode) {
             export_print();
@@ -811,6 +816,7 @@ int main(int argc, char **argv) {
         pthread_cancel(thread);
 
         export_finish();
+        procinfo_destroy();
     } else {
         ui_init();
 
@@ -825,6 +831,7 @@ int main(int argc, char **argv) {
         pthread_cancel(thread);
 
         ui_finish();
+        procinfo_destroy();
     }
 
 

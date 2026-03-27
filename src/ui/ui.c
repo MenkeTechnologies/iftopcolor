@@ -24,11 +24,8 @@
 #include "../include/sorted_list.h"
 #include "../include/options.h"
 #include "../include/screenfilter.h"
-
-
-#define HOSTNAME_LENGTH 256
-
-#define HISTORY_DIVISIONS 3
+#include "../include/host_pair_line.h"
+#include "../include/procinfo.h"
 
 #define HELP_TIME 2
 
@@ -44,7 +41,7 @@
     " S - toggle show source port            l - set screen filter\n"             \
     " D - toggle show destination port       L - lin/log scales\n"                \
     " p - toggle port display                ! - shell command\n"                 \
-    "                                        q - quit\n"                          \
+    " Z - toggle process display             q - quit\n"                          \
     "Sorting:\n"                                                                  \
     " 1/2/3 - sort by 1st/2nd/3rd column\n"                                       \
     " < - sort by source name\n"                                                  \
@@ -61,21 +58,17 @@ int history_divs[HISTORY_DIVISIONS] = {1, 5, 20};
 char *unit_bits[UNIT_DIVISIONS] = {"b", "kb", "Mb", "Gb"};
 char *unit_bytes[UNIT_DIVISIONS] = {"B", "kB", "MB", "GB"};
 
-typedef struct host_pair_line_tag {
-    addr_pair ap;
-    unsigned long long total_recv;
-    unsigned long long total_sent;
-    double long recv[HISTORY_DIVISIONS];
-    double long sent[HISTORY_DIVISIONS];
-    char cached_hostname[HOSTNAME_LENGTH]; /* pre-resolved for sort */
-} host_pair_line;
-
-
 extern hash_type *history;
 extern int history_pos;
 extern int history_len;
 
 extern options_t options;
+
+/* Interface addresses from iftop.c, used for local-side detection */
+extern int have_ip_addr;
+extern int have_ip6_addr;
+extern struct in_addr if_ip_addr;
+extern struct in6_addr if_ip6_addr;
 
 void ui_finish();
 
@@ -128,6 +121,7 @@ int RATES_LABEL_COLOR[] = {MAGENTA_FOREGROUND, BOLD};
 int TOTAL_LABEL_COLOR[] = {BLUE_FOREGROUND, BOLD};
 int CUM_TRANSFER_COLUMN_COLOR[] = {YELLOW_FOREGROUND, BOLD};
 int PEAK_TRANSFER_COLUMN_COLOR[] = {YELLOW_FOREGROUND, BOLD};
+int PROC_NAME_COLOR[] = {GREEN_FOREGROUND, BOLD};
 
 int convertColorToInt(char *color) {
 
@@ -276,6 +270,9 @@ void getColors() {
 
             char *peakTransferColumnString = "PEAK_TRANSFER_COLUMN_COLOR";
             char peakTransferColumnColor[100] = "yellow";
+
+            char *procNameString = "PROC_NAME_COLOR";
+            char procNameColor[100] = "green";
 
             int i = 0;
             for (i = 0; i < lineCount; i++) {
@@ -461,6 +458,15 @@ void getColors() {
                     }
                     fscanf(fp, "%49s", boldBuffer);
                     PEAK_TRANSFER_COLUMN_COLOR[1] = convertBoldToInt(boldBuffer);
+                }
+                if (strcmp(procNameString, buffer) == 0) {
+                    fscanf(fp, "%99s", procNameColor);
+                    int colorInt = convertColorToInt(procNameColor);
+                    if (colorInt != -1) {
+                        PROC_NAME_COLOR[0] = colorInt;
+                    }
+                    fscanf(fp, "%49s", boldBuffer);
+                    PROC_NAME_COLOR[1] = convertBoldToInt(boldBuffer);
                 }
             }
 
@@ -1076,6 +1082,29 @@ void analyse_data() {
             screen_line = xcalloc(1, sizeof *screen_line);
             addr_hash_insert(screen_hash, &ap, screen_line);
             screen_line->ap = ap;
+
+            /* Resolve owning process using the original (non-aggregated) key */
+            if (options.show_processes) {
+                addr_pair *orig = (addr_pair *)node->key;
+                proc_entry pe;
+                int found = 0;
+                if (orig->address_family == AF_INET) {
+                    if (have_ip_addr && orig->src.s_addr == if_ip_addr.s_addr)
+                        found = procinfo_lookup(AF_INET, &orig->src, orig->src_port, orig->protocol, &pe);
+                    else if (have_ip_addr && orig->dst.s_addr == if_ip_addr.s_addr)
+                        found = procinfo_lookup(AF_INET, &orig->dst, orig->dst_port, orig->protocol, &pe);
+                } else if (orig->address_family == AF_INET6) {
+                    if (have_ip6_addr && IN6_ARE_ADDR_EQUAL(&orig->src6, &if_ip6_addr))
+                        found = procinfo_lookup(AF_INET6, &orig->src6, orig->src_port, orig->protocol, &pe);
+                    else if (have_ip6_addr && IN6_ARE_ADDR_EQUAL(&orig->dst6, &if_ip6_addr))
+                        found = procinfo_lookup(AF_INET6, &orig->dst6, orig->dst_port, orig->protocol, &pe);
+                }
+                if (found) {
+                    screen_line->pid = pe.pid;
+                    strncpy(screen_line->process_name, pe.name, PROCNAME_LENGTH - 1);
+                    screen_line->process_name[PROCNAME_LENGTH - 1] = '\0';
+                }
+            }
         }
 
         screen_line->total_sent += hist_data->total_sent;
@@ -1212,9 +1241,13 @@ void ui_print() {
                     if (options.show_totals) {
                         L -= 4;
                     }
+                    if (options.show_processes) {
+                        L -= 8; /* reserve space for [procname] */
+                    }
                     if (L > HOSTNAME_LENGTH) {
                         L = HOSTNAME_LENGTH;
                     }
+                    if (L < 1) L = 1;
 
                     sprint_host(host1, screen_line->ap.address_family, &(screen_line->ap.src6),
                                 screen_line->ap.src_port, screen_line->ap.protocol, L);
@@ -1264,8 +1297,16 @@ void ui_print() {
 
                     turnOnColor(HOST2_COLOR);
                     mvaddstr(y, x, host2);
-
                     turnOffColor(HOST2_COLOR);
+
+                    if (options.show_processes && screen_line->process_name[0]) {
+                        char proc_label[PROCNAME_LENGTH + 16];
+                        snprintf(proc_label, sizeof(proc_label), " [%d:%.12s]",
+                                 screen_line->pid, screen_line->process_name);
+                        turnOnColor(PROC_NAME_COLOR);
+                        mvaddstr(y, x + L, proc_label);
+                        turnOffColor(PROC_NAME_COLOR);
+                    }
 
                     if (options.show_totals) {
                         draw_line_total(screen_line->total_sent, screen_line->total_recv, y,
@@ -1688,6 +1729,11 @@ void ui_loop() {
             options.log_scale = !options.log_scale;
             showhelp(options.log_scale ? "Logarithmic scale" : "Linear scale");
             ui_print();
+            break;
+        case 'Z':
+            options.show_processes = !options.show_processes;
+            showhelp(options.show_processes ? "Process display on" : "Process display off");
+            tick(1);
             break;
         case KEY_CLEAR:
         case 12: /* ^L */

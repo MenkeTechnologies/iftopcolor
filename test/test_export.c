@@ -15,20 +15,9 @@
 #include "options.h"
 #include "cfgfile.h"
 #include "export.h"
+#include "host_pair_line.h"
 
 /* === Copied static helpers from export.c for unit testing === */
-
-#define HISTORY_DIVISIONS 3
-#define HOSTNAME_LENGTH 256
-
-typedef struct host_pair_line_tag {
-    addr_pair ap;
-    unsigned long long total_recv;
-    unsigned long long total_sent;
-    double long recv[HISTORY_DIVISIONS];
-    double long sent[HISTORY_DIVISIONS];
-    char cached_hostname[HOSTNAME_LENGTH];
-} host_pair_line;
 
 static const char *protocol_name(unsigned short proto) {
     switch (proto) {
