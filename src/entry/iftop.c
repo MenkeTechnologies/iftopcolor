@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/time.h>
 #include <sys/socket.h>
 /* include <net/bpf.h> -- this was added by the PFLOG patch but seems
  * superfluous and breaks on Slackware */
@@ -67,9 +68,12 @@ extern options_t options;
 
 hash_type *history;
 history_type history_totals;
-time_t last_timestamp;
+struct timeval last_timestamp;      /* last history rotation */
+struct timeval last_display;        /* last UI repaint */
+struct timeval last_procinfo;       /* last procinfo refresh */
 int history_pos = 0;
 int history_len = 1;
+double slot_elapsed = 0;           /* seconds elapsed in current slot */
 pthread_mutex_t tick_mutex;
 
 pcap_t *pd; /* pcap descriptor */
@@ -93,7 +97,9 @@ static void finish(int sig) {
 
 void init_history() {
     history = addr_hash_create();
-    last_timestamp = time(NULL);
+    gettimeofday(&last_timestamp, NULL);
+    last_display = last_timestamp;
+    last_procinfo = last_timestamp;
     memset(&history_totals, 0, sizeof history_totals);
 }
 
@@ -167,24 +173,46 @@ void history_rotate() {
 }
 
 
+static double timeval_diff(struct timeval *a, struct timeval *b) {
+    return (a->tv_sec - b->tv_sec) + (a->tv_usec - b->tv_usec) / 1e6;
+}
+
 void tick(int print) {
-    time_t now;
+    struct timeval now;
+    int did_rotate = 0;
 
     pthread_mutex_lock(&tick_mutex);
 
-    now = time(NULL);
-    if (now - last_timestamp >= RESOLUTION) {
-        if (options.show_processes) {
-            procinfo_refresh();
-        }
+    gettimeofday(&now, NULL);
+
+    /* History rotation at the original RESOLUTION (2s) */
+    if (timeval_diff(&now, &last_timestamp) >= RESOLUTION) {
+        history_rotate();
+        last_timestamp = now;
+        did_rotate = 1;
+    }
+
+    /* Track how far into the current slot we are */
+    slot_elapsed = timeval_diff(&now, &last_timestamp);
+    if (slot_elapsed < 0) slot_elapsed = 0;
+    if (slot_elapsed > RESOLUTION) slot_elapsed = RESOLUTION;
+
+    /* Procinfo refresh at its own slower cadence */
+    if (options.show_processes &&
+        timeval_diff(&now, &last_procinfo) >= PROCINFO_RESOLUTION) {
+        procinfo_refresh();
+        last_procinfo = now;
+    }
+
+    /* Display repaint at DISPLAY_RESOLUTION */
+    if (did_rotate || timeval_diff(&now, &last_display) >= DISPLAY_RESOLUTION) {
         analyse_data();
         if (options.export_mode) {
             export_print();
         } else {
             ui_print();
         }
-        history_rotate();
-        last_timestamp = now;
+        last_display = now;
     } else {
         ui_tick(print);
     }

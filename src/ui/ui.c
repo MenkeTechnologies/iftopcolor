@@ -51,8 +51,8 @@
     "iftop, version " IFTOP_VERSION
 
 
-/* 2, 10 and 40 seconds */
-int history_divs[HISTORY_DIVISIONS] = {1, 5, 20};
+/* 2, 10 and 40 seconds (in slots: seconds / RESOLUTION) */
+int history_divs[HISTORY_DIVISIONS] = {2, 10, 40};
 
 #define UNIT_DIVISIONS 4
 char *unit_bits[UNIT_DIVISIONS] = {"b", "kb", "Mb", "Gb"};
@@ -498,7 +498,7 @@ void ui_curses_init() {
     (void)nonl();         /* tell curses not to do NL->CR/NL on output */
     (void)cbreak();       /* take input chars one at a time, no wait for \n */
     (void)noecho();       /* don't echo input */
-    halfdelay(2);
+    halfdelay(1);
 }
 
 
@@ -648,8 +648,8 @@ static float get_max_bandwidth() {
     return max;
 }
 
-/* rate in bits */
-static int get_bar_length(const int rate) {
+/* rate in bits — returns length in 1/8th character units for sub-cell precision */
+static int get_bar_length_eighths(const int rate) {
     float bar_length;
     if (rate <= 0) {
         return 0;
@@ -666,7 +666,11 @@ static int get_bar_length(const int rate) {
     } else {
         bar_length = rate / get_max_bandwidth();
     }
-    return (bar_length * COLS);
+    return (int)(bar_length * COLS * 8);
+}
+
+static int get_bar_length(const int rate) {
+    return get_bar_length_eighths(rate) / 8;
 }
 
 static void draw_bar_scale(int *row) {
@@ -726,12 +730,21 @@ static void draw_bar_scale(int *row) {
     }
 }
 
-int history_length(const int division) {
+extern double slot_elapsed;
+
+double history_length(const int division) {
+    int full_slots;
     if (history_len < history_divs[division]) {
-        return history_len * RESOLUTION;
+        full_slots = history_len;
     } else {
-        return history_divs[division] * RESOLUTION;
+        full_slots = history_divs[division];
     }
+    /* The newest slot is only partially filled — use elapsed fraction
+     * instead of a full RESOLUTION to avoid rate dips after rotation. */
+    if (full_slots <= 1) {
+        return slot_elapsed > 0 ? slot_elapsed : RESOLUTION;
+    }
+    return (full_slots - 1) * RESOLUTION + slot_elapsed;
 }
 
 void draw_line_total(float sent, float recv, int row, int col, option_linedisplay_t linedisplay,
@@ -776,13 +789,30 @@ void draw_line_total(float sent, float recv, int row, int col, option_linedispla
     }
 }
 
+#define BAR_SMOOTH_MAX_ROWS 256
+#define BAR_SMOOTH_FACTOR 0.15f  /* smaller = smoother glide */
+static float bar_smooth[BAR_SMOOTH_MAX_ROWS];
+
 void draw_bar(float bandwidth, int row, short colorpair) {
     int length;
-    colorpair = has_colors() == TRUE ? colorpair : 0; /* set 0 if terminal is not color capable*/
+    float target;
+    colorpair = has_colors() == TRUE ? colorpair : 0;
     mvchgat(row, 0, 0, A_NORMAL, 0, NULL);
-    length = get_bar_length(8 * bandwidth);
+    target = get_bar_length_eighths(8 * bandwidth) / 8.0f;
+    if (row >= 0 && row < BAR_SMOOTH_MAX_ROWS) {
+        float prev = bar_smooth[row];
+        if (prev < 0.5f && target < 0.5f) {
+            bar_smooth[row] = 0;
+        } else {
+            bar_smooth[row] = prev + (target - prev) * BAR_SMOOTH_FACTOR;
+        }
+        length = (int)(bar_smooth[row] + 0.5f);
+    } else {
+        length = (int)(target + 0.5f);
+    }
     if (length > 0) {
-        mvchgat(row, 0, length + 1, A_REVERSE, colorpair, NULL);
+        if (length > COLS) length = COLS;
+        mvchgat(row, 0, length, A_REVERSE, colorpair, NULL);
     }
 }
 
@@ -909,17 +939,18 @@ void calculate_totals(const int hist_idx[]) {
         }
     }
 
-    /* Totals: unrolled, using precomputed index array */
-    recv_bytes = history_totals.recv[hist_idx[0]];
-    sent_bytes = history_totals.sent[hist_idx[0]];
-    totals.recv[0] += recv_bytes;
-    totals.sent[0] += sent_bytes;
-    totals.recv[1] += recv_bytes;
-    totals.sent[1] += sent_bytes;
-    totals.recv[2] += recv_bytes;
-    totals.sent[2] += sent_bytes;
-
-    for (i = 1; i < history_divs[1]; i++) {
+    /* Accumulate totals across history divisions */
+    for (i = 0; i < history_divs[0]; i++) {
+        recv_bytes = history_totals.recv[hist_idx[i]];
+        sent_bytes = history_totals.sent[hist_idx[i]];
+        totals.recv[0] += recv_bytes;
+        totals.sent[0] += sent_bytes;
+        totals.recv[1] += recv_bytes;
+        totals.sent[1] += sent_bytes;
+        totals.recv[2] += recv_bytes;
+        totals.sent[2] += sent_bytes;
+    }
+    for (; i < history_divs[1]; i++) {
         recv_bytes = history_totals.recv[hist_idx[i]];
         sent_bytes = history_totals.sent[hist_idx[i]];
         totals.recv[1] += recv_bytes;
@@ -934,9 +965,11 @@ void calculate_totals(const int hist_idx[]) {
 
     /* Divide by time spans */
     for (i = 0; i < HISTORY_DIVISIONS; i++) {
-        int hl = history_length(i);
-        totals.recv[i] /= hl;
-        totals.sent[i] /= hl;
+        double hl = history_length(i);
+        if (hl > 0) {
+            totals.recv[i] /= hl;
+            totals.sent[i] /= hl;
+        }
     }
 }
 
@@ -950,7 +983,8 @@ void make_screen_list() {
     const int freeze = options.freezeorder;
 
     for (i = 0; i < HISTORY_DIVISIONS; i++) {
-        inv_hist_len[i] = 1.0 / history_length(i);
+        double hl = history_length(i);
+        inv_hist_len[i] = hl > 0 ? 1.0 / hl : 0;
     }
 
     if (!freeze) {
@@ -1114,20 +1148,23 @@ void analyse_data() {
         screen_line->total_sent += hist_data->total_sent;
         screen_line->total_recv += hist_data->total_recv;
 
-        /* Unrolled: history_divs = {1, 5, 20}. Use precomputed index array. */
+        /* Accumulate history slots into division buckets.
+         * Slot i contributes to div j if i < history_divs[j]. */
         {
             long recv_bytes, sent_bytes;
-            /* i=0: contributes to div 0,1,2 */
-            recv_bytes = hist_data->recv[hist_idx[0]];
-            sent_bytes = hist_data->sent[hist_idx[0]];
-            screen_line->recv[0] += recv_bytes;
-            screen_line->sent[0] += sent_bytes;
-            screen_line->recv[1] += recv_bytes;
-            screen_line->sent[1] += sent_bytes;
-            screen_line->recv[2] += recv_bytes;
-            screen_line->sent[2] += sent_bytes;
-            /* i=1..4: contributes to div 1,2 */
-            for (i = 1; i < history_divs[1]; i++) {
+            /* Slots 0..divs[0]-1: contribute to all 3 divisions */
+            for (i = 0; i < history_divs[0]; i++) {
+                recv_bytes = hist_data->recv[hist_idx[i]];
+                sent_bytes = hist_data->sent[hist_idx[i]];
+                screen_line->recv[0] += recv_bytes;
+                screen_line->sent[0] += sent_bytes;
+                screen_line->recv[1] += recv_bytes;
+                screen_line->sent[1] += sent_bytes;
+                screen_line->recv[2] += recv_bytes;
+                screen_line->sent[2] += sent_bytes;
+            }
+            /* Slots divs[0]..divs[1]-1: contribute to div 1 and 2 */
+            for (; i < history_divs[1]; i++) {
                 recv_bytes = hist_data->recv[hist_idx[i]];
                 sent_bytes = hist_data->sent[hist_idx[i]];
                 screen_line->recv[1] += recv_bytes;
@@ -1135,7 +1172,7 @@ void analyse_data() {
                 screen_line->recv[2] += recv_bytes;
                 screen_line->sent[2] += sent_bytes;
             }
-            /* i=5..19: contributes to div 2 only */
+            /* Slots divs[1]..HISTORY_LENGTH-1: contribute to div 2 only */
             for (; i < HISTORY_LENGTH; i++) {
                 screen_line->recv[2] += hist_data->recv[hist_idx[i]];
                 screen_line->sent[2] += hist_data->sent[hist_idx[i]];

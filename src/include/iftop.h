@@ -9,9 +9,12 @@
 #include "conf.h"
 #include "procinfo.h"
 
-/* 40 / 2  */
-#define HISTORY_LENGTH  20
-#define RESOLUTION      2
+/* 40 / 1 */
+#define HISTORY_LENGTH  40
+#define RESOLUTION      1        /* history slot rotation interval (seconds) */
+#define DISPLAY_RESOLUTION 0.03  /* UI repaint interval */
+#define DISPLAY_RESOLUTION_US 30000
+#define PROCINFO_RESOLUTION 0.25 /* process table refresh interval */
 #define DUMP_RESOLUTION 300
 
 typedef struct {

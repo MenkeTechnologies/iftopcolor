@@ -193,7 +193,7 @@ void export_loop(void) {
                 break;
             }
         }
-        sleep(RESOLUTION);
+        usleep(DISPLAY_RESOLUTION_US);
         tick(1);
     }
 }
