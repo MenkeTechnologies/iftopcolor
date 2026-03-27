@@ -428,6 +428,28 @@ static void __attribute__((hot)) handle_ip_packet(struct ip *iptr, int hw_dir) {
     if (addr_hash_find(history, &ap, u_ht.void_pp) == HASH_STATUS_KEY_NOT_FOUND) {
         hist = history_create();
         addr_hash_insert(history, &ap, hist);
+
+        /* Resolve owning process at flow creation time — the socket is
+         * most likely still open now vs waiting for the next 2s tick. */
+        if (options.show_processes && !hist->proc_resolved) {
+            proc_entry pe;
+            int found = 0;
+            if (ap.address_family == AF_INET) {
+                found = procinfo_lookup(AF_INET, &ap.src, ap.src_port, ap.protocol, &pe);
+                if (!found)
+                    found = procinfo_lookup(AF_INET, &ap.dst, ap.dst_port, ap.protocol, &pe);
+            } else if (ap.address_family == AF_INET6) {
+                found = procinfo_lookup(AF_INET6, &ap.src6, ap.src_port, ap.protocol, &pe);
+                if (!found)
+                    found = procinfo_lookup(AF_INET6, &ap.dst6, ap.dst_port, ap.protocol, &pe);
+            }
+            if (found) {
+                hist->proc_resolved = 1;
+                hist->proc_pid = pe.pid;
+                strncpy(hist->proc_name, pe.name, PROCINFO_NAME_MAX - 1);
+                hist->proc_name[PROCINFO_NAME_MAX - 1] = '\0';
+            }
+        }
     }
 
     /* Update record */

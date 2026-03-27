@@ -4,6 +4,11 @@
  * Map network sockets to owning processes.
  * macOS: libproc (proc_pidinfo / proc_pidfdinfo)
  * Linux: /proc/net/tcp* + /proc/[pid]/fd/ symlink walking
+ *
+ * Thread safety: procinfo_refresh() is called from the tick thread,
+ * procinfo_lookup() may be called from the packet capture thread.
+ * We use a double-buffer: refresh builds a new table, then swaps
+ * the live pointer atomically.
  */
 
 #include "../include/procinfo.h"
@@ -13,11 +18,9 @@
 #include <string.h>
 #include <errno.h>
 #include <arpa/inet.h>
+#include <stdatomic.h>
 
 /* ── Internal lookup table ────────────────────────────────────────── */
-
-/* Key: (af, protocol, local_port, local_addr).
- * We use a flat array since the number of open sockets is typically small. */
 
 typedef struct {
     int af;
@@ -31,26 +34,41 @@ typedef struct {
     char name[PROCINFO_NAME_MAX];
 } sock_entry;
 
-static sock_entry *sock_table = NULL;
-static int sock_count = 0;
-static int sock_cap = 0;
+typedef struct {
+    sock_entry *entries;
+    int count;
+    int cap;
+} sock_table_t;
 
-static void table_clear(void) {
-    sock_count = 0;
+/* Double-buffer: live table is read by lookup, staging is built by refresh */
+static _Atomic(sock_table_t *) live_table = NULL;
+static sock_table_t *staging_table = NULL;
+
+static sock_table_t *table_create(void) {
+    sock_table_t *t = calloc(1, sizeof(sock_table_t));
+    return t;
 }
 
-static void table_add(int af, unsigned short protocol, unsigned short port,
-                      const void *addr, pid_t pid, const char *name) {
-    if (sock_count >= sock_cap) {
-        sock_cap = sock_cap ? sock_cap * 2 : 512;
-        sock_table = realloc(sock_table, sock_cap * sizeof(sock_entry));
-        if (!sock_table) {
-            sock_count = 0;
-            sock_cap = 0;
+static void table_free(sock_table_t *t) {
+    if (t) {
+        free(t->entries);
+        free(t);
+    }
+}
+
+static void table_add(sock_table_t *t, int af, unsigned short protocol,
+                      unsigned short port, const void *addr, pid_t pid,
+                      const char *name) {
+    if (t->count >= t->cap) {
+        t->cap = t->cap ? t->cap * 2 : 512;
+        t->entries = realloc(t->entries, t->cap * sizeof(sock_entry));
+        if (!t->entries) {
+            t->count = 0;
+            t->cap = 0;
             return;
         }
     }
-    sock_entry *e = &sock_table[sock_count++];
+    sock_entry *e = &t->entries[t->count++];
     e->af = af;
     e->protocol = protocol;
     e->port = port;
@@ -64,10 +82,12 @@ static void table_add(int af, unsigned short protocol, unsigned short port,
     e->name[PROCINFO_NAME_MAX - 1] = '\0';
 }
 
-static int table_find(int af, const void *addr, unsigned short port,
-                      unsigned short protocol, proc_entry *out) {
-    for (int i = 0; i < sock_count; i++) {
-        sock_entry *e = &sock_table[i];
+static int table_find(sock_table_t *t, int af, const void *addr,
+                      unsigned short port, unsigned short protocol,
+                      proc_entry *out) {
+    if (!t) return 0;
+    for (int i = 0; i < t->count; i++) {
+        sock_entry *e = &t->entries[i];
         if (e->port != port || e->protocol != protocol)
             continue;
         if (e->af == af) {
@@ -91,7 +111,6 @@ static int table_find(int af, const void *addr, unsigned short port,
         /* Handle IPv4-mapped IPv6: socket bound as ::ffff:A.B.C.D, packet is AF_INET */
         if (af == AF_INET && e->af == AF_INET6) {
             const unsigned char *b = e->addr.v6.s6_addr;
-            /* Check for ::ffff:x.x.x.x prefix */
             static const unsigned char v4mapped_prefix[12] = {
                 0,0,0,0, 0,0,0,0, 0,0,0xff,0xff
             };
@@ -107,6 +126,13 @@ static int table_find(int af, const void *addr, unsigned short port,
     return 0;
 }
 
+/* Swap staging into live, free the old live table */
+static void table_publish(void) {
+    sock_table_t *old = atomic_exchange(&live_table, staging_table);
+    staging_table = NULL;
+    table_free(old);
+}
+
 /* ── macOS implementation ─────────────────────────────────────────── */
 
 #if defined(__APPLE__)
@@ -117,25 +143,25 @@ static int table_find(int af, const void *addr, unsigned short port,
 int procinfo_available(void) { return 1; }
 
 void procinfo_refresh(void) {
-    table_clear();
+    staging_table = table_create();
+    if (!staging_table) return;
 
-    /* Get list of all PIDs */
     int npids = proc_listallpids(NULL, 0);
-    if (npids <= 0) return;
+    if (npids <= 0) { table_publish(); return; }
 
     pid_t *pids = malloc(npids * sizeof(pid_t));
-    if (!pids) return;
+    if (!pids) { table_publish(); return; }
 
     npids = proc_listallpids(pids, npids * sizeof(pid_t));
     if (npids <= 0) {
         free(pids);
+        table_publish();
         return;
     }
 
     for (int p = 0; p < npids; p++) {
         pid_t pid = pids[p];
 
-        /* Get list of file descriptors */
         int bufsize = proc_pidinfo(pid, PROC_PIDLISTFDS, 0, NULL, 0);
         if (bufsize <= 0) continue;
 
@@ -149,7 +175,6 @@ void procinfo_refresh(void) {
         }
         int nfds = actual / (int)sizeof(struct proc_fdinfo);
 
-        /* Check if this PID has any sockets before getting the name */
         int has_socket = 0;
         for (int f = 0; f < nfds; f++) {
             if (fds[f].proc_fdtype == PROX_FDTYPE_SOCKET) {
@@ -188,15 +213,16 @@ void procinfo_refresh(void) {
 
             if (family == AF_INET) {
                 struct in_addr laddr = si.psi.soi_proto.pri_in.insi_laddr.ina_46.i46a_addr4;
-                table_add(AF_INET, proto, lport, &laddr, pid, pname);
+                table_add(staging_table, AF_INET, proto, lport, &laddr, pid, pname);
             } else {
                 struct in6_addr laddr = si.psi.soi_proto.pri_in.insi_laddr.ina_6;
-                table_add(AF_INET6, proto, lport, &laddr, pid, pname);
+                table_add(staging_table, AF_INET6, proto, lport, &laddr, pid, pname);
             }
         }
         free(fds);
     }
     free(pids);
+    table_publish();
 }
 
 /* ── Linux implementation ─────────────────────────────────────────── */
@@ -207,7 +233,6 @@ void procinfo_refresh(void) {
 
 int procinfo_available(void) { return 1; }
 
-/* Temporary inode-to-socket mapping used during refresh */
 typedef struct {
     unsigned long inode;
     int af;
@@ -263,7 +288,6 @@ static void parse_proc_net(const char *path, int af, unsigned short protocol) {
     if (!fp) return;
 
     char line[512];
-    /* Skip header line */
     if (!fgets(line, sizeof(line), fp)) {
         fclose(fp);
         return;
@@ -276,7 +300,6 @@ static void parse_proc_net(const char *path, int af, unsigned short protocol) {
         unsigned long inode;
 
         if (af == AF_INET) {
-            /* Format: sl local_address rem_address st ... inode */
             int matched = sscanf(line, " %*d: %x:%x %x:%x %x %*x:%*x %*x:%*x %*x %*u %*d %lu",
                                  &local_addr_hex, &local_port,
                                  &remote_addr_hex, &remote_port,
@@ -285,10 +308,9 @@ static void parse_proc_net(const char *path, int af, unsigned short protocol) {
             if (inode == 0) continue;
 
             struct in_addr addr;
-            addr.s_addr = local_addr_hex; /* already in network byte order */
+            addr.s_addr = local_addr_hex;
             inode_table_add(inode, AF_INET, protocol, (unsigned short)local_port, &addr);
         } else {
-            /* IPv6: addresses are 32 hex chars */
             char local_addr_str[33], remote_addr_str[33];
             int matched = sscanf(line, " %*d: %32[0-9A-Fa-f]:%x %32[0-9A-Fa-f]:%x %x %*x:%*x %*x:%*x %*x %*u %*d %lu",
                                  local_addr_str, &local_port,
@@ -297,7 +319,6 @@ static void parse_proc_net(const char *path, int af, unsigned short protocol) {
             if (matched < 6) continue;
             if (inode == 0) continue;
 
-            /* Parse the 32-char hex IPv6 address (4 groups of 8 hex chars, each in host byte order) */
             struct in6_addr addr;
             for (int i = 0; i < 4; i++) {
                 unsigned int word;
@@ -305,7 +326,6 @@ static void parse_proc_net(const char *path, int af, unsigned short protocol) {
                 memcpy(chunk, local_addr_str + i * 8, 8);
                 chunk[8] = '\0';
                 sscanf(chunk, "%x", &word);
-                /* Each 32-bit word is in host byte order in /proc */
                 memcpy(addr.s6_addr + i * 4, &word, 4);
             }
             inode_table_add(inode, AF_INET6, protocol, (unsigned short)local_port, &addr);
@@ -320,7 +340,6 @@ static void get_proc_name(pid_t pid, char *buf, int bufsize) {
     FILE *fp = fopen(path, "r");
     if (fp) {
         if (fgets(buf, bufsize, fp)) {
-            /* Strip trailing newline */
             char *nl = strchr(buf, '\n');
             if (nl) *nl = '\0';
         } else {
@@ -333,24 +352,23 @@ static void get_proc_name(pid_t pid, char *buf, int bufsize) {
 }
 
 void procinfo_refresh(void) {
-    table_clear();
+    staging_table = table_create();
+    if (!staging_table) return;
+
     inode_table_clear();
 
-    /* Step 1: Parse /proc/net/* to build inode → socket mapping */
     parse_proc_net("/proc/net/tcp",  AF_INET,  IPPROTO_TCP);
     parse_proc_net("/proc/net/tcp6", AF_INET6, IPPROTO_TCP);
     parse_proc_net("/proc/net/udp",  AF_INET,  IPPROTO_UDP);
     parse_proc_net("/proc/net/udp6", AF_INET6, IPPROTO_UDP);
 
-    if (inode_count == 0) return;
+    if (inode_count == 0) { table_publish(); return; }
 
-    /* Step 2: Walk /proc/[pid]/fd/ to map inode → PID */
     DIR *proc_dir = opendir("/proc");
-    if (!proc_dir) return;
+    if (!proc_dir) { table_publish(); return; }
 
     struct dirent *proc_ent;
     while ((proc_ent = readdir(proc_dir)) != NULL) {
-        /* Only numeric directories (PIDs) */
         char *endp;
         long pid = strtol(proc_ent->d_name, &endp, 10);
         if (*endp != '\0' || pid <= 0) continue;
@@ -384,11 +402,13 @@ void procinfo_refresh(void) {
                 name_resolved = 1;
             }
 
-            table_add(ie->af, ie->protocol, ie->port, &ie->addr, (pid_t)pid, pname);
+            table_add(staging_table, ie->af, ie->protocol, ie->port,
+                      &ie->addr, (pid_t)pid, pname);
         }
         closedir(fd_dir);
     }
     closedir(proc_dir);
+    table_publish();
 }
 
 /* ── Unsupported platform ─────────────────────────────────────────── */
@@ -408,14 +428,15 @@ void procinfo_refresh(void) {
 int procinfo_lookup(int address_family, const void *local_addr,
                     unsigned short local_port, unsigned short protocol,
                     proc_entry *out) {
-    return table_find(address_family, local_addr, local_port, protocol, out);
+    sock_table_t *t = atomic_load(&live_table);
+    return table_find(t, address_family, local_addr, local_port, protocol, out);
 }
 
 void procinfo_destroy(void) {
-    free(sock_table);
-    sock_table = NULL;
-    sock_count = 0;
-    sock_cap = 0;
+    sock_table_t *t = atomic_exchange(&live_table, NULL);
+    table_free(t);
+    table_free(staging_table);
+    staging_table = NULL;
 #if defined(__linux__)
     free(inode_table);
     inode_table = NULL;

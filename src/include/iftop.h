@@ -7,6 +7,7 @@
 #define __IFTOP_H_
 
 #include "conf.h"
+#include "procinfo.h"
 
 /* 40 / 2  */
 #define HISTORY_LENGTH  20
@@ -19,6 +20,10 @@ typedef struct {
     unsigned long long total_sent;
     unsigned long long total_recv;
     int last_write;
+    /* Cached process info — persists after socket closes */
+    int proc_resolved;            /* 1 if we've found a process for this flow */
+    int proc_pid;                 /* cached PID (0 = unknown) */
+    char proc_name[PROCINFO_NAME_MAX]; /* cached process name */
 } history_type;
 
 void tick(int print);

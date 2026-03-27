@@ -64,12 +64,6 @@ extern int history_len;
 
 extern options_t options;
 
-/* Interface addresses from iftop.c, used for local-side detection */
-extern int have_ip_addr;
-extern int have_ip6_addr;
-extern struct in_addr if_ip_addr;
-extern struct in6_addr if_ip6_addr;
-
 void ui_finish();
 
 hash_type *screen_hash;
@@ -1082,27 +1076,37 @@ void analyse_data() {
             screen_line = xcalloc(1, sizeof *screen_line);
             addr_hash_insert(screen_hash, &ap, screen_line);
             screen_line->ap = ap;
+        }
 
-            /* Resolve owning process using the original (non-aggregated) key */
-            if (options.show_processes) {
+        /* Resolve owning process if screen_line doesn't have one yet.
+         * Check history cache first (persists after socket closes),
+         * then try a live lookup on both sides of the flow. */
+        if (options.show_processes && !screen_line->process_name[0]) {
+            if (hist_data->proc_resolved) {
+                screen_line->pid = hist_data->proc_pid;
+                strncpy(screen_line->process_name, hist_data->proc_name, PROCNAME_LENGTH - 1);
+                screen_line->process_name[PROCNAME_LENGTH - 1] = '\0';
+            } else {
                 addr_pair *orig = (addr_pair *)node->key;
                 proc_entry pe;
                 int found = 0;
                 if (orig->address_family == AF_INET) {
-                    if (have_ip_addr && orig->src.s_addr == if_ip_addr.s_addr)
-                        found = procinfo_lookup(AF_INET, &orig->src, orig->src_port, orig->protocol, &pe);
-                    else if (have_ip_addr && orig->dst.s_addr == if_ip_addr.s_addr)
+                    found = procinfo_lookup(AF_INET, &orig->src, orig->src_port, orig->protocol, &pe);
+                    if (!found)
                         found = procinfo_lookup(AF_INET, &orig->dst, orig->dst_port, orig->protocol, &pe);
                 } else if (orig->address_family == AF_INET6) {
-                    if (have_ip6_addr && IN6_ARE_ADDR_EQUAL(&orig->src6, &if_ip6_addr))
-                        found = procinfo_lookup(AF_INET6, &orig->src6, orig->src_port, orig->protocol, &pe);
-                    else if (have_ip6_addr && IN6_ARE_ADDR_EQUAL(&orig->dst6, &if_ip6_addr))
+                    found = procinfo_lookup(AF_INET6, &orig->src6, orig->src_port, orig->protocol, &pe);
+                    if (!found)
                         found = procinfo_lookup(AF_INET6, &orig->dst6, orig->dst_port, orig->protocol, &pe);
                 }
                 if (found) {
                     screen_line->pid = pe.pid;
                     strncpy(screen_line->process_name, pe.name, PROCNAME_LENGTH - 1);
                     screen_line->process_name[PROCNAME_LENGTH - 1] = '\0';
+                    hist_data->proc_resolved = 1;
+                    hist_data->proc_pid = pe.pid;
+                    strncpy(hist_data->proc_name, pe.name, PROCINFO_NAME_MAX - 1);
+                    hist_data->proc_name[PROCINFO_NAME_MAX - 1] = '\0';
                 }
             }
         }
